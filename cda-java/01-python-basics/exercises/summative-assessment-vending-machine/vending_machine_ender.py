@@ -241,13 +241,190 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         print("\n\nSession ended by user. Goodbye!")
 
-with open("load_inventory.txt", "r") as file:
-    data = file.read()
+def load_inventory(filename):
+    inventory = {}
 
-    print(data)
+    print(inventory)
+
     
+#if the inventory list was suppose to auto-populate, then I was unable to get it to.
+#===========================SET UP==Display menu items, price, quantity, and create main menu.===========
+
+inventory = {"A1": {"item": "chips", "price": 1.50, "quantity": 5}, 
+             "A2": {"item": "candy bar", "price": 1.25, "quantity": 5},
+             "B1": {"item": "soda", "price": 2.00, "quantity": 5},
+             "B2": {"item": "water", "price": 1.75, "quantity": 5},
+             "C1": {"item": "gum", "price": 0.75, "quantity": 5},
+             "D1": {"item": "chocolate", "price": 2.25, "quantity":5}}
+
+print(inventory)
 
 
 
+INVENTORY_FILE = "inventory.txt" 
+LOG_FILE = "transaction_log.txt"
 
 
+
+def view_inventory(inventory):
+    print("\n---Inventory---")
+
+    for slot, details in inventory.items():
+        print(
+            f"{slot}: {details['item']} | "
+            f"Price: ${details['price']: .2f} | "
+            f"Quantity: {details['quantity']}" 
+        )
+
+view_inventory(inventory)
+
+
+
+def main_menu():
+    print("\n===== VENDING MACHINE =====")
+    print("1. View Products")
+    print("2. Feed Money")
+    print("3. Purchase Item")
+    print("4. Check Balance")
+    print("5. Exit")
+    print("===========================")
+
+main_menu()
+
+
+
+def main_menu():
+    while True:
+        print("\n===== VENDING MACHINE ====")
+        print("1. View Products")
+        print("2. Feed Money")
+        print("3. Purchase Item")
+        print("4. Check Balance")
+        print("5. Exit")
+        print("==========================")
+
+        choice = input("Please select an option: ")
+
+        if choice  == "1":
+            print("Viewing products...")
+        elif choice == "2":
+            print("Feeding money...")
+        elif choice == "3":
+            print("Purchasing item...")
+        elif choice == "4":
+            print("Thank you!  Goodbye!")
+            break
+        else:
+            print("Invalid selection.  Please choose 1-5.")
+
+
+
+main_menu()
+
+
+
+        
+
+#====================LOOP FOR SELECTING ITEM AND INPUT MONEY===========================
+def log_transaction(message, filename=LOG_FILE):
+
+    pass
+
+
+def get_menu_choice():
+    while True:
+        try:
+            choice = int(input("Please select an option (1-5): "))
+
+            if choice < 1 or choice > 5:
+                print("Error: Please enter a number between 1 and 5.")
+                continue
+
+            return choice
+
+        except ValueError:
+            print("Error: Please enter a number.")
+
+
+def feed_money(balance):
+    while True:
+        try:
+            amount = float(input("Enter amount to feed: $"))
+
+            if amount <= 0:
+                print("Error: Amount must be greater than zero.")
+                continue
+
+
+            balance += amount
+
+            print(f"Money added: ${amount: .2f}")
+            print(f"Current balance: ${balance: .2f}")
+
+            log_transaction(f"Fed ${amount: .2f}")
+
+            return balance
+
+        except ValueError:
+            print("Error: Please enter a valid number.")
+
+
+
+balance = 0.00
+
+while True:
+    print("\n===== VENDING MACHINE =====")
+    print("1. View Products")
+    print("2. Feed Money")
+    print("3. Purchase Item")
+    print("4. Check Balance")
+    print("5. Exit")
+
+    choice = get_menu_choice()
+
+
+
+    if choice == 1:
+        print("Viewing products.")
+
+    elif choice == 2:
+        balance = feed_money(balance)
+
+    elif choice == 3:
+        print ("Purchase Item selected.")
+
+    elif choice == 4:
+        print(f"Current balance: ${balance:.2f}")
+
+    elif choice == 5:
+        print("Thank you!  Goodbye!")
+        break
+
+
+def feed_money(balance):
+    while True:
+        try:
+            money = float(input("Enter money"))
+
+            if money <= 0:
+                print("Error: Please enter a positive amount.")
+                continue
+
+
+            balance += money
+
+            print(f"Money added: ${money: .2f}")
+            print(f"Current balance: ${balance:.2f}")
+
+
+            return balance
+
+        except ValueError:
+            print("Error: Please enter a valid number.")
+
+
+
+#When I input values into terminal, nothing happens, unsure why==========
+
+
+#This is not complete, but wanted to turn in something ==========
