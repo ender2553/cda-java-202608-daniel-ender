@@ -1,0 +1,6 @@
+A1,Chips,1.5,6
+A2,Candy Bar,1.25,8
+B1,Soda,2.0,12
+B2,Water,1.75,15
+C1,Gum,0.75,20
+D1,Chocolate,2.25,6
