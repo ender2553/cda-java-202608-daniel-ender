@@ -1,0 +1,56 @@
+{
+  "MHP-01": [
+    {
+      "name": "postgresql",
+      "version": "12.3",
+      "port": 5432,
+      "protocol": "tcp"
+    }
+  ],
+  "MHP-02": [
+    {
+      "name": "nginx",
+      "version": "1.18.0",
+      "port": 443,
+      "protocol": "tcp"
+    },
+    {
+      "name": "openssl",
+      "version": "1.1.1f",
+      "port": 443,
+      "protocol": "tcp"
+    }
+  ],
+  "MHP-03": [
+    {
+      "name": "nginx",
+      "version": "1.20.1",
+      "port": 443,
+      "protocol": "tcp"
+    }
+  ],
+  "MHP-04": [
+    {
+      "name": "openssh",
+      "version": "7.2p2",
+      "port": 22,
+      "protocol": "tcp"
+    }
+  ],
+  "MHP-05": [
+    {
+      "name": "apache-tomcat",
+      "version": "9.0.30",
+      "port": 8080,
+      "protocol": "tcp"
+    }
+  ],
+  "MHP-06": [
+    {
+      "name": "openssl",
+      "version": "1.0.2k",
+      "port": 443,
+      "protocol": "tcp"
+    }
+  ]
+}

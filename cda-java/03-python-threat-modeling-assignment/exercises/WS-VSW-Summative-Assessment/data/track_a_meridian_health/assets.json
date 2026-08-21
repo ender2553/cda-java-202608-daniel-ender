@@ -1,0 +1,68 @@
+[
+  {
+    "asset_id": "MHP-01",
+    "hostname": "ehr-db-01",
+    "ip": "10.20.1.10",
+    "network_zone": "internal",
+    "asset_criticality": 5,
+    "data_sensitivity": 5,
+    "business_impact": 5,
+    "owner": "Clinical Systems Team",
+    "notes": "Primary electronic health record database."
+  },
+  {
+    "asset_id": "MHP-02",
+    "hostname": "patient-portal-web",
+    "ip": "203.0.113.12",
+    "network_zone": "internet_facing",
+    "asset_criticality": 4,
+    "data_sensitivity": 5,
+    "business_impact": 4,
+    "owner": "Web Services",
+    "notes": "Patient-facing portal; PHI display, no storage."
+  },
+  {
+    "asset_id": "MHP-03",
+    "hostname": "appt-scheduler-web",
+    "ip": "203.0.113.19",
+    "network_zone": "internet_facing",
+    "asset_criticality": 5,
+    "data_sensitivity": 1,
+    "business_impact": 4,
+    "owner": "Web Services",
+    "notes": "Appointment scheduling only -- names/times, no PHI/diagnosis data. Mission-critical to daily operations despite low data sensitivity."
+  },
+  {
+    "asset_id": "MHP-04",
+    "hostname": "lab-results-svc",
+    "ip": "10.20.1.44",
+    "network_zone": "internal",
+    "asset_criticality": 3,
+    "data_sensitivity": 5,
+    "business_impact": 3,
+    "owner": "Lab Integration",
+    "notes": "Internal lab results relay service."
+  },
+  {
+    "asset_id": "MHP-05",
+    "hostname": "staff-wiki",
+    "ip": "10.20.2.5",
+    "network_zone": "isolated",
+    "asset_criticality": 1,
+    "data_sensitivity": 1,
+    "business_impact": 1,
+    "owner": "IT Ops",
+    "notes": "Internal documentation wiki, air-gapped segment."
+  },
+  {
+    "asset_id": "MHP-06",
+    "hostname": "billing-vendor-gateway",
+    "ip": "10.20.1.60",
+    "network_zone": "dmz",
+    "asset_criticality": 4,
+    "data_sensitivity": 4,
+    "business_impact": 4,
+    "owner": "Third-Party Integration",
+    "notes": "Gateway to third-party medical billing clearinghouse (vendor: ClearPath Billing Svcs)."
+  }
+]

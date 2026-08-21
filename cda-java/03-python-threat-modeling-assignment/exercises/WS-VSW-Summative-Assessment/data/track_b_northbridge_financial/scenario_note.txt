@@ -1,0 +1,1 @@
+Scenario focus: financial services / PCI DSS & SOX. Counter-example asset: NBF-03 (stale low-criticality label on a system still handling cardholder data).

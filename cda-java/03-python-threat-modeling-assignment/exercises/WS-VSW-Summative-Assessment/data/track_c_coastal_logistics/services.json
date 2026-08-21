@@ -1,0 +1,56 @@
+{
+  "CLC-01": [
+    {
+      "name": "openssh",
+      "version": "7.1p1",
+      "port": 22,
+      "protocol": "tcp"
+    }
+  ],
+  "CLC-02": [
+    {
+      "name": "nginx",
+      "version": "1.16.1",
+      "port": 443,
+      "protocol": "tcp"
+    }
+  ],
+  "CLC-03": [
+    {
+      "name": "openssl",
+      "version": "1.1.1c",
+      "port": 443,
+      "protocol": "tcp"
+    },
+    {
+      "name": "nginx",
+      "version": "1.21.0",
+      "port": 443,
+      "protocol": "tcp"
+    }
+  ],
+  "CLC-04": [
+    {
+      "name": "openssl",
+      "version": "1.0.2k",
+      "port": 443,
+      "protocol": "tcp"
+    }
+  ],
+  "CLC-05": [
+    {
+      "name": "postgresql",
+      "version": "10.6",
+      "port": 5432,
+      "protocol": "tcp"
+    }
+  ],
+  "CLC-06": [
+    {
+      "name": "apache-tomcat",
+      "version": "9.0.40",
+      "port": 8080,
+      "protocol": "tcp"
+    }
+  ]
+}

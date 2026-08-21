@@ -1,0 +1,1 @@
+Scenario focus: logistics / supply chain, third-party-risk-heavy. Counter-example: internet-facing assets with only moderate impact factors but high-likelihood findings.

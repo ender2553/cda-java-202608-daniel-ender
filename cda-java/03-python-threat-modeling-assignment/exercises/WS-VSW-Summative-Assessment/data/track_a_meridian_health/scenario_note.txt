@@ -1,0 +1,1 @@
+Scenario focus: healthcare / HIPAA. Counter-example asset: MHP-03 (mission-critical, low data sensitivity).

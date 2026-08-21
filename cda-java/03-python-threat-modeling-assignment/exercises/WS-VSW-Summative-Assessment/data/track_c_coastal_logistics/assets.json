@@ -1,0 +1,68 @@
+[
+  {
+    "asset_id": "CLC-01",
+    "hostname": "fleet-tracking-svc",
+    "ip": "10.60.1.10",
+    "network_zone": "internal",
+    "asset_criticality": 4,
+    "data_sensitivity": 2,
+    "business_impact": 4,
+    "owner": "Fleet Ops",
+    "notes": "Real-time vehicle/shipment tracking service."
+  },
+  {
+    "asset_id": "CLC-02",
+    "hostname": "customer-tracking-portal",
+    "ip": "192.0.2.15",
+    "network_zone": "internet_facing",
+    "asset_criticality": 3,
+    "data_sensitivity": 2,
+    "business_impact": 3,
+    "owner": "Web Services",
+    "notes": "Customer shipment-tracking portal."
+  },
+  {
+    "asset_id": "CLC-03",
+    "hostname": "warehouse-mgmt-api",
+    "ip": "192.0.2.28",
+    "network_zone": "internet_facing",
+    "asset_criticality": 3,
+    "data_sensitivity": 2,
+    "business_impact": 3,
+    "owner": "Warehouse Systems",
+    "notes": "API used by handheld scanners in regional warehouses."
+  },
+  {
+    "asset_id": "CLC-04",
+    "hostname": "vendor-edi-gateway",
+    "ip": "10.60.1.75",
+    "network_zone": "dmz",
+    "asset_criticality": 4,
+    "data_sensitivity": 3,
+    "business_impact": 4,
+    "owner": "Third-Party Integration",
+    "notes": "EDI gateway to third-party customs-clearance broker (vendor: PortLink Customs Services)."
+  },
+  {
+    "asset_id": "CLC-05",
+    "hostname": "driver-hr-db",
+    "ip": "10.60.2.12",
+    "network_zone": "internal",
+    "asset_criticality": 2,
+    "data_sensitivity": 4,
+    "business_impact": 2,
+    "owner": "HR Systems",
+    "notes": "Driver personnel records including license and background check data."
+  },
+  {
+    "asset_id": "CLC-06",
+    "hostname": "internal-analytics-dash",
+    "ip": "10.60.2.40",
+    "network_zone": "isolated",
+    "asset_criticality": 1,
+    "data_sensitivity": 1,
+    "business_impact": 1,
+    "owner": "Analytics",
+    "notes": "Internal-only ops dashboard, isolated VLAN."
+  }
+]
