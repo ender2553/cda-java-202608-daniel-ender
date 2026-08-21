@@ -1,0 +1,56 @@
+{
+  "NBF-01": [
+    {
+      "name": "mssql",
+      "version": "2016",
+      "port": 1433,
+      "protocol": "tcp"
+    }
+  ],
+  "NBF-02": [
+    {
+      "name": "nginx",
+      "version": "1.19.2",
+      "port": 443,
+      "protocol": "tcp"
+    },
+    {
+      "name": "openssl",
+      "version": "1.1.1k",
+      "port": 443,
+      "protocol": "tcp"
+    }
+  ],
+  "NBF-03": [
+    {
+      "name": "openssh",
+      "version": "6.6.1p1",
+      "port": 22,
+      "protocol": "tcp"
+    }
+  ],
+  "NBF-04": [
+    {
+      "name": "nginx",
+      "version": "1.22.0",
+      "port": 443,
+      "protocol": "tcp"
+    }
+  ],
+  "NBF-05": [
+    {
+      "name": "postgresql",
+      "version": "11.5",
+      "port": 5432,
+      "protocol": "tcp"
+    }
+  ],
+  "NBF-06": [
+    {
+      "name": "openssl",
+      "version": "1.0.2k",
+      "port": 443,
+      "protocol": "tcp"
+    }
+  ]
+}

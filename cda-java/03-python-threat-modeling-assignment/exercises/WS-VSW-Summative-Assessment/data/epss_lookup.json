@@ -1,0 +1,26 @@
+{
+  "CVE-2014-0160": {
+    "epss_score": 0.12,
+    "epss_percentile": 0.55
+  },
+  "CVE-2018-15473": {
+    "epss_score": 0.03,
+    "epss_percentile": 0.3
+  },
+  "CVE-2022-41741": {
+    "epss_score": 0.08,
+    "epss_percentile": 0.48
+  },
+  "CVE-2020-1938": {
+    "epss_score": 0.31,
+    "epss_percentile": 0.85
+  },
+  "CVE-2020-14349": {
+    "epss_score": 0.01,
+    "epss_percentile": 0.15
+  },
+  "CVE-2019-1068": {
+    "epss_score": 0.05,
+    "epss_percentile": 0.4
+  }
+}
