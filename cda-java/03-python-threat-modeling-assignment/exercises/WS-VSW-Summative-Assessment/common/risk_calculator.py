@@ -59,7 +59,17 @@ def normalize_cvss_to_scale(cvss_base_score):
 
     TODO: implement this function.
     """
-    raise NotImplementedError("TODO: implement normalize_cvss_to_scale")
+    #raise NotImplementedError("TODO: implement normalize_cvss_to_scale")
+
+    if cvss_base_score >= 8:
+        return 5
+    if cvss_base_score >= 6:
+        return 4
+    if cvss_base_score >= 4:
+        return 3
+    if cvss_base_score >= 2:
+        return 2
+    return 1
 
 
 def normalize_epss_to_scale(epss_score):
@@ -73,8 +83,17 @@ def normalize_epss_to_scale(epss_score):
 
     TODO: implement this function.
     """
-    raise NotImplementedError("TODO: implement normalize_epss_to_scale")
+    #raise NotImplementedError("TODO: implement normalize_epss_to_scale")
 
+    if epss_score >= 0.75:
+        return 5
+    if epss_score >= 0.5:
+        return 4
+    if epss_score >= 0.25:
+        return 3
+    if epss_score >= 0.1:
+        return 2
+    return 1
 
 def compute_likelihood(finding, epss_score, exploit_availability):
     """
@@ -88,8 +107,15 @@ def compute_likelihood(finding, epss_score, exploit_availability):
 
     TODO: implement this function.
     """
-    raise NotImplementedError("TODO: implement compute_likelihood")
+    #raise NotImplementedError("TODO: implement compute_likelihood")
 
+    cvss_scaled = normalize_cvss_to_scale(finding["cvss_base_score"])
+    epss_scaled = normalize_epss_to_scale(epss_score)
+    return (
+        cvss_scaled * LIKELIHOOD_WEIGHTS["cvss"]
+        + epss_scaled * LIKELIHOOD_WEIGHTS["epss"]
+        + exploit_availability * LIKELIHOOD_WEIGHTS["exploit_availability"]
+    )
 
 def compute_impact(asset):
     """
@@ -99,8 +125,13 @@ def compute_impact(asset):
 
     TODO: implement this function.
     """
-    raise NotImplementedError("TODO: implement compute_impact")
+    #raise NotImplementedError("TODO: implement compute_impact")
 
+    return (
+        asset["asset_criticality"] * IMPACT_WEIGHTS["asset_criticality"]
+        + asset["data_sensitivity"] * IMPACT_WEIGHTS["data_sensitivity"]
+        + asset["business_impact"] * IMPACT_WEIGHTS["business_impact"]
+    )
 
 def compute_risk_score(likelihood, impact):
     """
@@ -109,8 +140,10 @@ def compute_risk_score(likelihood, impact):
 
     TODO: implement this function.
     """
-    raise NotImplementedError("TODO: implement compute_risk_score; You got this one! It's just a simple multiplication and rounding.")
+    #raise NotImplementedError("TODO: implement compute_risk_score; You got this one! It's just a simple multiplication and rounding.")
 
+    return round(likelihood * impact, 2)
+        
 
 def build_risk_register(track_dir, epss_path, exploit_intel_path, intel_update_path=None):
     """

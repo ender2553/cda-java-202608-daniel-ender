@@ -46,7 +46,17 @@ def parse_version(version_str):
     # HINT: version_str.split(".") gives you the dot-separated segments.
     # For each segment, keep only the leading digit characters, then
     # convert what you kept to an int.
-    raise NotImplementedError("TODO: implement parse_version")
+    
+    parts = []
+    for segment in version_str.split("."):
+        digits = ""
+        for ch in segment:
+            if ch.isdigit():
+                digits += ch
+            else:
+                break
+        parts.append(int(digits) if digits else 0)
+    return tuple(parts)
 
 
 def version_is_below(installed_version, threshold_version):
@@ -56,7 +66,10 @@ def version_is_below(installed_version, threshold_version):
 
     TODO: implement this function using parse_version().
     """
-    raise NotImplementedError("TODO: implement version_is_below; Hint: the function parse_version() - you have already written above, and you can call it here.")
+    #raise NotImplementedError("TODO: implement version_is_below; Hint: the function parse_version() - you have already written above, and you can call it here.")
+
+    return parse_version(installed_version) < parse_version(threshold_version)
+
 
 
 def match_signatures(services_by_asset, signatures):
@@ -71,7 +84,17 @@ def match_signatures(services_by_asset, signatures):
     # HINT: you'll need nested loops -- for each asset_id/services pair in
     # services_by_asset.items(), for each service in services, for each
     # sig in signatures, check the two conditions above.
-    raise NotImplementedError("TODO: implement match_signatures")
+    
+
+    matches = []
+    for asset_id, services in services_by_asset.items():
+        for service in services:
+            for sig in signatures:
+                if service["name"] != sig["service_match"]:
+                    continue
+                if version_is_below(service["version"], sig["vulnerable_below"]):
+                    matches.append((asset_id, service, sig))
+    return matches
 
 
 def build_finding(asset, service, signature):
@@ -84,8 +107,25 @@ def build_finding(asset, service, signature):
 
     TODO: implement this function.
     """
-    raise NotImplementedError("TODO: implement build_finding")
+    #raise NotImplementedError("TODO: implement build_finding")
 
+    return {
+        "plugin_id": signature["plugin_id"],
+        "plugin_name": signature["plugin_name"],
+        "severity": signature["severity"],
+        "host": asset["hostname"],
+        "asset_id": asset["asset_id"],
+        "ip": asset["ip"],
+        "port": service["port"],
+        "protocol": service["protocol"],
+        "service": service["name"],
+        "installed_version": service["version"],
+        "cve": signature["cve"],
+        "cvss_vector": signature["cvss_vector"],
+        "cvss_base_score": signature["cvss_base_score"],
+        "description": signature["description"],
+        "solution": signature["solution"]
+    }
 
 SEVERITY_ORDER = {"critical": 0, "high": 1, "medium": 2, "low": 3, "info": 4}
 

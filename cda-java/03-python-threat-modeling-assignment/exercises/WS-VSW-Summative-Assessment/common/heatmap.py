@@ -43,8 +43,10 @@ def bucket_score(score):
     """
     # HINT: Python's built-in round() gets you most of the way. Then make
     # sure the result can't go below 1 or above 5 -- think about min()/max().
-    raise NotImplementedError("TODO: implement bucket_score")
+    # raise NotImplementedError("TODO: implement bucket_score")
 
+    bucket = round(score)
+    return max(1, min(5, bucket))
 
 def build_grid(register):
     """
@@ -61,7 +63,15 @@ def build_grid(register):
     # HINT: start with grid = [[[] for _ in range(5)] for _ in range(5)],
     # then loop over `register` and append each finding's label into the
     # right cell.
-    raise NotImplementedError("TODO: implement build_grid")
+    # raise NotImplementedError("TODO: implement build_grid")
+
+    grid = [[[] for _ in range(5)] for _ in range(5)]
+    for finding in register:
+        li = bucket_score(finding["likelihood_score"])
+        im = bucket_score(finding["impact_score"])
+        label = f"{finding['host']}: {finding['plugin_name']}"
+        grid[im - 1][li - 1].append(label)
+    return grid
 
 
 def grid_counts(grid):
