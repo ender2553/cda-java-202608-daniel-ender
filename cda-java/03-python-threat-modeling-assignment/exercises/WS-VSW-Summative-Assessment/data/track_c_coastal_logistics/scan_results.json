@@ -1,0 +1,53 @@
+[
+  {
+    "plugin_id": "WS-10003",
+    "plugin_name": "nginx Range Filter Integer Overflow",
+    "severity": "high",
+    "host": "customer-tracking-portal",
+    "asset_id": "CLC-02",
+    "ip": "192.0.2.15",
+    "port": 443,
+    "protocol": "tcp",
+    "service": "nginx",
+    "installed_version": "1.16.1",
+    "cve": "CVE-2022-41741",
+    "cvss_vector": "AV:N/AC:L/Au:N/C:N/I:N/A:C",
+    "cvss_base_score": 7.5,
+    "description": "Integer overflow in the range filter module can lead to worker process crash or memory disclosure.",
+    "solution": "Upgrade nginx to 1.21.0 or later."
+  },
+  {
+    "plugin_id": "WS-10002",
+    "plugin_name": "OpenSSH Pre-Authentication User Enumeration",
+    "severity": "medium",
+    "host": "fleet-tracking-svc",
+    "asset_id": "CLC-01",
+    "ip": "10.60.1.10",
+    "port": 22,
+    "protocol": "tcp",
+    "service": "openssh",
+    "installed_version": "7.1p1",
+    "cve": "CVE-2018-15473",
+    "cvss_vector": "AV:N/AC:L/Au:N/C:P/I:N/A:N",
+    "cvss_base_score": 5.3,
+    "description": "OpenSSH server allows remote attackers to enumerate valid usernames via crafted authentication requests.",
+    "solution": "Upgrade OpenSSH to 7.4 or later."
+  },
+  {
+    "plugin_id": "WS-10005",
+    "plugin_name": "PostgreSQL Privilege Escalation via ALTER ... DEPENDS ON EXTENSION",
+    "severity": "medium",
+    "host": "driver-hr-db",
+    "asset_id": "CLC-05",
+    "ip": "10.60.2.12",
+    "port": 5432,
+    "protocol": "tcp",
+    "service": "postgresql",
+    "installed_version": "10.6",
+    "cve": "CVE-2020-14349",
+    "cvss_vector": "AV:N/AC:H/Au:S/C:P/I:P/A:N",
+    "cvss_base_score": 4.8,
+    "description": "Certain search-path handling allows a low-privilege user to execute code as the extension owner.",
+    "solution": "Upgrade PostgreSQL to 12.4 or later; audit extension ownership."
+  }
+]
