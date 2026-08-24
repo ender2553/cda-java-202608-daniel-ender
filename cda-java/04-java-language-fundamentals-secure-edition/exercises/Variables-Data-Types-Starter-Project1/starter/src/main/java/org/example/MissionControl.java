@@ -35,7 +35,9 @@ public class MissionControl {
     //         value 6. Return crewCount.
     public static int getCrewCount() {
         // your code here
-        return 0;
+       int crewCount = 6;
+
+        return crewCount;
     }
 
 
@@ -50,7 +52,10 @@ public class MissionControl {
     //         Return the final value of oxygenLevel.
     public static double getUpdatedOxygenLevel() {
         // your code here
-        return 0.0;
+        double oxygenLevel = 98.5;
+        oxygenLevel = 95.2;
+
+        return oxygenLevel;
     }
 
 
@@ -62,28 +67,32 @@ public class MissionControl {
     //         it true. Return missionActive.
     public static boolean isMissionActive() {
         // your code here
-        return false;
+        boolean missionActive = true;
+        return missionActive;
     }
 
     // TODO 4: Declare a char variable named commanderInitial and assign
     //         it 'R'. Return commanderInitial.
     public static char getCommanderInitial() {
         // your code here
-        return ' ';
+        char commanderInitial = 'R';
+        return commanderInitial;
     }
 
     // TODO 5: Declare a byte variable named crewBadgeNumber and assign
     //         it 42. Return crewBadgeNumber.
     public static byte getCrewBadgeNumber() {
         // your code here
-        return 0;
+        byte crewBadgeNumber = 42;
+        return crewBadgeNumber;
     }
 
     // TODO 6: Declare a short variable named orbitNumber and assign it
     //         1200. Return orbitNumber.
     public static short getOrbitNumber() {
         // your code here
-        return 0;
+        short orbitNumber = 1200;
+        return orbitNumber;
     }
 
     // TODO 7: Declare a long variable named totalTelemetryPackets and
@@ -92,7 +101,8 @@ public class MissionControl {
     //         long literals need. Return totalTelemetryPackets.
     public static long getTotalTelemetryPackets() {
         // your code here
-        return 0L;
+        long totalTelemetryPackets = 5000000000L;
+        return totalTelemetryPackets;
     }
 
     // TODO 8: Declare a float variable named fuelBurnRate and assign it
@@ -100,14 +110,16 @@ public class MissionControl {
     //         Return fuelBurnRate.
     public static float getFuelBurnRate() {
         // your code here
-        return 0f;
+        float fuelBurnRate = 2.75f;
+        return fuelBurnRate;
     }
 
     // TODO 9: Declare a double variable named preciseTrajectory and
     //         assign it 12.34567891. Return preciseTrajectory.
     public static double getPreciseTrajectory() {
         // your code here
-        return 0.0;
+        double preciseTrajectory = 12.34567891;
+        return preciseTrajectory;
     }
 
 
@@ -121,7 +133,8 @@ public class MissionControl {
     //          Return altitudeAsDouble.
     public static double widenAltitude(int altitudeMeters) {
         // your code here
-        return 0.0;
+        double altitudeAsDouble = altitudeMeters;
+        return altitudeAsDouble;
     }
 
     // TODO 11: This method receives a double, rawSignal. Narrow it into
@@ -131,6 +144,7 @@ public class MissionControl {
     //          Return signalStrength.
     public static int narrowSignal(double rawSignal) {
         // your code here
-        return 0;
+        int signalStrength = (int) rawSignal;
+        return signalStrength;
     }
 }
