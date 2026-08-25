@@ -1,4 +1,4 @@
-/*
+package org.example;/*
  * ============================================================
  * INDIVIDUAL GRADED LAB — Day 2
  * Vulnerability Triage Classifier
@@ -50,6 +50,8 @@ public class TriageClassifier {
         // Example prompt: "Enter severity (LOW, MEDIUM, HIGH, CRITICAL): "
         // ------------------------------------------------------------
 
+        System.out.print("Enter severity (SMALL, MEDIUM, LARGE, X_LARGE): ");
+        String severityInput = input.nextLine();
 
         // ------------------------------------------------------------
         // TODO 2: Safely convert the text the analyst typed into a
@@ -72,6 +74,20 @@ public class TriageClassifier {
         // Severity-typed variable.
         // ------------------------------------------------------------
 
+        Severity severity;
+
+        if (severityInput.equalsIgnoreCase("SMALL")) {
+            severity = Severity.SMALL;
+        } else if (severityInput.equalsIgnoreCase("MEDIUM")) {
+            severity = Severity.MEDIUM;
+        } else if (severityInput.equalsIgnoreCase("LARGE")) {
+            severity = Severity.LARGE;
+        } else if (severityInput.equalsIgnoreCase("X_LARGE")) {
+            severity = Severity.X_LARGE;
+        } else {
+            // Fail-secure default for invalid input
+            severity = Severity.X_LARGE;
+        }
 
         // ------------------------------------------------------------
         // TODO 3: Use a switch statement on your Severity variable to
@@ -87,6 +103,19 @@ public class TriageClassifier {
         //   }
         // ------------------------------------------------------------
 
+        switch (severity) {
+            case SMALL ->
+                    System.out.println("SLA: Fix within 30 days. Recommended action: Monitor and schedule remediation.");
+
+            case MEDIUM ->
+                    System.out.println("SLA: Fix within 14 days. Recommended action: Apply a security patch.");
+
+            case LARGE ->
+                    System.out.println("SLA: Fix within 7 days. Recommended action: Prioritize remediation.");
+
+            case X_LARGE ->
+                    System.out.println("SLA: Fix within 24 hours. Recommended action: Immediate remediation and escalation.");
+        }
 
         // ------------------------------------------------------------
         // TODO 4 (CHECK YOUR FAIL-SECURE LOGIC):

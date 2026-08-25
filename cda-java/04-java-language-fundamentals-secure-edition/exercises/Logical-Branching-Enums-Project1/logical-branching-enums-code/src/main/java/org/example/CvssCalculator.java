@@ -1,4 +1,4 @@
-/*
+package org.example;/*
  * ============================================================
  * INDIVIDUAL GRADED LAB — Day 1/2
  * CVSS Score Calculator
@@ -40,20 +40,27 @@ public class CvssCalculator {
         Scanner input = new Scanner(System.in);
 
         // ------------------------------------------------------------
+
         // TODO 1: Declare a variable to hold the "Attack Vector" metric
         // as a double. Prompt the analyst to enter a value (suggest a
         // scale of your choosing, e.g., 0.0-2.0), and read it with
         // input.nextDouble().
-        //
         // Example prompt text: "Enter Attack Vector score (0.0-2.0): "
-        // ------------------------------------------------------------
 
+        // ------------------------------------------------------------
+        double attackVector;
+
+        System.out.print("Enter Attack Vector value (0.0-5.0): ");
+        attackVector = input.nextDouble();
 
         // ------------------------------------------------------------
         // TODO 2: Declare a variable to hold the "Attack Complexity"
         // metric as a double. Prompt and read it the same way as TODO 1.
         // ------------------------------------------------------------
+        double attackComplexity;
 
+        System.out.print("Enter Attack Complexity value (0.0-5.0): ");
+        attackComplexity = input.nextDouble();
 
         // ------------------------------------------------------------
         // TODO 3: Declare a variable to hold the "Impact" metric as a
@@ -62,6 +69,11 @@ public class CvssCalculator {
         // (This satisfies the "at least 3 numeric inputs" requirement.
         // Feel free to add a 4th or 5th metric for extra realism.)
         // ------------------------------------------------------------
+        double impact;
+
+        System.out.print("Enter Impact value (0.0-5.0): ");
+        impact = input.nextDouble();
+
 
 
         // ------------------------------------------------------------
@@ -76,6 +88,7 @@ public class CvssCalculator {
         // Store the result in a double variable.
         // ------------------------------------------------------------
 
+        double combinedScore = attackVector + attackComplexity + impact;
 
         // ------------------------------------------------------------
         // TODO 5: Print the combined score using System.out.printf with
@@ -85,6 +98,7 @@ public class CvssCalculator {
         // Example: System.out.printf("Combined Score: %.1f%n", combinedScore);
         // ------------------------------------------------------------
 
+        System.out.printf("Combined Score: %.1f%n", combinedScore);
 
         // ------------------------------------------------------------
         // TODO 6: Using a chain of if / else if / else statements,
@@ -105,6 +119,15 @@ public class CvssCalculator {
         //   }
         // ------------------------------------------------------------
 
+        if (combinedScore >= 12.0) {
+            System.out.println("CRITICAL");
+        } else if (combinedScore >= 9.0) {
+            System.out.println("HIGH");
+        } else if (combinedScore >= 6.0) {
+            System.out.println("MEDIUM");
+        } else {
+            System.out.println("LOW");
+        }
 
         input.close();
     }

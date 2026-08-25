@@ -1,4 +1,4 @@
-/*
+package org.example;/*
  * ============================================================
  * INDIVIDUAL GRADED LAB — Day 2
  * Vulnerability Triage Classifier
@@ -17,7 +17,7 @@
  * ============================================================
  */
 
-public enum Severity {
+
 
     // TODO: list your severity values here, separated by commas.
     // Example shape (do not just copy this — think about whether you
@@ -25,4 +25,10 @@ public enum Severity {
     //
     //     LOW, MEDIUM, HIGH, CRITICAL
 
+
+public enum Severity {
+    SMALL,
+    MEDIUM,
+    LARGE,
+    X_LARGE
 }
