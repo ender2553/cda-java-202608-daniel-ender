@@ -42,6 +42,7 @@ public class PortScanner {
         // Feel free to use different values than this example.
         // ------------------------------------------------------------
 
+        int[] openPorts = {22, 80, 443, 3389, 8080, 20, 25};
 
         // ------------------------------------------------------------
         // TODO 2: Declare a second int array representing KNOWN-
@@ -51,6 +52,7 @@ public class PortScanner {
         // can test that a match is correctly detected.
         // ------------------------------------------------------------
 
+        int[] vulnerablePorts = {21, 23, 3389, 20};
 
         // ------------------------------------------------------------
         // TODO 3: Using nested loops (a loop inside a loop), compare
@@ -58,8 +60,8 @@ public class PortScanner {
         // your known-vulnerable array. When you find a match, print a
         // finding, e.g.:
         //     "FINDING: Port 3389 is open and matches a known-vulnerable port!"
-	    //
-	    //
+        //
+        //
         // Structure hint:
         //   for (int i = 0; i < openPorts.length; i++) {
         //       for (int j = 0; j < knownVulnerablePorts.length; j++) {
@@ -69,11 +71,20 @@ public class PortScanner {
         //
         // IMPORTANT: double-check your loop conditions use < and NOT <=
         // against .length. This is the exact bug from today's lecture.
-	    //
-	    //
-	    // NOTE: THERE IS A BETTER WAY TO HANDLE THIS OTHER THAN NESTED FOR LOOPS - WILL COVER THIS LATER.
+        //
+        //
+        // NOTE: THERE IS A BETTER WAY TO HANDLE THIS OTHER THAN NESTED FOR LOOPS - WILL COVER THIS LATER.
         // ------------------------------------------------------------
 
+        for (int i = 0; i < openPorts.length; i++) {
+            for (int j = 0; j < vulnerablePorts.length; j++) {
+
+                if (openPorts[i] == vulnerablePorts[j]) {
+                    System.out.println("FINDING: Port " + openPorts[i]
+                            + " is open and matches a known-vulnerable port!");
+                }
+            }
+        }
 
         // ------------------------------------------------------------
         // TODO 4: Track whether ANY finding was reported (e.g., with a
@@ -83,10 +94,28 @@ public class PortScanner {
         // the analyst with no output at all if nothing matched.
         // ------------------------------------------------------------
 
+        boolean findingReported = false;
+
+        for (int i = 0; i < openPorts.length; i++) {
+            for (int j = 0; j < vulnerablePorts.length; j++) {
+
+                if (openPorts[i] == vulnerablePorts[j]) {
+                    System.out.println("FINDING: Port " + openPorts[i]
+                            + " is open and matches a known-vulnerable port!");
+
+                    findingReported = true;
+                }
+            }
+        }
+
+        if (!findingReported) {
+            System.out.println("No known-vulnerable ports found.");
+        }
 
     }
 
 }
+
 
 /*
  * ============================================================
