@@ -24,26 +24,26 @@ public class PatchPriorityCodeAlong {
     public static void main(String[] args) {
 
         System.out.println("=== Step 1: The Problem (monolithic, repeated logic) ===");
-        demoMonolithicVersion();
+        //demoMonolithicVersion();
 
         System.out.println();
         System.out.println("=== Step 2: The Fix (decomposed, validated methods) ===");
 
         // ---- Happy path: two-factor version ----
-        double urgency = calculateUrgency(8.0);
-        double effort = calculateEffort(3.0);
-        double priority = calculatePatchPriority(urgency, effort);
-        String label = getPriorityLabel(priority);
-        System.out.printf("Two-factor priority: %.1f (%s)%n", priority, label);
+       // double urgency = calculateUrgency(8.0);
+       // double effort = calculateEffort(3.0);
+       // double priority = calculatePatchPriority(urgency, effort);
+       // String label = getPriorityLabel(priority);
+       //System.out.printf("Two-factor priority: %.1f (%s)%n", priority, label);
 
         // ---- Happy path: three-factor OVERLOADED version ----
-        double businessImpact = calculateBusinessImpact(9.0);
-        double priorityWithImpact = calculatePatchPriority(urgency, effort, businessImpact);
-        String labelWithImpact = getPriorityLabel(priorityWithImpact);
-        System.out.printf("Three-factor priority: %.1f (%s)%n", priorityWithImpact, labelWithImpact);
+        //double businessImpact = calculateBusinessImpact(9.0);
+        //double priorityWithImpact = calculatePatchPriority(urgency, effort, businessImpact);
+        //String labelWithImpact = getPriorityLabel(priorityWithImpact);
+        //System.out.printf("Three-factor priority: %.1f (%s)%n", priorityWithImpact, labelWithImpact);
 
-        System.out.println();
-        System.out.println("=== Step 3: Validation Actually Works ===");
+        //System.out.println();
+        //System.out.println("=== Step 3: Validation Actually Works ===");
         // ------------------------------------------------------------
         // TODO 1: Call calculateUrgency(-5.0) inside a try/catch block.
         // In the catch block (catching IllegalArgumentException),
@@ -51,14 +51,13 @@ public class PatchPriorityCodeAlong {
         // including e.getMessage().
         //
         // Example shape:
-        //   try {
-        //       calculateUrgency(-5.0);
-        //   } catch (IllegalArgumentException e) {
-        //       System.out.println("Correctly rejected invalid input: " + e.getMessage());
-        //   }
-        // ------------------------------------------------------------
+//           try {
+//               calculateUrgency(-5.0);
+//           } catch (IllegalArgumentException e) {
+//               System.out.println("Correctly rejected invalid input: " + e.getMessage());
+//           }
+         //------------------------------------------------------------
 
-    }
 
     // ------------------------------------------------------------
     // STEP 1: THE PROBLEM (already written - just run it and review)
@@ -67,7 +66,7 @@ public class PatchPriorityCodeAlong {
     // pasted for two different "systems." No validation anywhere.
     // DISCUSS: if this formula had a bug, how many places would we
     // need to fix it?
-    private static void demoMonolithicVersion() {
+    //private static void demoMonolithicVersion() {
         double system1Urgency = 8.0;
         double system1Effort = 3.0;
         double system1Priority = (system1Urgency + system1Effort) / 2.0; // no validation!
@@ -113,6 +112,8 @@ public class PatchPriorityCodeAlong {
     //
     // public static double calculateEffort(double rawValue) {
     //     // your code here
+
+
     // }
 
 

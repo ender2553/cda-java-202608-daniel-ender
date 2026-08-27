@@ -65,12 +65,42 @@ public class RiskCalculatorRefactored {
     //   }
     // ------------------------------------------------------------
 
+    /**
+     * Validates and returns a likelihood value.
+     *
+     * @param rawValue the raw likelihood input, expected 0-10
+     * @return the validated likelihood value
+     * @throws IllegalArgumentException if rawValue is outside 0-10
+     */
+    public static double calculateLikelihood(double rawValue) {
+        if (rawValue < 0.0 || rawValue > 10.0) {
+            throw new IllegalArgumentException("Likelihood must be 0-10");
+        }
+
+        return rawValue;
+    }
+
 
     // ------------------------------------------------------------
     // TODO 2: Write a method calculateImpact() following the same
     // pattern as TODO 1, but representing the impact metric. Don't
     // forget its Javadoc comment too.
     // ------------------------------------------------------------
+
+    /**
+     * Validates and returns an impact value.
+     *
+     * @param rawValue the raw impact input, expected 0-10
+     * @return the validated impact value
+     * @throws IllegalArgumentException if rawValue is outside 0-10
+     */
+    public static double calculateImpact(double rawValue) {
+        if (rawValue < 0.0 || rawValue > 10.0) {
+            throw new IllegalArgumentException("Impact must be 0-10");
+        }
+
+        return rawValue;
+    }
 
 
     // ------------------------------------------------------------
@@ -85,6 +115,16 @@ public class RiskCalculatorRefactored {
     // method doesn't validate anything, so it can't throw.
     // ------------------------------------------------------------
 
+    /**
+     * Calculates the overall risk score using likelihood and impact.
+     *
+     * @param likelihood the validated likelihood value
+     * @param impact the validated impact value
+     * @return the calculated risk score
+     */
+    public static double calculateRiskScore(double likelihood, double impact) {
+        return likelihood * impact;
+    }
 
     // ------------------------------------------------------------
     // TODO 4: Write a method getSeverityLabel(double riskScore) that
@@ -94,8 +134,27 @@ public class RiskCalculatorRefactored {
     // Give it a Javadoc comment with @param and @return.
     // ------------------------------------------------------------
 
+    /**
+     * Assigns the severity label based on the calculated risk score.
+     *
+     * @param riskScore the calculated risk score
+     * @return LOW, MEDIUM, HIGH, or CRITICAL based on the risk score
+     */
+    public static String getSeverityLabel(double riskScore) {
+        if (riskScore < 25.0) {
+            return "LOW";
+        } else if (riskScore < 50.0) {
+            return "MEDIUM";
+        } else if (riskScore < 75.0) {
+            return "HIGH";
+        } else {
+            return "CRITICAL";
+        }
+    }
+
 
     public static void main(String[] args) {
+
 
         // ------------------------------------------------------------
         // TODO 5: Call your methods in sequence to calculate and print
@@ -110,6 +169,13 @@ public class RiskCalculatorRefactored {
         //   String severity = getSeverityLabel(riskScore);
         //   System.out.printf("Risk Score: %.1f (%s)%n", riskScore, severity);
         // ------------------------------------------------------------
+
+        double likelihood = calculateLikelihood(4.0);
+        double impact = calculateImpact(6.0);
+        double riskScore = calculateRiskScore(likelihood, impact);
+        String severity = getSeverityLabel(riskScore);
+
+        System.out.printf("Risk Score: %.1f (%s)%n", riskScore, severity);
 
 
         // ------------------------------------------------------------
@@ -126,9 +192,21 @@ public class RiskCalculatorRefactored {
         //   }
         // ------------------------------------------------------------
 
-    }
+        try {
+            calculateLikelihood(-5.0);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Correctly rejected: " + e.getMessage());
 
+        }
+
+    }
 }
+
+
+
+
+
+
 
 /*
  * ============================================================
