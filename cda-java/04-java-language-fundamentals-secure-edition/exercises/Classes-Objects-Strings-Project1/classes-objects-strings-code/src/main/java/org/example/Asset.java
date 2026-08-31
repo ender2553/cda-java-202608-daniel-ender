@@ -50,20 +50,74 @@ public class Asset {
 
     // TODO 1: declare your fields here.
 
+    private String assetName;
+    private String owner;
+    private String location;
 
     // TODO 2: write your constructor here.
 
+    public Asset(String assetName, String owner, String location) {
+        this.assetName = assetName;
+        this.owner = owner;
+        this.location = location;
+    }
 
     // TODO 3: write your isOwnedBy(String candidateOwner) method here.
 
+    public boolean isOwnedBy(String candidateOwner) {
+        return this.owner.equals(candidateOwner);
+    }
 
     // TODO 4: write your countCriticalVulnerabilities(Vulnerability[] findings) method here.
 
+    public int countCriticalVulnerabilities(Vulnerability[] findings) {
+        int count = 0;
+
+        for (Vulnerability finding : findings) {
+            if (finding.isCritical()) {
+                count++;
+            }
+        }
+
+        return count;
+    }
 
     // TODO 5: write your getTotalRemediationCost(Vulnerability[] findings) method here.
 
+    public BigDecimal getTotalRemediationCost(Vulnerability[] findings) {
+        BigDecimal total = BigDecimal.ZERO;
+
+        for (Vulnerability finding : findings) {
+            total = total.add(finding.getEstimatedRemediationCost());
+        }
+
+        return total;
+    }
 
     // TODO 6: write your countOverdueVulnerabilities(Vulnerability[] findings) method here.
 
+    public int countOverdueVulnerabilities(Vulnerability[] findings) {
+        int count = 0;
 
+        for (Vulnerability finding : findings) {
+            if (finding.isOverdue()) {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
+    public String getAssetName() {
+        return this.assetName;
+    }
+
+    public String getOwner() {
+        return this.owner;
+    }
+
+    public String getLocation() {
+        return this.location;
+    }
 }
+

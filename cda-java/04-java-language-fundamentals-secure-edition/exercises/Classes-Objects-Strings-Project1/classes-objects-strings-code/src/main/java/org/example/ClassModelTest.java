@@ -59,6 +59,33 @@ public class ClassModelTest {
         // LocalDate.now() so it will NOT be overdue yet.
         // ------------------------------------------------------------
 
+        Vulnerability finding1 = new Vulnerability(
+                "CVE-2020-1938",
+                "Tomcat",
+                "9.0.30",
+                Severity.CRITICAL,
+                new BigDecimal("1500.00"),
+                LocalDate.of(2026, 1, 15)
+        );
+
+        Vulnerability finding2 = new Vulnerability(
+                "CVE-2020-1938",
+                "Apache Tomcat",
+                "9.0.40",
+                Severity.HIGH,
+                new BigDecimal("2000.00"),
+                LocalDate.now()
+        );
+
+        Vulnerability finding3 = new Vulnerability(
+                "CVE-2024-1234",
+                "OpenSSL",
+                "3.0.1",
+                Severity.MEDIUM,
+                new BigDecimal("750.00"),
+                LocalDate.of(2026, 1, 15)
+        );
+
 
         // ------------------------------------------------------------
         // TODO 2: Print each Vulnerability object directly (e.g.,
@@ -68,6 +95,9 @@ public class ClassModelTest {
         // string.
         // ------------------------------------------------------------
 
+        System.out.println(finding1);
+        System.out.println(finding2);
+        System.out.println(finding3);
 
         // ------------------------------------------------------------
         // TODO 3: Call .equals() between your two same-cveId objects
@@ -76,6 +106,8 @@ public class ClassModelTest {
         // too (should be false).
         // ------------------------------------------------------------
 
+        System.out.println(finding1.equals(finding2));
+        System.out.println(finding1.equals(finding3));
 
         // ------------------------------------------------------------
         // TODO 4: Call isCritical() on at least two of your
@@ -83,6 +115,8 @@ public class ClassModelTest {
         // results.
         // ------------------------------------------------------------
 
+        System.out.println(finding1.isCritical());
+        System.out.println(finding2.isCritical());
 
         // ------------------------------------------------------------
         // TODO 5: Call getRemediationDeadline() and isOverdue() on your
@@ -91,6 +125,11 @@ public class ClassModelTest {
         // true; the fresh finding's should print false.
         // ------------------------------------------------------------
 
+        System.out.println(finding1.getRemediationDeadline());
+        System.out.println(finding1.isOverdue());
+
+        System.out.println(finding2.getRemediationDeadline());
+        System.out.println(finding2.isOverdue());
 
         // ------------------------------------------------------------
         // TODO 6: Create at least one Asset object using your
@@ -98,6 +137,15 @@ public class ClassModelTest {
         // correctly.
         // ------------------------------------------------------------
 
+        Asset asset1 = new Asset(
+                "Web Server",
+                "IT Department",
+                "Austin Data Center"
+        );
+
+        System.out.println("Asset Name: " + asset1.getAssetName());
+        System.out.println("Owner: " + asset1.getOwner());
+        System.out.println("Location: " + asset1.getLocation());
 
         // ------------------------------------------------------------
         // TODO 7: Call isOwnedBy() on your Asset with a String that
@@ -106,6 +154,8 @@ public class ClassModelTest {
         // that result too (should be false).
         // ------------------------------------------------------------
 
+        System.out.println(asset1.isOwnedBy("IT Department"));
+        System.out.println(asset1.isOwnedBy("HR Department"));
 
         // ------------------------------------------------------------
         // TODO 8: Put your Vulnerability objects from TODO 1 into a
@@ -114,6 +164,16 @@ public class ClassModelTest {
         // on your Asset with that array, and print all three results.
         // ------------------------------------------------------------
 
+        Vulnerability[] findings = {finding1, finding2, finding3};
+
+        System.out.println("Critical vulnerabilities: "
+                + asset1.countCriticalVulnerabilities(findings));
+
+        System.out.println("Total remediation cost: $"
+                + asset1.getTotalRemediationCost(findings));
+
+        System.out.println("Overdue vulnerabilities: "
+                + asset1.countOverdueVulnerabilities(findings));
 
     }
 
