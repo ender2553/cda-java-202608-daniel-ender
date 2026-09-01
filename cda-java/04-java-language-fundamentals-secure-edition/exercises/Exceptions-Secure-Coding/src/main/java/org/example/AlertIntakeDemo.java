@@ -70,20 +70,69 @@ public class AlertIntakeDemo {
 
         // TODO 1: create your AlertIntake here.
 
+        AlertIntake intake = new AlertIntake();
 
         // TODO 2: open the feed with try-with-resources, loop over
         // fetchRawLines(), and handle each addAlert() call with the
         // two-surface pattern described above.
 
+        try (AlertFeedConnection feed = new AlertFeedConnection("SecurityFeed")) {
+
+            for (String rawLine : feed.fetchRawLines()) {
+
+                try {
+                    intake.addAlert(rawLine);
+
+                } catch (InvalidAlertException e) {
+                    String referenceId =
+                            UUID.randomUUID().toString().substring(0, 8);
+
+                    System.out.println(
+                            "[SERVER LOG] Ref=" + referenceId
+                                    + " Error=" + e.getMessage()
+                                    + " RawLine=" + rawLine
+                    );
+
+                    System.out.println(
+                            "Sorry, we couldn't process that alert. "
+                                    + "Reference ID: " + referenceId
+                    );
+                }
+            }
+        }
 
         // TODO 3: print your summary here.
+
+        System.out.println("Total accepted alerts: " + intake.getAllAlerts().size());
+        System.out.println("Unique CVE IDs: " + intake.getUniqueCveIds());
+        System.out.println("HIGH alerts: " + intake.countBySeverity(Severity.HIGH));
+        System.out.println("CRITICAL alerts: " + intake.countBySeverity(Severity.CRITICAL));
 
 
         // TODO 4: demonstrate defensive encapsulation here.
 
+        try {
+            intake.getAllAlerts().add(null);
+        } catch (UnsupportedOperationException e) {
+            System.out.println("Confirmed: alert list cannot be modified.");
+        }
+
+        try {
+            intake.getUniqueCveIds().add("HACKED");
+        } catch (UnsupportedOperationException e) {
+            System.out.println("Confirmed: CVE ID set cannot be modified.");
+        }
     }
 
 }
+
+
+
+
+
+
+
+
 
 /*
  * ============================================================

@@ -21,8 +21,17 @@ package org.example;
  *     it in the message shown elsewhere.
  * ============================================================
  */
-public class InvalidAlertException extends RuntimeException {
 
     // TODO 1 and 2: write both constructors here.
 
+
+public class InvalidAlertException extends RuntimeException {
+
+    public InvalidAlertException(String message) {
+        super(message);
+    }
+
+    public InvalidAlertException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

@@ -37,16 +37,38 @@ package org.example;
  */
 import java.util.List;
 
-public class AlertFeedConnection {
 
     // TODO 1, 2: declare "implements AutoCloseable" above, add the
     // field, and write the constructor here.
 
+public class AlertFeedConnection implements AutoCloseable {
+
+    private final String name;
+
+    public AlertFeedConnection(String name) {
+        this.name = name;
+        System.out.println("Opened feed connection: " + name);
+    }
 
     // TODO 3: write fetchRawLines() here.
 
+    public List<String> fetchRawLines() {
+        return List.of(
+                "CVE-2024-1234,openssl,HIGH,7.5",
+                "CVE-2024-5678,log4j,CRITICAL,9.8",
+                "CVE-2024-1234,openssl,HIGH,7.5",
+                "NOT-A-CVE,curl,LOW,3.0",
+                "CVE-2024-9999,unknown-lib,SUPER_HIGH,5.0",
+                "CVE-2024-1111,openssl,MEDIUM,999",
+                "CVE-2024-2222,openssl,MEDIUM,not-a-number"
+        );
+    }
 
     // TODO 4: write close() here.
 
+    @Override
+    public void close() {
+        System.out.println("Closed feed connection: " + name);
+    }
 
 }

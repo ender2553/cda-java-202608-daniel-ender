@@ -46,17 +46,43 @@ public class AlertIntake {
 
     // TODO 1: declare your two fields here.
 
+    private final List<Alert> acceptedAlerts = new ArrayList<>();
+    private final Set<String> distinctCveIds = new HashSet<>();
 
     // TODO 2: write addAlert(String rawLine) here.
 
+    public void addAlert(String rawLine) {
+        AlertParser parser = new AlertParser();
+        Alert alert = parser.parseAlertLine(rawLine);
+
+        acceptedAlerts.add(alert);
+        distinctCveIds.add(alert.getCveId());
+    }
 
     // TODO 3: write getAllAlerts() here.
 
+    public List<Alert> getAllAlerts() {
+        return Collections.unmodifiableList(acceptedAlerts);
+    }
 
     // TODO 4: write getUniqueCveIds() here.
 
+    public Set<String> getUniqueCveIds() {
+        return Collections.unmodifiableSet(distinctCveIds);
+    }
 
     // TODO 5: write countBySeverity(Severity target) here.
 
+    public int countBySeverity(Severity target) {
+        int count = 0;
+
+        for (Alert alert : acceptedAlerts) {
+            if (alert.getSeverity() == target) {
+                count++;
+            }
+        }
+
+        return count;
+    }
 
 }

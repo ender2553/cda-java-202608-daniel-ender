@@ -55,11 +55,66 @@ public class AlertParser {
 
     // TODO 1: declare your two length constants here.
 
+    private static final int MAX_LINE_LENGTH = 200;
+    private static final int MAX_COMPONENT_LENGTH = 50;
 
     // TODO 2: declare your anchored CVE_PATTERN here.
 
+    private static final Pattern CVE_PATTERN =
+            Pattern.compile("^CVE-\\d{4}-\\d{4,}$");
 
     // TODO 3: write parseAlertLine(String rawLine) here.
 
+    public Alert parseAlertLine(String rawLine) {
+        // a) LENGTH
+        if (rawLine == null || rawLine.length() > MAX_LINE_LENGTH) {
+            throw new InvalidAlertException("Alert line is null or too long");
+        }
+
+        // b) FORMAT
+        String[] parts = rawLine.split(",");
+        if (parts.length != 4) {
+            throw new InvalidAlertException("Alert line must contain exactly 4 fields");
+        }
+
+        // c) CVE ID
+        String cveId = parts[0].trim();
+        if (!CVE_PATTERN.matcher(cveId).matches()) {
+            throw new InvalidAlertException("Invalid CVE ID: " + cveId);
+        }
+
+        // d) COMPONENT
+        String component = parts[1].trim();
+        if (component.isEmpty() || component.length() > MAX_COMPONENT_LENGTH) {
+            throw new InvalidAlertException("Invalid component: " + component);
+        }
+
+        // e) SEVERITY
+        String severityRaw = parts[2].trim().toUpperCase();
+        Severity severity;
+
+        try {
+            severity = Severity.valueOf(severityRaw);
+        } catch (IllegalArgumentException e) {
+            throw new InvalidAlertException("Invalid severity: " + severityRaw, e);
+        }
+
+        // f) SCORE
+        String scoreRaw = parts[3].trim();
+        double score;
+
+        try {
+            score = Double.parseDouble(scoreRaw);
+        } catch (NumberFormatException e) {
+            throw new InvalidAlertException("Invalid score: " + scoreRaw, e);
+        }
+
+        if (score < 0.0 || score > 10.0) {
+            throw new InvalidAlertException("Score must be between 0.0 and 10.0");
+        }
+
+        // g) Everything passed
+        return new Alert(cveId, component, severity, score);
+    }
 
 }

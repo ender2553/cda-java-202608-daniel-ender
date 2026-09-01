@@ -32,23 +32,70 @@ package org.example;
  * "CVE-2024-1234 [openssl] - HIGH (7.5)".
  * ============================================================
  */
-import java.util.Objects;
 
 public final class Alert {
 
     // TODO 2: declare your four fields here.
 
+    private final String cveID;
+    private String component = "";
+    private final Severity severity;
+    private final double score;
 
     // TODO 3: write your constructor here.
 
+    public Alert(String cveId, String cveID, Severity severity, double score) {
+
+        this.cveID = cveID;
+        this.component = component;
+        this.severity = severity;
+        this.score = score;
+    }
 
     // TODO 4: write your four getters here.
 
+    public String getCveId() {
+        return cveID;
+    }
+
+    public String getComponent() {
+        return component;
+    }
+
+    public Severity getSeverity() {
+        return severity;
+    }
+
+    public double getScore() {
+        return score;
+    }
 
     // TODO 5: override equals() and hashCode() here.
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (!(o instanceof Alert)) {
+            return false;
+        }
+
+        Alert other = (Alert) o;
+        return cveID.equals(other.cveID);
+    }
+
+    @Override
+    public int hashCode() {
+        return cveID.hashCode();
+    }
 
     // TODO 6: override toString() here.
 
+    @Override
+    public String toString() {
+        return cveID + " [" + component + "] - " + severity + " (" + score + ")";
+    }
 
 }
