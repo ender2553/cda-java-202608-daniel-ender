@@ -1,0 +1,12 @@
+[
+  { "host": "10.0.1.15", "port": 22, "protocol": "TCP", "state": "OPEN", "bannerRaw": "SSH-2.0-OpenSSH_9.6" },
+  { "host": "10.0.1.15", "port": 443, "protocol": "TCP", "state": "OPEN", "bannerRaw": "nginx/1.24.0" },
+  { "host": "10.0.1.20", "port": 3389, "protocol": "TCP", "state": "OPEN", "bannerRaw": "" },
+  { "host": "10.0.1.20", "port": 445, "protocol": "TCP", "state": "FILTERED", "bannerRaw": "" },
+  { "host": "10.0.1.30", "port": 53, "protocol": "UDP", "state": "OPEN", "bannerRaw": "dnsmasq-2.90" },
+  { "host": "10.0.1.30", "port": 70000, "protocol": "TCP", "state": "OPEN", "bannerRaw": "" },
+  { "host": "10.0.1.40", "port": 8080, "protocol": "ICMP", "state": "OPEN", "bannerRaw": "" },
+  { "host": "10.0.1.40", "port": 8443, "protocol": "TCP", "state": "UNKNOWN", "bannerRaw": "" },
+  { "host": "10.0.1.50", "port": -1, "protocol": "TCP", "state": "CLOSED", "bannerRaw": "" },
+  { "host": "10.0.1.60", "port": 21, "protocol": "TCP", "state": "OPEN", "bannerRaw": "vsftpd 3.0.5" }
+]

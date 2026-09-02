@@ -1,0 +1,57 @@
+[
+  {
+    "indicatorValue": "198.51.100.23",
+    "indicatorType": "IP",
+    "confidence": 87,
+    "source": "OpenCTI-Sim-Feed",
+    "tags": ["c2", "botnet"]
+  },
+  {
+    "indicatorValue": "malicious-update-server.example.net",
+    "indicatorType": "DOMAIN",
+    "confidence": 72,
+    "source": "OpenCTI-Sim-Feed",
+    "tags": ["phishing"]
+  },
+  {
+    "indicatorValue": "44d88612fea8a8f36de82e1278abb02f7fd7f56d5e5b6f7a4c8b0e3f5a9c1a2b",
+    "indicatorType": "FILE_HASH",
+    "confidence": 95,
+    "source": "MalwareBazaar-Sim",
+    "tags": ["ransomware", "trojan"]
+  },
+  {
+    "indicatorValue": "203.0.113.77",
+    "indicatorType": "IP",
+    "confidence": 150,
+    "source": "OpenCTI-Sim-Feed",
+    "tags": []
+  },
+  {
+    "indicatorValue": "not-a-valid-ip-address",
+    "indicatorType": "IP",
+    "confidence": 60,
+    "source": "OpenCTI-Sim-Feed",
+    "tags": []
+  },
+  {
+    "indicatorValue": "192.0.2.10",
+    "indicatorType": "ROUTER",
+    "confidence": 50,
+    "source": "OpenCTI-Sim-Feed",
+    "tags": []
+  },
+  {
+    "indicatorValue": "192.0.2.55",
+    "indicatorType": "IP",
+    "source": "OpenCTI-Sim-Feed",
+    "tags": []
+  },
+  {
+    "indicatorValue": "evil-payload-host.example.org",
+    "indicatorType": "DOMAIN",
+    "confidence": 80,
+    "source": "OpenCTI-Sim-Feed",
+    "tags": ["c2"]
+  }
+]

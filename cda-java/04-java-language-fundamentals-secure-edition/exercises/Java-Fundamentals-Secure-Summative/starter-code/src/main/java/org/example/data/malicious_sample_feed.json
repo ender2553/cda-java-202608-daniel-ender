@@ -1,0 +1,44 @@
+[
+  { "indicatorValue": "198.51.100.9", "indicatorType": "IP", "confidence": 91, "source": "Trusted-Sim-Feed", "tags": ["c2"] },
+
+  { "indicatorValue": "10.0.0.1; DROP TABLE indicators;--", "indicatorType": "IP", "confidence": 80, "source": "Hostile-Sim-Feed", "tags": [] },
+
+  { "indicatorValue": "<script>alert(document.cookie)</script>", "indicatorType": "DOMAIN", "confidence": 70, "source": "Hostile-Sim-Feed", "tags": ["phishing"] },
+
+  { "indicatorValue": "203.0.113.5", "indicatorType": "ROUTER_MAC", "confidence": 60, "source": "Hostile-Sim-Feed", "tags": [] },
+
+  { "indicatorValue": "203.0.113.5", "indicatorType": "IP", "confidence": 250, "source": "Hostile-Sim-Feed", "tags": [] },
+
+  { "indicatorValue": "203.0.113.6", "indicatorType": "IP", "confidence": -15, "source": "Hostile-Sim-Feed", "tags": [] },
+
+  { "indicatorValue": "203.0.113.7", "indicatorType": "IP", "confidence": 42.7, "source": "Hostile-Sim-Feed", "tags": [] },
+
+  { "indicatorValue": "999.999.999.999", "indicatorType": "IP", "confidence": 50, "source": "Hostile-Sim-Feed", "tags": [] },
+
+  { "indicatorValue": "../../../etc/passwd", "indicatorType": "DOMAIN", "confidence": 55, "source": "Hostile-Sim-Feed", "tags": [] },
+
+  { "indicatorValue": "deadbeef", "indicatorType": "FILE_HASH", "confidence": 88, "source": "Hostile-Sim-Feed", "tags": ["trojan"] },
+
+  { "indicatorValue": "44D88612FEA8A8F36DE82E1278ABB02F7FD7F56D5E5B6F7A4C8B0E3F5A9C1AG", "indicatorType": "FILE_HASH", "confidence": 90, "source": "Hostile-Sim-Feed", "tags": [] },
+
+  { "indicatorValue": "evil-c2.example.com", "indicatorType": "DOMAIN", "confidence": 66, "source": "", "tags": [] },
+
+  { "indicatorValue": "evil-c2-two.example.com", "indicatorType": "DOMAIN", "source": "Hostile-Sim-Feed", "tags": [] },
+
+  { "indicatorValue": "", "indicatorType": "IP", "confidence": 40, "source": "Hostile-Sim-Feed", "tags": [] },
+
+  { "indicatorValue": "phish-relay.example.net", "indicatorType": "domain", "confidence": 73, "source": "Hostile-Sim-Feed", "tags": ["phishing"] },
+
+  { "indicatorValue": "phish-relay-two.example.net", "indicatorType": "DOMAIN", "confidence": "high", "source": "Hostile-Sim-Feed", "tags": [] },
+
+  { "indicatorValue": "phish-relay-three.example.net", "indicatorType": "DOMAIN", "confidence": 62, "source": "Hostile-Sim-Feed", "tags": "not-an-array" },
+
+  { "indicatorValue": "phish-relay-four.example.net", "indicatorType": "DOMAIN", "confidence": 61, "source": "Hostile-Sim-Feed", "tags": ["c2", 12345] },
+
+  { "indicatorValue": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.example.org",
+    "indicatorType": "DOMAIN", "confidence": 58, "source": "Hostile-Sim-Feed", "tags": [] },
+
+  "this-is-not-even-an-object",
+
+  { "indicatorValue": "185.220.101.7", "indicatorType": "IP", "confidence": 84, "source": "Trusted-Sim-Feed", "tags": ["tor-exit"] }
+]
