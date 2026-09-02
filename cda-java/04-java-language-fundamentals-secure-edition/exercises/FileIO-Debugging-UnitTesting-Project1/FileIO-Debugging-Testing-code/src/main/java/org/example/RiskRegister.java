@@ -107,39 +107,177 @@ package org.example;
  * ============================================================
  */
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Set;
+import java.io.*;
+import java.util.*;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 
 public class RiskRegister {
 
     // TODO 1: declare your List<Vulnerability> and Set<String> fields here.
 
 
-    public RiskRegister() {
-        // TODO 1 (continued): initialize both fields here.
+    // TODO 1 (continued): initialize both fields here.
+    private List<Vulnerability> vulnerabilities;
+    private Set<String> uniqueCveIds;
 
+    public void VulnerabilityRegister() {
+        vulnerabilities = new ArrayList<>();
+        uniqueCveIds = new HashSet<>();
     }
 
-    // TODO 2: validateCveId(String candidate)
+    // TODO 2
+    public void validateCveId(String candidate) {
+        if (candidate == null || candidate.isBlank()) {
+            throw new IllegalArgumentException("CVE ID cannot be null or blank.");
+        }
 
+        if (!candidate.matches("CVE-\\d{4}-\\d{4,7}")) {
+            throw new IllegalArgumentException("Invalid CVE ID format: " + candidate);
+        }
+    }
 
-    // TODO 3: validateComponent(String candidate)
+    // TODO 3
+    public void validateComponent(String candidate) {
+        if (candidate == null || candidate.isBlank()) {
+            throw new IllegalArgumentException("Component cannot be null or blank.");
+        }
 
+        if (candidate.length() > 50) {
+            throw new IllegalArgumentException("Component cannot exceed 50 characters.");
+        }
 
-    // TODO 4: addFinding(Vulnerability finding)
+        if (candidate.contains("|") || candidate.contains("\n") || candidate.contains("\r")) {
+            throw new IllegalArgumentException(
+                    "Component cannot contain '|' or line breaks."
+            );
+        }
+    }
 
+    // TODO 4
+    public void addFinding(Vulnerability finding) {
+        validateCveId(finding.getCveId());
+        validateComponent(finding.getComponent());
 
-    // TODO 5: getFindings() and getUniqueCveIds()
+        if (uniqueCveIds.contains(finding.getCveId())) {
+            throw new DuplicateFindingException(
+                    "Duplicate CVE ID: " + finding.getCveId()
+            );
+        }
 
+        vulnerabilities.add(finding);
+        uniqueCveIds.add(finding.getCveId());
+    }
 
-    // TODO 6: saveToFile(String filename) throws IOException
+    // TODO 5
+    public List<Vulnerability> getFindings() {
+        return Collections.unmodifiableList(vulnerabilities);
+    }
 
+    public Set<String> getUniqueCveIds() {
+        return Collections.unmodifiableSet(uniqueCveIds);
+    }
 
-    // TODO 7: static loadFromFile(String filename) throws IOException, InvalidRegisterDataException
+    // TODO 6
+    public void saveToFile(String filename) throws IOException {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+            for (Vulnerability finding : vulnerabilities) {
+                writer.write(
+                        finding.getCveId() + "|" +
+                                finding.getComponent() + "|" +
+                                finding.getVersion() + "|" +
+                                finding.getSeverity() + "|" +
+                                finding.getEstimatedRemediationCost() + "|" +
+                                finding.getDiscoveredDate()
+                );
 
+                writer.newLine();
+            }
+        }
+    }
 
-    // TODO 8: importLegacyScanResults(String filename) throws IOException, InvalidRegisterDataException
+    // TODO 7
+    public static RiskRegister loadFromFile(String filename)
+            throws IOException, InvalidRegisterDataException {
+
+        RiskRegister register = new RiskRegister();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+
+                String[] parts = line.split("\\|", -1);
+
+                if (parts.length != 6) {
+                    throw new InvalidRegisterDataException(
+                            "Invalid line: expected exactly 6 fields: " + line
+                    );
+                }
+
+                try {
+                    String cveId = parts[0];
+                    String component = parts[1];
+                    String version = parts[2];
+
+                    Severity severity = Severity.valueOf(parts[3]);
+
+                    BigDecimal estimatedRemediationCost =
+                            new BigDecimal(parts[4]);
+
+                    LocalDate discoveredDate =
+                            LocalDate.parse(parts[5]);
+
+                    Vulnerability finding = new Vulnerability(
+                            cveId,
+                            component,
+                            version,
+                            severity,
+                            estimatedRemediationCost,
+                            discoveredDate
+                    );
+
+                    // Only add after the entire line has been successfully parsed
+                    register.addFinding(finding);
+
+                } catch (Exception e) {
+                    throw new InvalidRegisterDataException(
+                            "Invalid register data: " + line, e
+                    );
+                }
+            }
+        }
+
+        return register;
+    }
+
+    // TODO 8
+    public void importLegacyScanResults(String filename)
+            throws IOException, InvalidRegisterDataException {
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+
+                if (line.isBlank()) {
+                    continue;
+                }
+
+                try {
+                    Vulnerability finding =
+                            LegacyScanOutputParser.parseLine(line);
+
+                    addFinding(finding);
+
+                } catch (Exception e) {
+                    throw new InvalidRegisterDataException(
+                            "Invalid legacy scan data: " + line, e
+                    );
+                }
+            }
+        }
+    }
 
 
 }
