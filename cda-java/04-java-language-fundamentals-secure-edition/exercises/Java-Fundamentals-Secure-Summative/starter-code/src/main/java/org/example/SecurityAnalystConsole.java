@@ -18,6 +18,7 @@ import org.example.util.ParseResult;
 import org.example.util.SecurityLogger;
 import org.example.util.ValidationException;
 
+import javax.print.attribute.standard.Severity;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -68,7 +69,7 @@ public final class SecurityAnalystConsole {
     }
 
     public static void main(String[] args) {
-        Path dataDir = args.length > 0 ? Paths.get(args[0]) : Paths.get("data");
+        Path dataDir = args.length > 0 ? Paths.get(args[0]) : Paths.get("./src/main/java/org/example/data");
         new SecurityAnalystConsole(dataDir).run();
     }
 
@@ -125,7 +126,41 @@ public final class SecurityAnalystConsole {
      * a context string identifying this method.
      */
     private void loadThreatIntelFeed() {
-        throw new UnsupportedOperationException("TODO: wire up loadThreatIntelFeed()");
+        try {
+            System.out.println("DEBUG: Starting threat intel load...");
+
+            Path path = dataDir.resolve("threat_intel_feed.json");
+            System.out.println("DEBUG: Looking for file at: " + path.toAbsolutePath());
+
+            String json = readDataFile("threat_intel_feed.json");
+
+            System.out.println("DEBUG: File was successfully read.");
+
+            ThreatIntelFeedParser parser = new ThreatIntelFeedParser();
+            ParseResult<ThreatIndicator> result = parser.parseFeed(json);
+
+            System.out.println("DEBUG: File was successfully parsed.");
+
+            threatIndicators.clear();
+            threatIndicators.addAll(result.getAccepted());
+
+            recordIngestion("threat_intel_feed.json", result);
+
+            System.out.println(
+                    "Threat Intel Feed: accepted=" +
+                            result.getAcceptedCount() +
+                            ", rejected=" +
+                            result.getRejectedCount()
+            );
+
+        } catch (ValidationException e) {
+            System.out.println("DEBUG: VALIDATION ERROR");
+            e.printStackTrace();
+
+        } catch (IOException e) {
+            System.out.println("DEBUG: IO ERROR");
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -134,7 +169,30 @@ public final class SecurityAnalystConsole {
      * repopulating portScanResults.
      */
     private void loadPortScanResults() {
-        throw new UnsupportedOperationException("TODO: wire up loadPortScanResults()");
+        try {
+            String json = readDataFile("port_scan_results.json");
+
+            PortScanResultParser parser = new PortScanResultParser();
+            ParseResult<PortScanResult> result = parser.parseResults(json);
+
+            portScanResults.clear();
+            portScanResults.addAll(result.getAccepted());
+
+            recordIngestion("port_scan_results.json", result);
+
+            System.out.println(
+                    "Port Scan Results: accepted=" +
+                            result.getAcceptedCount() +
+                            ", rejected=" +
+                            result.getRejectedCount()
+            );
+
+        } catch (ValidationException e) {
+            reportFailure("loadPortScanResults: validation failure", e);
+
+        } catch (IOException e) {
+            reportFailure("loadPortScanResults: I/O failure", e);
+        }
     }
 
     /**
@@ -147,16 +205,73 @@ public final class SecurityAnalystConsole {
      * summary, same exception handling as the other load* methods.
      */
     private void loadCvssEpssScores() {
-        throw new UnsupportedOperationException("TODO: wire up loadCvssEpssScores()");
-    }
+        try {
+            String json = readDataFile("cvss_epss_scores.json");
 
+            CvssEpssParser parser = new CvssEpssParser();
+            ParseResult<CvssEpssParser.ScoredCve> result = parser.parseScores(json);
+
+            cvssByCve.clear();
+            epssByCve.clear();
+
+            for (CvssEpssParser.ScoredCve scored : result.getAccepted()) {
+                cvssByCve.put(
+                        scored.cvss.getCveId(),
+                        scored.cvss
+                );
+
+                epssByCve.put(
+                        scored.epss.getCveId(),
+                        scored.epss
+                );
+            }
+
+            recordIngestion("cvss_epss_scores.json", result);
+
+            System.out.println(
+                    "CVSS/EPSS Scores: accepted=" +
+                            result.getAcceptedCount() +
+                            ", rejected=" +
+                            result.getRejectedCount()
+            );
+
+        } catch (ValidationException e) {
+            reportFailure("loadCvssEpssScores: validation failure", e);
+
+        } catch (IOException e) {
+            reportFailure("loadCvssEpssScores: I/O failure", e);
+        }
+    }
     /**
      * TODO (menu option 4): same pattern as loadThreatIntelFeed(), but
      * for "sbom_dependencies.json" via new SbomDependencyParser().parseDependencies(json),
      * repopulating dependencies.
      */
     private void loadSbomDependencies() {
-        throw new UnsupportedOperationException("TODO: wire up loadSbomDependencies()");
+        try {
+            String json = readDataFile("sbom_dependencies.json");
+
+            SbomDependencyParser parser = new SbomDependencyParser();
+            ParseResult<Dependency> result = parser.parseDependencies(json);
+
+            dependencies.clear();
+            dependencies.addAll(result.getAccepted());
+
+            recordIngestion("sbom_dependencies.json", result);
+
+            System.out.println(
+                    "SBOM Dependencies: accepted=" +
+                            result.getAcceptedCount() +
+                            ", rejected=" +
+                            result.getRejectedCount()
+            );
+
+        } catch (ValidationException e) {
+            reportFailure("loadSbomDependencies: validation failure", e);
+
+        } catch (IOException e) {
+            reportFailure("loadSbomDependencies: I/O failure", e);
+        }
     }
 
     /**
@@ -170,7 +285,25 @@ public final class SecurityAnalystConsole {
      * handled internally), so only one catch block is needed here.
      */
     private void loadLegacyDependencyScan() {
-        throw new UnsupportedOperationException("TODO: wire up loadLegacyDependencyScan()");
+        try {
+            Path path = dataDir.resolve("legacy_dependency_scan.log");
+
+            LegacyDependencyScanner scanner = new LegacyDependencyScanner();
+            LegacyDependencyScanner.ScanReadResult result =
+                    scanner.readLegacyScanLog(path);
+
+            dependencies.addAll(result.accepted);
+
+            System.out.println(
+                    "Legacy Dependency Scan: accepted=" +
+                            result.accepted.size() +
+                            ", rejected=" +
+                            result.rejectedCount
+            );
+
+        } catch (IOException e) {
+            reportFailure("loadLegacyDependencyScan: I/O failure", e);
+        }
     }
 
     /**
@@ -188,7 +321,49 @@ public final class SecurityAnalystConsole {
      * in-memory computation.)
      */
     private void buildAndShowRiskRegister() {
-        throw new UnsupportedOperationException("TODO: wire up buildAndShowRiskRegister()");
+
+        RiskRegisterService service = new RiskRegisterService();
+
+        riskRegister = service.buildRegister(
+                dependencies,
+                cvssByCve,
+                epssByCve
+        );
+
+        Map<String, Long> severityCounts =
+                service.countBySeverity(riskRegister);
+
+        reportData.setSeverityCounts(severityCounts);
+
+        List<RiskRegisterEntry> topRisks =
+                service.topRisks(riskRegister, 10);
+
+        reportData.setTopRisks(topRisks);
+
+        reportData.setTotalDependencies(
+                dependencies.size()
+        );
+
+        long vulnerableCount = dependencies.stream()
+                .filter(Dependency::isVulnerable)
+                .count();
+
+        reportData.setVulnerableDependencies(
+                (int) vulnerableCount
+        );
+
+        System.out.println();
+        System.out.println("=== Risk Register Summary ===");
+
+        System.out.println("Severity Counts:");
+        System.out.println(severityCounts);
+
+        System.out.println();
+        System.out.println("Top Risks:");
+
+        for (RiskRegisterEntry entry : topRisks) {
+            System.out.println(entry);
+        }
     }
 
     /**
@@ -201,7 +376,27 @@ public final class SecurityAnalystConsole {
      * so this is just a fallback notice).
      */
     private void generateExecutiveReport() {
-        throw new UnsupportedOperationException("TODO: wire up generateExecutiveReport()");
+        if (riskRegister.isEmpty()) {
+            System.out.println(
+                    "Risk register is empty. Please run option 6 first."
+            );
+            return;
+        }
+
+        ExecutiveReportGenerator generator =
+                new ExecutiveReportGenerator();
+
+        boolean success =
+                generator.writeExecutiveSummary(
+                        reportsDir,
+                        reportData
+                );
+
+        if (!success) {
+            System.out.println(
+                    "Executive report generation failed."
+            );
+        }
     }
 
     /**
@@ -219,9 +414,51 @@ public final class SecurityAnalystConsole {
      * route it to reportFailure(...).
      */
     private void runAbuseCaseDemo() {
-        throw new UnsupportedOperationException("TODO: wire up runAbuseCaseDemo()");
-    }
+        try {
+            String json = readDataFile("malicious_sample_feed.json");
 
+            ThreatIntelFeedParser parser =
+                    new ThreatIntelFeedParser();
+
+            ParseResult<ThreatIndicator> result =
+                    parser.parseFeed(json);
+
+            System.out.println();
+            System.out.println("=== Abuse Case Demo ===");
+            System.out.println(
+                    "Malicious Sample Feed: accepted=" +
+                            result.getAcceptedCount() +
+                            ", rejected=" +
+                            result.getRejectedCount()
+            );
+
+            System.out.println(
+                    "This demonstrates fail-closed parsing: " +
+                            "invalid records are rejected rather than trusted."
+            );
+
+        } catch (ValidationException e) {
+            String ref =
+                    SecurityLogger.logDetailed(
+                            "runAbuseCaseDemo",
+                            e
+                    );
+
+            System.out.println(
+                    SecurityLogger.userMessageFor(
+                            "The sample feed was rejected outright " +
+                                    "(whole-document failure).",
+                            ref
+                    )
+            );
+
+        } catch (IOException e) {
+            reportFailure(
+                    "runAbuseCaseDemo: I/O failure",
+                    e
+            );
+        }
+    }
     private void recordIngestion(String feedName, ParseResult<?> result) {
         List<String> sample = result.getRejectionReasons().stream().limit(3).toList();
         reportData.addIngestionStats(new ExecutiveReportData.FeedIngestionStats(

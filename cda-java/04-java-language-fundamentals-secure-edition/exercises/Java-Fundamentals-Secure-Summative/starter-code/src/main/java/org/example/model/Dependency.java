@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+
 /**
  * A single third-party dependency entry in the Software Bill of Materials
  * (SBOM), as ingested from sbom_dependencies.json (untrusted input).
@@ -38,29 +39,43 @@ public final class Dependency {
      *     applied to its "tags" field.
      */
     public Dependency(String name, String version, String ecosystem, List<String> knownCves) {
-        throw new UnsupportedOperationException(
-                "TODO: implement Dependency constructor with defensive copy of knownCves");
+        this.name = Objects.requireNonNull(name);
+        this.version = Objects.requireNonNull(version);
+        this.ecosystem = Objects.requireNonNull(ecosystem);
+
+        List<String> copy = new ArrayList<>(
+                knownCves == null ? Collections.emptyList() : knownCves
+        );
+
+        this.knownCves = Collections.unmodifiableList(copy);
     }
-
-    public String getName() { return name; }
-    public String getVersion() { return version; }
-    public String getEcosystem() { return ecosystem; }
-
     /**
      * TODO (ACCEPTANCE CRITERION 2): implement this getter so that a
      * caller can never mutate this object's internal knownCves list
      * through the reference it returns.
      */
+    public String getName() {
+        return name; }
+
+    public String getVersion() {
+        return version; }
+
+    public String getEcosystem() {
+        return ecosystem; }
+
+
     public List<String> getKnownCves() {
-        throw new UnsupportedOperationException("TODO: implement getKnownCves() defensive return");
+        return knownCves;
     }
 
     public boolean isVulnerable() {
+
         return !knownCves.isEmpty();
     }
 
     @Override
     public String toString() {
-        return "Dependency{" + name + "@" + version + " (" + ecosystem + "), cves=" + knownCves + "}";
+        return "Dependency{" + name + "@" + version +
+                " (" + ecosystem + "), cves=" + knownCves + "}";
     }
 }

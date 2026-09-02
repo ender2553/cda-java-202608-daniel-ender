@@ -54,7 +54,26 @@ public final class ThreatIntelFeedParser {
      * propagate out of this method.
      */
     public ParseResult<ThreatIndicator> parseFeed(String jsonText) throws ValidationException {
-        throw new UnsupportedOperationException("TODO: implement parseFeed()");
+        List<Object> records;
+
+        try {
+            records = SimpleJson.parseArray(jsonText);
+        } catch (RuntimeException e) {
+            throw new ValidationException("Invalid threat intelligence feed", e);
+        }
+
+        ParseResult<ThreatIndicator> result = new ParseResult<>();
+
+        for (int i = 0; i < records.size(); i++) {
+            try {
+                ThreatIndicator indicator = parseRecord(records.get(i));
+                result.addAccepted(indicator);
+            } catch (ValidationException e) {
+                result.addRejected(i, e.getMessage());
+            }
+        }
+
+        return result;
     }
 
     /**
@@ -82,7 +101,56 @@ public final class ThreatIntelFeedParser {
      *      indicatorType, confidence, source, tags).
      */
     private ThreatIndicator parseRecord(Object rawRecord) throws ValidationException {
-        throw new UnsupportedOperationException("TODO: implement parseRecord()");
+        if (!(rawRecord instanceof Map)) {
+            throw new ValidationException("Record must be a JSON object");
+        }
+
+        Map<String, Object> record = (Map<String, Object>) rawRecord;
+
+        String indicatorType = requireString(record, "indicatorType");
+        indicatorType = InputValidator.validateIndicatorType(indicatorType);
+
+        String indicatorValue = requireString(record, "indicatorValue");
+        indicatorValue = InputValidator.validateIndicatorValue(
+                indicatorType, indicatorValue
+        );
+
+        int confidence = requireInt(record, "confidence");
+        confidence = InputValidator.validateConfidence(confidence);
+
+        String source = requireString(record, "source");
+        source = InputValidator.validateTextField(source, "source", 200);
+
+        List<String> tags = new ArrayList<>();
+
+        Object rawTags = record.get("tags");
+
+        if (rawTags != null) {
+            if (!(rawTags instanceof List)) {
+                throw new ValidationException("Field 'tags' must be a list");
+            }
+
+            List<?> tagList = (List<?>) rawTags;
+
+            for (Object tag : tagList) {
+                if (!(tag instanceof String)) {
+                    throw new ValidationException("Each tag must be a String");
+                }
+
+                String validatedTag =
+                        InputValidator.validateTextField((String) tag, "tag", 50);
+
+                tags.add(validatedTag);
+            }
+        }
+
+        return new ThreatIndicator(
+                indicatorValue,
+                indicatorType,
+                confidence,
+                source,
+                tags
+        );
     }
 
     /**
@@ -90,8 +158,18 @@ public final class ThreatIntelFeedParser {
      * ValidationException naming the field if it is missing or not a
      * String.
      */
-    private String requireString(Map<String, Object> record, String field) throws ValidationException {
-        throw new UnsupportedOperationException("TODO: implement requireString()");
+    private String requireString(Map<String, Object> record, String field)
+            throws ValidationException {
+
+        Object value = record.get(field);
+
+        if (!(value instanceof String)) {
+            throw new ValidationException(
+                    "Field '" + field + "' is missing or not a String"
+            );
+        }
+
+        return (String) value;
     }
 
     /**
@@ -102,7 +180,31 @@ public final class ThreatIntelFeedParser {
      * must reject the latter rather than truncating it, since silently
      * truncating 42.7 to 42 would be a coercion, not a validation).
      */
-    private int requireInt(Map<String, Object> record, String field) throws ValidationException {
-        throw new UnsupportedOperationException("TODO: implement requireInt()");
+    private int requireInt(Map<String, Object> record, String field)
+            throws ValidationException {
+
+        Object value = record.get(field);
+
+        if (!(value instanceof Number)) {
+            throw new ValidationException(
+                    "Field '" + field + "' is missing or not a number"
+            );
+        }
+
+        double number = ((Number) value).doubleValue();
+
+        if (Double.isNaN(number) || number != Math.floor(number)) {
+            throw new ValidationException(
+                    "Field '" + field + "' must be a whole number"
+            );
+        }
+
+        if (number < Integer.MIN_VALUE || number > Integer.MAX_VALUE) {
+            throw new ValidationException(
+                    "Field '" + field + "' is outside the integer range"
+            );
+        }
+
+        return (int) number;
     }
 }

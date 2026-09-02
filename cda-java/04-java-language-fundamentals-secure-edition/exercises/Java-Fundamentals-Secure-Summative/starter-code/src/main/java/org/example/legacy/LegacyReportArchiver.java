@@ -1,5 +1,6 @@
 package org.example.legacy;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -52,6 +53,31 @@ public final class LegacyReportArchiver {
      *     new IOException("Archived report appears to be empty: " + archiveDestination).
      */
     public void archiveReport(Path source, Path archiveDestination) throws IOException {
-        throw new UnsupportedOperationException("TODO: implement archiveReport()");
+
+        if (!Files.exists(source)) {
+            throw new IOException(
+                    "Source report does not exist: " + source
+            );
+        }
+
+        Files.copy(
+                source,
+                archiveDestination,
+                StandardCopyOption.REPLACE_EXISTING
+        );
+
+        try (BufferedReader reader =
+                     Files.newBufferedReader(
+                             archiveDestination,
+                             StandardCharsets.UTF_8
+                     )) {
+
+            if (reader.readLine() == null) {
+                throw new IOException(
+                        "Archived report appears to be empty: "
+                                + archiveDestination
+                );
+            }
+        }
     }
 }

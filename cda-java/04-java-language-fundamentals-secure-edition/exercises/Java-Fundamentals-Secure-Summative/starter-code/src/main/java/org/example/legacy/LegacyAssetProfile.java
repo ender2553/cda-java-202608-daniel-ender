@@ -45,8 +45,14 @@ public final class LegacyAssetProfile {
      * before assigning to this.openPorts.
      */
     public LegacyAssetProfile(String assetId, String hostname, List<String> openPorts) {
-        throw new UnsupportedOperationException(
-                "TODO: implement LegacyAssetProfile constructor with defensive copy of openPorts");
+        this.assetId = Objects.requireNonNull(assetId);
+        this.hostname = Objects.requireNonNull(hostname);
+
+        List<String> copy = new ArrayList<>(
+                openPorts == null ? Collections.emptyList() : openPorts
+        );
+
+        this.openPorts = Collections.unmodifiableList(copy);
     }
 
     public String getAssetId() { return assetId; }
@@ -58,7 +64,7 @@ public final class LegacyAssetProfile {
      * mutate this object's internal state.
      */
     public List<String> getOpenPorts() {
-        throw new UnsupportedOperationException("TODO: implement getOpenPorts() defensive return");
+        return openPorts;
     }
 
     // Fix for BUG 3: do NOT add a setHostname() method here. An asset's

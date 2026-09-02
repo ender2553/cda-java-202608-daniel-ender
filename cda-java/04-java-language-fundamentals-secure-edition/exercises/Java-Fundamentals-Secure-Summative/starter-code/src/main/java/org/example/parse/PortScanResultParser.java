@@ -26,7 +26,26 @@ public final class PortScanResultParser {
      * result.addRejected(index, message).
      */
     public ParseResult<PortScanResult> parseResults(String jsonText) throws ValidationException {
-        throw new UnsupportedOperationException("TODO: implement parseResults()");
+        List<Object> records;
+
+        try {
+            records = SimpleJson.parseArray(jsonText);
+        } catch (RuntimeException e) {
+            throw new ValidationException("Invalid port scan results feed", e);
+        }
+
+        ParseResult<PortScanResult> result = new ParseResult<>();
+
+        for (int i = 0; i < records.size(); i++) {
+            try {
+                PortScanResult scanResult = parseRecord(records.get(i));
+                result.addAccepted(scanResult);
+            } catch (ValidationException e) {
+                result.addRejected(i, e.getMessage());
+            }
+        }
+
+        return result;
     }
 
     /**
@@ -60,7 +79,52 @@ public final class PortScanResultParser {
      *      state, bannerRaw).
      */
     private PortScanResult parseRecord(Object rawRecord) throws ValidationException {
-        throw new UnsupportedOperationException("TODO: implement parseRecord()");
+        if (!(rawRecord instanceof Map)) {
+            throw new ValidationException("Record must be a JSON object");
+        }
+
+        Map<String, Object> record = (Map<String, Object>) rawRecord;
+
+        String host = requireString(record, "host");
+        host = InputValidator.validateTextField(host, "host", 253);
+
+        int port = requireInt(record, "port");
+        port = InputValidator.validatePort(port);
+
+        String protocol = requireString(record, "protocol");
+        protocol = InputValidator.validateProtocol(protocol);
+
+        String state = requireString(record, "state");
+        state = InputValidator.validatePortState(state);
+
+        Object bannerValue = record.get("bannerRaw");
+        String bannerRaw;
+
+        if (bannerValue == null) {
+            bannerRaw = "";
+        } else if (bannerValue instanceof String && ((String) bannerValue).isEmpty()) {
+            bannerRaw = "";
+        } else {
+            if (!(bannerValue instanceof String)) {
+                throw new ValidationException(
+                        "Field 'bannerRaw' must be a String"
+                );
+            }
+
+            bannerRaw = InputValidator.validateTextField(
+                    (String) bannerValue,
+                    "bannerRaw",
+                    1000
+            );
+        }
+
+        return new PortScanResult(
+                host,
+                port,
+                protocol,
+                state,
+                bannerRaw
+        );
     }
 
     /**
@@ -71,8 +135,18 @@ public final class PortScanResultParser {
      * this capstone; a shared base class or utility method is a
      * reasonable refactor to discuss, but is out of scope here.)
      */
-    private String requireString(Map<String, Object> record, String field) throws ValidationException {
-        throw new UnsupportedOperationException("TODO: implement requireString()");
+    private String requireString(Map<String, Object> record, String field)
+            throws ValidationException {
+
+        Object value = record.get(field);
+
+        if (!(value instanceof String)) {
+            throw new ValidationException(
+                    "Field '" + field + "' is missing or not a String"
+            );
+        }
+
+        return (String) value;
     }
 
     /**
@@ -81,7 +155,31 @@ public final class PortScanResultParser {
      * not a whole number. See ThreatIntelFeedParser.requireInt(...) for
      * the identical pattern.
      */
-    private int requireInt(Map<String, Object> record, String field) throws ValidationException {
-        throw new UnsupportedOperationException("TODO: implement requireInt()");
+    private int requireInt(Map<String, Object> record, String field)
+            throws ValidationException {
+
+        Object value = record.get(field);
+
+        if (!(value instanceof Number)) {
+            throw new ValidationException(
+                    "Field '" + field + "' is missing or not a number"
+            );
+        }
+
+        double number = ((Number) value).doubleValue();
+
+        if (Double.isNaN(number) || number != Math.floor(number)) {
+            throw new ValidationException(
+                    "Field '" + field + "' must be a whole number"
+            );
+        }
+
+        if (number < Integer.MIN_VALUE || number > Integer.MAX_VALUE) {
+            throw new ValidationException(
+                    "Field '" + field + "' is outside the integer range"
+            );
+        }
+
+        return (int) number;
     }
 }

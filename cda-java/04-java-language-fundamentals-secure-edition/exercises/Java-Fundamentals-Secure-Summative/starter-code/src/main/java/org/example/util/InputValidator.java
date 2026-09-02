@@ -55,7 +55,10 @@ public final class InputValidator {
      * the port unchanged.
      */
     public static int validatePort(int port) throws ValidationException {
-        throw new UnsupportedOperationException("TODO: implement validatePort()");
+        if (port < 0 || port > 65535) {
+            throw new ValidationException("Port out of range [0, 65535]: " + port);
+        }
+        return port;
     }
 
     /**
@@ -68,7 +71,16 @@ public final class InputValidator {
      * naming the allow-list and the offending value otherwise.
      */
     public static String validateProtocol(String protocol) throws ValidationException {
-        throw new UnsupportedOperationException("TODO: implement validateProtocol()");
+        String p = requireNonBlank(protocol, "protocol");
+        String upper = p.toUpperCase();
+
+        if (!ALLOWED_PROTOCOLS.contains(upper)) {
+            throw new ValidationException(
+                    "Protocol not in allow-list " + ALLOWED_PROTOCOLS + ": '" + protocol + "'"
+            );
+        }
+
+        return upper;
     }
 
     /**
@@ -77,7 +89,16 @@ public final class InputValidator {
      * UPPERCASE, check set membership.
      */
     public static String validatePortState(String state) throws ValidationException {
-        throw new UnsupportedOperationException("TODO: implement validatePortState()");
+        String s = requireNonBlank(state, "port state");
+        String upper = s.toUpperCase();
+
+        if (!ALLOWED_PORT_STATES.contains(upper)) {
+            throw new ValidationException(
+                    "Port state not in allow-list " + ALLOWED_PORT_STATES + ": '" + state + "'"
+            );
+        }
+
+        return upper;
     }
 
     /**
@@ -102,7 +123,16 @@ public final class InputValidator {
      * except normalize to UPPERCASE (matching "IP"/"DOMAIN"/"FILE_HASH").
      */
     public static String validateIndicatorType(String type) throws ValidationException {
-        throw new UnsupportedOperationException("TODO: implement validateIndicatorType()");
+        String t = requireNonBlank(type, "indicator type");
+        String upper = t.toUpperCase();
+
+        if (!ALLOWED_INDICATOR_TYPES.contains(upper)) {
+            throw new ValidationException(
+                    "Indicator type not in allow-list " + ALLOWED_INDICATOR_TYPES + ": '" + type + "'"
+            );
+        }
+
+        return upper;
     }
 
     /**
@@ -122,8 +152,51 @@ public final class InputValidator {
      *     validateIndicatorType() was called first, but never assume a
      *     caller did that correctly).
      */
-    public static String validateIndicatorValue(String indicatorType, String value) throws ValidationException {
-        throw new UnsupportedOperationException("TODO: implement validateIndicatorValue()");
+    public static String validateIndicatorValue(String indicatorType, String value)
+            throws ValidationException {
+
+        String type = requireNonBlank(indicatorType, "indicator type");
+        String v = requireNonBlank(value, "indicator value");
+
+        if (v.length() > MAX_TEXT_FIELD_LENGTH) {
+            throw new ValidationException(
+                    "Indicator value exceeds maximum length of "
+                            + MAX_TEXT_FIELD_LENGTH + ": '" + value + "'"
+            );
+        }
+
+        switch (type) {
+            case "IP":
+                if (!IPV4_PATTERN.matcher(v).matches()) {
+                    throw new ValidationException(
+                            "Indicator value is not a valid IPv4 address: '" + value + "'"
+                    );
+                }
+                break;
+
+            case "DOMAIN":
+                if (!DOMAIN_PATTERN.matcher(v).matches()) {
+                    throw new ValidationException(
+                            "Indicator value is not a valid domain: '" + value + "'"
+                    );
+                }
+                break;
+
+            case "FILE_HASH":
+                if (!SHA256_PATTERN.matcher(v).matches()) {
+                    throw new ValidationException(
+                            "Indicator value is not a valid SHA-256 hash: '" + value + "'"
+                    );
+                }
+                break;
+
+            default:
+                throw new ValidationException(
+                        "Unknown indicator type: '" + indicatorType + "'"
+                );
+        }
+
+        return v;
     }
 
     /**
@@ -131,7 +204,13 @@ public final class InputValidator {
      * [0, 100] INCLUSIVE on both ends.
      */
     public static int validateConfidence(int confidence) throws ValidationException {
-        throw new UnsupportedOperationException("TODO: implement validateConfidence()");
+        if (confidence < 0 || confidence > 100) {
+            throw new ValidationException(
+                    "Confidence out of range [0, 100]: " + confidence
+            );
+        }
+
+        return confidence;
     }
 
     /**
@@ -142,7 +221,13 @@ public final class InputValidator {
      * silently let NaN through. Use Double.isNaN(score) explicitly.
      */
     public static double validateCvssScore(double score) throws ValidationException {
-        throw new UnsupportedOperationException("TODO: implement validateCvssScore()");
+        if (Double.isNaN(score) || score < 0.0 || score > 10.0) {
+            throw new ValidationException(
+                    "CVSS score out of range [0.0, 10.0]: " + score
+            );
+        }
+
+        return score;
     }
 
     /**
@@ -153,8 +238,16 @@ public final class InputValidator {
      * same method can validate both epssProbability and epssPercentile
      * with a field-specific error.
      */
-    public static double validateUnitInterval(double value, String fieldName) throws ValidationException {
-        throw new UnsupportedOperationException("TODO: implement validateUnitInterval()");
+    public static double validateUnitInterval(double value, String fieldName)
+            throws ValidationException {
+
+        if (Double.isNaN(value) || value < 0.0 || value > 1.0) {
+            throw new ValidationException(
+                    fieldName + " out of range [0.0, 1.0]: " + value
+            );
+        }
+
+        return value;
     }
 
     /**
@@ -162,7 +255,15 @@ public final class InputValidator {
      * against CVE_ID_PATTERN. Use requireNonBlank(...) first.
      */
     public static String validateCveId(String cveId) throws ValidationException {
-        throw new UnsupportedOperationException("TODO: implement validateCveId()");
+        String id = requireNonBlank(cveId, "CVE ID");
+
+        if (!CVE_ID_PATTERN.matcher(id).matches()) {
+            throw new ValidationException(
+                    "Invalid CVE ID format: '" + cveId + "'"
+            );
+        }
+
+        return id;
     }
 
     /**
@@ -171,8 +272,19 @@ public final class InputValidator {
      * first, then check the value's length against maxLength (INCLUSIVE --
      * a value exactly at maxLength characters must be ACCEPTED).
      */
-    public static String validateTextField(String value, String fieldName, int maxLength) throws ValidationException {
-        throw new UnsupportedOperationException("TODO: implement validateTextField()");
+    public static String validateTextField(String value, String fieldName, int maxLength)
+            throws ValidationException {
+
+        String v = requireNonBlank(value, fieldName);
+
+        if (v.length() > maxLength) {
+            throw new ValidationException(
+                    fieldName + " exceeds maximum length of "
+                            + maxLength + ": '" + value + "'"
+            );
+        }
+
+        return v;
     }
 
     /**
@@ -183,7 +295,15 @@ public final class InputValidator {
      * re-implementing a null/blank check inline -- consistent error
      * messages matter for analysts grepping the logs.
      */
-    private static String requireNonBlank(String value, String fieldName) throws ValidationException {
-        throw new UnsupportedOperationException("TODO: implement requireNonBlank()");
+    private static String requireNonBlank(String value, String fieldName)
+            throws ValidationException {
+
+        if (value == null || value.isBlank()) {
+            throw new ValidationException(
+                    fieldName + " must not be null or blank"
+            );
+        }
+
+        return value;
     }
 }

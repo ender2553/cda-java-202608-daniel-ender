@@ -54,9 +54,24 @@ public final class RiskRegisterEntry {
      *     lifetime, just only through addNote(String) below.
      */
     public RiskRegisterEntry(String riskId, String assetId, String description, String severity,
-                              double cvssScore, double epssProbability, List<String> relatedCveIds) {
-        throw new UnsupportedOperationException(
-                "TODO: implement RiskRegisterEntry constructor with defensive copy of relatedCveIds");
+                             double cvssScore, double epssProbability, List<String> relatedCveIds) {
+
+        this.riskId = Objects.requireNonNull(riskId);
+        this.assetId = Objects.requireNonNull(assetId);
+        this.description = Objects.requireNonNull(description);
+        this.severity = Objects.requireNonNull(severity);
+
+        this.cvssScore = cvssScore;
+        this.epssProbability = epssProbability;
+
+        List<String> copy = new ArrayList<>(
+                relatedCveIds == null ? Collections.emptyList() : relatedCveIds
+        );
+
+        this.relatedCveIds = Collections.unmodifiableList(copy);
+
+        this.status = "OPEN";
+        this.notes = new ArrayList<>();
     }
 
     public String getRiskId() { return riskId; }
@@ -77,7 +92,7 @@ public final class RiskRegisterEntry {
      * on every call.
      */
     public List<String> getNotes() {
-        throw new UnsupportedOperationException("TODO: implement getNotes() defensive copy");
+        return new ArrayList<>(notes);
     }
 
     /**
@@ -87,7 +102,11 @@ public final class RiskRegisterEntry {
      * grow -- there must be no setNotes(...) method anywhere in this class.
      */
     public void addNote(String note) {
-        throw new UnsupportedOperationException("TODO: implement addNote() with blank-check validation");
+        if (note == null || note.isBlank()) {
+            throw new IllegalArgumentException("Note cannot be null or blank");
+        }
+
+        notes.add(note);
     }
 
     /**
@@ -97,7 +116,11 @@ public final class RiskRegisterEntry {
      * throughout InputValidator), then assign it to this.status.
      */
     public void updateStatus(String newStatus) {
-        throw new UnsupportedOperationException("TODO: implement updateStatus() with allow-list validation");
+        if (newStatus == null || !ALLOWED_STATUSES.contains(newStatus)) {
+            throw new IllegalArgumentException("Invalid status: " + newStatus);
+        }
+
+        this.status = newStatus;
     }
 
     @Override

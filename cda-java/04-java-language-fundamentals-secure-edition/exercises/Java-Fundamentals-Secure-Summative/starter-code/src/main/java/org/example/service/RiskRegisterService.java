@@ -57,9 +57,69 @@ public final class RiskRegisterService {
      *     cvssValue, epssValue, List.of(cveId)) and add it to the result list.
      */
     public List<RiskRegisterEntry> buildRegister(List<Dependency> dependencies,
-                                                  Map<String, CvssScore> cvssByCve,
-                                                  Map<String, EpssScore> epssByCve) {
-        throw new UnsupportedOperationException("TODO: implement buildRegister()");
+                                                 Map<String, CvssScore> cvssByCve,
+                                                 Map<String, EpssScore> epssByCve) {
+
+        List<RiskRegisterEntry> result = new ArrayList<>();
+        int counter = 1;
+
+        for (Dependency dep : dependencies) {
+            for (String cveId : dep.getKnownCves()) {
+
+                CvssScore cvss = cvssByCve.get(cveId);
+                EpssScore epss = epssByCve.get(cveId);
+
+                double cvssValue;
+                double epssValue;
+                String severity;
+
+                if (cvss == null) {
+                    severity = "UNSCORED";
+                    cvssValue = -1.0;
+
+                    if (epss != null) {
+                        epssValue = epss.getProbability();
+                    } else {
+                        epssValue = -1.0;
+                    }
+
+                } else {
+                    cvssValue = cvss.getBaseScore();
+
+                    if (epss != null) {
+                        epssValue = epss.getProbability();
+                    } else {
+                        epssValue = 0.0;
+                    }
+
+                    severity = classifySeverity(cvssValue, epssValue);
+                }
+
+                String riskId = String.format("RISK-%04d", counter++);
+
+                String description = String.format(
+                        "%s@%s (%s) is vulnerable to %s",
+                        dep.getName(),
+                        dep.getVersion(),
+                        dep.getEcosystem(),
+                        cveId
+                );
+
+                RiskRegisterEntry entry = new RiskRegisterEntry(
+                        riskId,
+                        dep.getName() + "@" + dep.getVersion(),
+                        description,
+                        severity,
+                        cvssValue,
+                        epssValue,
+                        List.of(cveId)
+                );
+
+                result.add(entry);
+            }
+        }
+
+        return result;
     }
 
     /**
@@ -82,7 +142,22 @@ public final class RiskRegisterService {
      * cvss-alone thresholds).
      */
     public String classifySeverity(double cvssScore, double epssProbability) {
-        throw new UnsupportedOperationException("TODO: implement classifySeverity()");
+
+        if (cvssScore >= 9.0
+                || (cvssScore >= 7.0 && epssProbability >= 0.50)) {
+            return "CRITICAL";
+        }
+
+        if (cvssScore >= 7.0
+                || (cvssScore >= 4.0 && epssProbability >= 0.50)) {
+            return "HIGH";
+        }
+
+        if (cvssScore >= 4.0) {
+            return "MEDIUM";
+        }
+
+        return "LOW";
     }
 
     public List<RiskRegisterEntry> filterByStatus(List<RiskRegisterEntry> register, String status) {
@@ -115,6 +190,19 @@ public final class RiskRegisterService {
      * (Map.merge(...) with Long::sum is a convenient way to do this).
      */
     public Map<String, Long> countBySeverity(List<RiskRegisterEntry> register) {
-        throw new UnsupportedOperationException("TODO: implement countBySeverity()");
+
+        Map<String, Long> counts = new LinkedHashMap<>();
+
+        counts.put("CRITICAL", 0L);
+        counts.put("HIGH", 0L);
+        counts.put("MEDIUM", 0L);
+        counts.put("LOW", 0L);
+        counts.put("UNSCORED", 0L);
+
+        for (RiskRegisterEntry entry : register) {
+            counts.merge(entry.getSeverity(), 1L, Long::sum);
+        }
+
+        return counts;
     }
 }

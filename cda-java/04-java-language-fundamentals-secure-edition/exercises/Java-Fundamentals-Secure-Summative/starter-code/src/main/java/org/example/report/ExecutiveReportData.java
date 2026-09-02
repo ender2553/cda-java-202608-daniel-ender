@@ -28,6 +28,18 @@ public final class ExecutiveReportData {
             this.rejectedCount = rejectedCount;
             this.sampleRejectionReasons = sampleRejectionReasons;
         }
+
+        public String feedName() {
+            return "";
+        }
+
+        public String acceptedCount() {
+            return "";
+        }
+
+        public String rejectedCount() {
+            return "";
+        }
     }
 
     private final List<FeedIngestionStats> ingestionStats = new ArrayList<>();

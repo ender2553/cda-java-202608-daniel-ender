@@ -84,7 +84,42 @@ public final class LegacyDependencyScanner {
      *     method (that was BUG 2).
      */
     public ScanReadResult readLegacyScanLog(Path path) throws IOException {
-        throw new UnsupportedOperationException("TODO: implement readLegacyScanLog()");
+        ScanReadResult result = new ScanReadResult();
+        int lineNumber = 0;
+
+        try (BufferedReader reader =
+                     Files.newBufferedReader(path, StandardCharsets.UTF_8)) {
+
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                lineNumber++;
+
+                if (line.isBlank()) {
+                    continue;
+                }
+
+                try {
+                    Dependency dependency = parseLine(line);
+                    result.accepted.add(dependency);
+
+                } catch (ValidationException | NumberFormatException e) {
+                    result.rejectedCount++;
+
+                    String reason =
+                            "line " + lineNumber + ": " + e.getMessage();
+
+                    result.rejectionReasons.add(reason);
+
+                    SecurityLogger.logDetailed(
+                            "LegacyDependencyScanner: rejected malformed scan line",
+                            e
+                    );
+                }
+            }
+        }
+
+        return result;
     }
 
     /**
@@ -110,6 +145,55 @@ public final class LegacyDependencyScanner {
      *   - Construct and return new Dependency(name, version, ecosystem, cves).
      */
     private Dependency parseLine(String line) throws ValidationException {
-        throw new UnsupportedOperationException("TODO: implement parseLine()");
+        String[] parts = line.split("\\|", -1);
+
+        if (parts.length != 5) {
+            throw new ValidationException(
+                    "Expected 5 fields but found " + parts.length
+            );
+        }
+
+        String name = InputValidator.validateTextField(
+                parts[0], "name", 200
+        );
+
+        String version = InputValidator.validateTextField(
+                parts[1], "version", 100
+        );
+
+        String ecosystem = InputValidator.validateEcosystem(parts[2]);
+
+        double cvssScore;
+
+        try {
+            cvssScore = Double.parseDouble(parts[3].trim());
+        } catch (NumberFormatException e) {
+            throw new ValidationException(
+                    "Invalid CVSS score: " + parts[3].trim(),
+                    e
+            );
+        }
+
+        InputValidator.validateCvssScore(cvssScore);
+
+        List<String> cves = new ArrayList<>();
+
+        if (!parts[4].isBlank()) {
+            String[] cveParts = parts[4].split(";");
+
+            for (String rawCve : cveParts) {
+                if (rawCve.isBlank()) {
+                    continue;
+                }
+
+                String cve = rawCve.trim();
+
+                InputValidator.validateCveId(cve);
+
+                cves.add(cve);
+            }
+        }
+
+        return new Dependency(name, version, ecosystem, cves);
     }
 }

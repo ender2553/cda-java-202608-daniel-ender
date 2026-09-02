@@ -68,7 +68,51 @@ public final class ExecutiveReportGenerator {
      *     false. Do NOT let the IOException propagate out of this method.
      */
     public boolean writeExecutiveSummary(Path outputDirectory, ExecutiveReportData data) {
-        throw new UnsupportedOperationException("TODO: implement writeExecutiveSummary()");
+
+        try {
+            Files.createDirectories(outputDirectory);
+
+            String filename = "executive_summary_"
+                    + LocalDateTime.now().format(TIMESTAMP_FORMAT)
+                    + ".txt";
+
+            Path outputFile = outputDirectory.resolve(filename);
+
+            try (Writer writer = Files.newBufferedWriter(
+                    outputFile,
+                    StandardCharsets.UTF_8,
+                    StandardOpenOption.CREATE,
+                    StandardOpenOption.TRUNCATE_EXISTING)) {
+
+                writeHeader(writer, data);
+                writeIngestionStats(writer, data);
+                writeSeverityBreakdown(writer, data);
+                writeTopRisks(writer, data);
+            }
+
+            System.out.println(
+                    "Executive summary written to: "
+                            + outputFile.toAbsolutePath()
+            );
+
+            return true;
+
+        } catch (IOException e) {
+
+            String referenceCode = SecurityLogger.logDetailed(
+                    "Failed to write executive summary",
+                    e
+            );
+
+            System.out.println(
+                    SecurityLogger.userMessageFor(
+                            "Executive summary could not be written",
+                            referenceCode
+                    )
+            );
+
+            return false;
+        }
     }
 
     /**
@@ -81,7 +125,20 @@ public final class ExecutiveReportGenerator {
      *   "Vulnerable dependencies:    <N>"
      */
     private void writeHeader(Writer w, ExecutiveReportData data) throws IOException {
-        throw new UnsupportedOperationException("TODO: implement writeHeader()");
+
+        w.write("EXECUTIVE SUMMARY\n");
+        w.write("=================\n");
+        w.write("Generated: "
+                + LocalDateTime.now().format(DISPLAY_FORMAT)
+                + "\n\n");
+
+        w.write("Total dependencies scanned: "
+                + data.getTotalDependencies()
+                + "\n");
+
+        w.write("Vulnerable dependencies:    "
+                + data.getVulnerableDependencies()
+                + "\n\n");
     }
 
     /**
@@ -103,15 +160,41 @@ public final class ExecutiveReportGenerator {
      * logs/security-server.log instead.
      */
     private void writeIngestionStats(Writer w, ExecutiveReportData data) throws IOException {
-        throw new UnsupportedOperationException("TODO: implement writeIngestionStats()");
+
+        w.write("Data Feed Ingestion\n");
+        w.write("===================\n");
+
+        for (ExecutiveReportData.FeedIngestionStats stats
+                : data.getIngestionStats()) {
+
+            w.write("Feed: " + stats.feedName() + "\n");
+            w.write("  Accepted: " + stats.acceptedCount() + "\n");
+            w.write("  Rejected: " + stats.rejectedCount() + "\n");
+            w.write("\n");
+        }
     }
 
     /**
      * TODO: write a "Severity Breakdown" section listing each entry in
      * data.getSeverityCounts() (a Map<String, Long>) as "  <severity>  <count>".
      */
-    private void writeSeverityBreakdown(Writer w, ExecutiveReportData data) throws IOException {
-        throw new UnsupportedOperationException("TODO: implement writeSeverityBreakdown()");
+    private void writeSeverityBreakdown(Writer w, ExecutiveReportData data)
+            throws IOException {
+
+        w.write("Severity Breakdown\n");
+        w.write("==================\n");
+
+        for (Map.Entry<String, Long> entry
+                : data.getSeverityCounts().entrySet()) {
+
+            w.write(String.format(
+                    "  %-10s %d%n",
+                    entry.getKey(),
+                    entry.getValue()
+            ));
+        }
+
+        w.write("\n");
     }
 
     /**
@@ -123,7 +206,42 @@ public final class ExecutiveReportGenerator {
      * negative number in that case so the report doesn't show a
      * nonsensical negative probability to an executive reader.
      */
-    private void writeTopRisks(Writer w, ExecutiveReportData data) throws IOException {
-        throw new UnsupportedOperationException("TODO: implement writeTopRisks()");
+    private void writeTopRisks(Writer w, ExecutiveReportData data)
+            throws IOException {
+
+        w.write("Top Risks\n");
+        w.write("=========\n");
+
+        int number = 1;
+
+        for (RiskRegisterEntry risk : data.getTopRisks()) {
+
+            double epssProbability = risk.getEpssProbability();
+
+            if (epssProbability < 0.0) {
+                epssProbability = 0.0;
+            }
+
+            w.write(String.format(
+                    "%d. [%s] %s%n",
+                    number++,
+                    risk.getSeverity(),
+                    risk.getRiskId()
+            ));
+
+            w.write(String.format(
+                    "   CVSS Score: %.1f%n",
+                    risk.getCvssScore()
+            ));
+
+            w.write(String.format(
+                    "   EPSS Probability: %.2f%n",
+                    epssProbability
+            ));
+
+            w.write("   Description: "
+                    + risk.getDescription()
+                    + "\n\n");
+        }
     }
 }

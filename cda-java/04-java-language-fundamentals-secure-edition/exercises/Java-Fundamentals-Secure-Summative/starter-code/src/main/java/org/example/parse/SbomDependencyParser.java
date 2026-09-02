@@ -27,7 +27,26 @@ public final class SbomDependencyParser {
      * ThreatIntelFeedParser.parseFeed(...) and PortScanResultParser.parseResults(...).
      */
     public ParseResult<Dependency> parseDependencies(String jsonText) throws ValidationException {
-        throw new UnsupportedOperationException("TODO: implement parseDependencies()");
+        List<Object> records;
+
+        try {
+            records = SimpleJson.parseArray(jsonText);
+        } catch (RuntimeException e) {
+            throw new ValidationException("Invalid SBOM dependency feed", e);
+        }
+
+        ParseResult<Dependency> result = new ParseResult<>();
+
+        for (int i = 0; i < records.size(); i++) {
+            try {
+                Dependency dependency = parseRecord(records.get(i));
+                result.addAccepted(dependency);
+            } catch (ValidationException e) {
+                result.addRejected(i, e.getMessage());
+            }
+        }
+
+        return result;
     }
 
     /**
@@ -48,14 +67,72 @@ public final class SbomDependencyParser {
      *   6. Construct and return new Dependency(name, version, ecosystem, cves).
      */
     private Dependency parseRecord(Object rawRecord) throws ValidationException {
-        throw new UnsupportedOperationException("TODO: implement parseRecord()");
+        if (!(rawRecord instanceof Map)) {
+            throw new ValidationException("Record must be a JSON object");
+        }
+
+        Map<String, Object> record = (Map<String, Object>) rawRecord;
+
+        String name = requireString(record, "name");
+        name = InputValidator.validateTextField(name, "name", 200);
+
+        String version = requireString(record, "version");
+        version = InputValidator.validateTextField(version, "version", 100);
+
+        String ecosystem = requireString(record, "ecosystem");
+        ecosystem = InputValidator.validateEcosystem(ecosystem);
+
+        List<String> cves = new ArrayList<>();
+
+        Object rawCves = record.get("knownCves");
+
+        if (rawCves != null) {
+            if (!(rawCves instanceof List)) {
+                throw new ValidationException(
+                        "Field 'knownCves' must be a list"
+                );
+            }
+
+            List<?> cveList = (List<?>) rawCves;
+
+            for (Object cve : cveList) {
+                if (!(cve instanceof String)) {
+                    throw new ValidationException(
+                            "Each knownCves entry must be a String"
+                    );
+                }
+
+                String validatedCve = InputValidator.validateCveId(
+                        (String) cve
+                );
+
+                cves.add(validatedCve);
+            }
+        }
+
+        return new Dependency(
+                name,
+                version,
+                ecosystem,
+                cves
+        );
     }
 
     /**
      * TODO: return record.get(field) cast to String, or throw
      * ValidationException naming the field if it is missing or not a String.
      */
-    private String requireString(Map<String, Object> record, String field) throws ValidationException {
-        throw new UnsupportedOperationException("TODO: implement requireString()");
+    private String requireString(Map<String, Object> record, String field)
+            throws ValidationException {
+
+        Object value = record.get(field);
+
+        if (!(value instanceof String)) {
+            throw new ValidationException(
+                    "Field '" + field + "' is missing or not a String"
+            );
+        }
+
+        return (String) value;
     }
 }

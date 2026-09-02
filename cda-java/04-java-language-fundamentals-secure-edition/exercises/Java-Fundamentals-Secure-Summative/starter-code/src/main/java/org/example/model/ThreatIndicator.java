@@ -48,15 +48,21 @@ public final class ThreatIndicator {
      *     second worked example of the identical pattern.
      */
     public ThreatIndicator(String indicatorValue, String indicatorType, int confidence,
-                            String source, List<String> tags) {
-        throw new UnsupportedOperationException(
-                "TODO: implement ThreatIndicator constructor with defensive copy of tags");
+                           String source, List<String> tags) {
+
+        this.indicatorValue = Objects.requireNonNull(indicatorValue);
+        this.indicatorType = Objects.requireNonNull(indicatorType);
+        this.confidence = confidence;
+        this.source = Objects.requireNonNull(source);
+
+        List<String> copy = new ArrayList<>(
+                tags == null ? Collections.emptyList() : tags
+        );
+
+        this.tags = Collections.unmodifiableList(copy);
     }
 
-    public String getIndicatorValue() { return indicatorValue; }
-    public String getIndicatorType() { return indicatorType; }
-    public int getConfidence() { return confidence; }
-    public String getSource() { return source; }
+
 
     /**
      * TODO (ACCEPTANCE CRITERION 2): implement this getter so that a
@@ -65,8 +71,24 @@ public final class ThreatIndicator {
      * tags as an unmodifiable wrapper, the simplest correct
      * implementation here is a single-line direct return of the field.
      */
+    public String getIndicatorValue() {
+        return indicatorValue;
+    }
+
+    public String getIndicatorType() {
+        return indicatorType;
+    }
+
+    public int getConfidence() {
+        return confidence;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
     public List<String> getTags() {
-        throw new UnsupportedOperationException("TODO: implement getTags() defensive return");
+        return tags;
     }
 
     @Override

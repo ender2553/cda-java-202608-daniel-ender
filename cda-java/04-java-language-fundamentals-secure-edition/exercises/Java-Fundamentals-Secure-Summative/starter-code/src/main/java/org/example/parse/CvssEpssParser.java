@@ -35,7 +35,26 @@ public final class CvssEpssParser {
      * three *Parser classes in this package.
      */
     public ParseResult<ScoredCve> parseScores(String jsonText) throws ValidationException {
-        throw new UnsupportedOperationException("TODO: implement parseScores()");
+        List<Object> records;
+
+        try {
+            records = SimpleJson.parseArray(jsonText);
+        } catch (RuntimeException e) {
+            throw new ValidationException("Invalid CVSS/EPSS feed", e);
+        }
+
+        ParseResult<ScoredCve> result = new ParseResult<>();
+
+        for (int i = 0; i < records.size(); i++) {
+            try {
+                ScoredCve scoredCve = parseRecord(records.get(i));
+                result.addAccepted(scoredCve);
+            } catch (ValidationException e) {
+                result.addRejected(i, e.getMessage());
+            }
+        }
+
+        return result;
     }
 
     /**
@@ -64,15 +83,71 @@ public final class CvssEpssParser {
      *      EpssScore(cveId, epssProbability, epssPercentile).
      */
     private ScoredCve parseRecord(Object rawRecord) throws ValidationException {
-        throw new UnsupportedOperationException("TODO: implement parseRecord()");
+        if (!(rawRecord instanceof Map)) {
+            throw new ValidationException("Record must be a JSON object");
+        }
+
+        Map<String, Object> record = (Map<String, Object>) rawRecord;
+
+        String cveId = requireString(record, "cveId");
+        cveId = InputValidator.validateCveId(cveId);
+
+        double cvssScore = requireDouble(record, "cvssScore");
+        cvssScore = InputValidator.validateCvssScore(cvssScore);
+
+        String severityLabel = requireString(record, "severityLabel");
+        severityLabel = severityLabel.toUpperCase();
+
+        if (!ALLOWED_SEVERITY.contains(severityLabel)) {
+            throw new ValidationException(
+                    "Severity label not in allow-list "
+                            + ALLOWED_SEVERITY + ": '" + severityLabel + "'"
+            );
+        }
+
+        double epssProbability = requireDouble(record, "epssProbability");
+        epssProbability = InputValidator.validateUnitInterval(
+                epssProbability,
+                "epssProbability"
+        );
+
+        double epssPercentile = requireDouble(record, "epssPercentile");
+        epssPercentile = InputValidator.validateUnitInterval(
+                epssPercentile,
+                "epssPercentile"
+        );
+
+        CvssScore cvss = new CvssScore(
+                cveId,
+                cvssScore,
+                severityLabel
+        );
+
+        EpssScore epss = new EpssScore(
+                cveId,
+                epssProbability,
+                epssPercentile
+        );
+
+        return new ScoredCve(cvss, epss);
     }
 
     /**
      * TODO: return record.get(field) cast to String, or throw
      * ValidationException naming the field if it is missing or not a String.
      */
-    private String requireString(Map<String, Object> record, String field) throws ValidationException {
-        throw new UnsupportedOperationException("TODO: implement requireString()");
+    private String requireString(Map<String, Object> record, String field)
+            throws ValidationException {
+
+        Object value = record.get(field);
+
+        if (!(value instanceof String)) {
+            throw new ValidationException(
+                    "Field '" + field + "' is missing or not a String"
+            );
+        }
+
+        return (String) value;
     }
 
     /**
@@ -82,7 +157,17 @@ public final class CvssEpssParser {
      * NOT need to reject non-whole numbers -- CVSS/EPSS scores are
      * legitimately fractional.
      */
-    private double requireDouble(Map<String, Object> record, String field) throws ValidationException {
-        throw new UnsupportedOperationException("TODO: implement requireDouble()");
+    private double requireDouble(Map<String, Object> record, String field)
+            throws ValidationException {
+
+        Object value = record.get(field);
+
+        if (!(value instanceof Number)) {
+            throw new ValidationException(
+                    "Field '" + field + "' is missing or not a Number"
+            );
+        }
+
+        return ((Number) value).doubleValue();
     }
 }
