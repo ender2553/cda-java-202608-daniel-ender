@@ -1,0 +1,16 @@
+SELECT * FROM employee;
+SELECT first_name, last_name, job_title FROM employee;
+SELECT * FROM employee WHERE department = 'technology';
+SELECT * FROM employee WHERE salary > 100000;
+SELECT * FROM employee WHERE salary BETWEEN 70000 AND 100000;
+SELECT * FROM employee WHERE department IN ('technology', 'cybersecurity');
+SELECT * FROM employee WHERE department <> 'support';
+SELECT * FROM employee WHERE employment_status = 'active';
+SELECT * FROM employee WHERE hire_date > '2023-01-01';
+SELECT * FROM employee WHERE hire_date < '2022-01-01';
+SELECT * FROM employee WHERE job_title = 'Junior Developer';
+SELECT * FROM employee WHERE last_name LIKE 'P%';
+SELECT * FROM employee WHERE job_title LIKE '%Security%';
+SELECT * FROM employee ORDER BY last_name ASC;
+SELECT * FROM employee ORDER BY salary DESC;
+SELECT * FROM employee ORDER BY salary DESC LIMIT 5;

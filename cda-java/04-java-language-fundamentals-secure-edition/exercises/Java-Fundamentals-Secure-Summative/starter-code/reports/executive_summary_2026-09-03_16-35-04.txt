@@ -1,0 +1,81 @@
+EXECUTIVE SUMMARY
+=================
+Generated: 2026-09-03 16:35:04
+
+Total dependencies scanned: 7
+Vulnerable dependencies:    5
+
+Data Feed Ingestion
+===================
+Feed: 
+  Accepted: 
+  Rejected: 
+
+Feed: 
+  Accepted: 
+  Rejected: 
+
+Feed: 
+  Accepted: 
+  Rejected: 
+
+Feed: 
+  Accepted: 
+  Rejected: 
+
+Feed: 
+  Accepted: 
+  Rejected: 
+
+Feed: 
+  Accepted: 
+  Rejected: 
+
+Feed: 
+  Accepted: 
+  Rejected: 
+
+Feed: 
+  Accepted: 
+  Rejected: 
+
+Severity Breakdown
+==================
+  CRITICAL   3
+  HIGH       0
+  MEDIUM     1
+  LOW        1
+  UNSCORED   1
+
+Top Risks
+=========
+1. [UNSCORED] RISK-0006
+   CVSS Score: -1.0
+   EPSS Probability: 0.00
+   Description: newtonsoft.json@12.0.1 (nuget) is vulnerable to CVE-2024-9999
+
+2. [CRITICAL] RISK-0001
+   CVSS Score: 10.0
+   EPSS Probability: 0.97
+   Description: log4j-core@2.14.1 (maven) is vulnerable to CVE-2021-44228
+
+3. [CRITICAL] RISK-0002
+   CVSS Score: 9.8
+   EPSS Probability: 0.62
+   Description: xz-utils@5.6.0 (npm) is vulnerable to CVE-2024-3094
+
+4. [CRITICAL] RISK-0003
+   CVSS Score: 7.5
+   EPSS Probability: 0.55
+   Description: requests@2.25.0 (pypi) is vulnerable to CVE-2023-5678
+
+5. [MEDIUM] RISK-0004
+   CVSS Score: 5.3
+   EPSS Probability: 0.08
+   Description: jackson-databind@2.9.8 (maven) is vulnerable to CVE-2022-9999
+
+6. [LOW] RISK-0005
+   CVSS Score: 3.1
+   EPSS Probability: 0.02
+   Description: jackson-databind@2.9.8 (maven) is vulnerable to CVE-2024-0001
+
