@@ -314,10 +314,10 @@ JOIN host AS h
 WHERE e.severity = 'critical'
 ORDER BY e.event_time ASC;
 
---"EHR-DB01"	"Patient Records"	"unauthorized_access"	"critical"	"2026-02-03 01:47:00"
---"EHR-APP01"	"Patient Records"	"malware_detected"	"critical"	"2026-02-05 09:12:00"
---"LEGACY-FILESRV"	"Administration"	"malware_detected"	"critical"	"2026-02-06 23:58:00"
---"BACKUP-SRV01"	"IT Operations"	"unauthorized_access"	"critical"	"2026-02-09 02:20:00"
+--"EHR-DB01"		"Patient Records"	"unauthorized_access"	"critical"	"2026-02-03 01:47:00"
+--"EHR-APP01"		"Patient Records"	"malware_detected"		"critical"	"2026-02-05 09:12:00"
+--"LEGACY-FILESRV"	"Administration"	"malware_detected"		"critical"	"2026-02-06 23:58:00"
+--"BACKUP-SRV01"	"IT Operations"		"unauthorized_access"	"critical"	"2026-02-09 02:20:00"
 
 --3.2
 
@@ -355,13 +355,13 @@ JOIN host AS h
 WHERE t.status IN ('open', 'escalated')
 ORDER BY h.hostname;
 
---"BACKUP-SRV01"	"IT Operations"	"critical"	"unauthorized_access"	"critical"	"critical"
---"BILL-SRV01"	"Billing"	"medium"	"patch_missing"	"low"	"low"
---"EHR-APP01"	"Patient Records"	"critical"	"malware_detected"	"critical"	"critical"
---"EHR-DB01"	"Patient Records"	"critical"	"unauthorized_access"	"critical"	"critical"
---"LEGACY-FILESRV"	"Administration"	"high"	"malware_detected"	"critical"	"critical"
---"LEGACY-FILESRV"	"Administration"	"high"	"patch_missing"	"high"	"high"
---"RAD-SRV01"	"Radiology"	"high"	"patch_missing"	"medium"	"medium"
+--"BACKUP-SRV01"	"IT Operations"		"critical"	"unauthorized_access"	"critical"	"critical"
+--"BILL-SRV01"		"Billing"			"medium"	"patch_missing"			"low"		"low"
+--"EHR-APP01"		"Patient Records"	"critical"	"malware_detected"		"critical"	"critical"
+--"EHR-DB01"		"Patient Records"	"critical"	"unauthorized_access"	"critical"	"critical"
+--"LEGACY-FILESRV"	"Administration"	"high"		"malware_detected"		"critical"	"critical"
+--"LEGACY-FILESRV"	"Administration"	"high"		"patch_missing"			"high"		"high"
+--"RAD-SRV01"		"Radiology"			"high"		"patch_missing"			"medium"	"medium"
 
 --3.4
 
@@ -376,26 +376,26 @@ JOIN app_user AS a
     ON t.assigned_to = a.user_id
 ORDER BY t.ticket_id;
 
---1	"closed"	"medium"	"Ravi Patel"	true
---2	"escalated"	"critical"	"Jamie Chen"	true
---3	"in_progress"	"medium"	"Jamie Chen"	true
---4	"escalated"	"critical"	"Sam Brooks"	true
---5	"in_progress"	"high"	"Maria Garcia"	true
---6	"open"	"medium"	"Tom Wright"	true
---7	"open"	"low"	"Tom Wright"	true
---8	"closed"	"high"	"Ravi Patel"	true
---9	"in_progress"	"high"	"Sam Brooks"	true
---10	"in_progress"	"medium"	"Kevin Lee"	false
---11	"escalated"	"critical"	"Jamie Chen"	true
---12	"in_progress"	"high"	"Maria Garcia"	true
---13	"escalated"	"critical"	"Sam Brooks"	true
---14	"open"	"high"	"Tom Wright"	true
---15	"closed"	"low"	"Divya Singh"	true
---16	"closed"	"low"	"Jamie Chen"	true
---17	"closed"	"medium"	"Divya Singh"	true
---18	"closed"	"low"	"Divya Singh"	true
---19	"closed"	"low"	"Ravi Patel"	true
---20	"closed"	"low"	"Sam Brooks"	true
+--1	 "closed"		"medium"	"Ravi Patel"	true
+--2	 "escalated"	"critical"	"Jamie Chen"	true
+--3	 "in_progress"	"medium"	"Jamie Chen"	true
+--4	 "escalated"	"critical"	"Sam Brooks"	true
+--5  "in_progress"	"high"		"Maria Garcia"	true
+--6	 "open"			"medium"	"Tom Wright"	true
+--7	 "open"			"low"		"Tom Wright"	true
+--8	 "closed"		"high"		"Ravi Patel"	true
+--9  "in_progress"	"high"		"Sam Brooks"	true
+--10 "in_progress"	"medium"	"Kevin Lee"		false
+--11 "escalated"	"critical"	"Jamie Chen"	true
+--12 "in_progress"	"high"		"Maria Garcia"	true
+--13 "escalated"	"critical"	"Sam Brooks"	true
+--14 "open"			"high"		"Tom Wright"	true
+--15 "closed"		"low"		"Divya Singh"	true
+--16 "closed"		"low"		"Jamie Chen"	true
+--17 "closed"		"medium"	"Divya Singh"	true
+--18 "closed"		"low"		"Divya Singh"	true
+--19 "closed"		"low"		"Ravi Patel"	true
+--20 "closed"		"low"		"Sam Brooks"	true
 
 
 --3.5
@@ -433,14 +433,14 @@ WHERE host_id NOT IN (
 )
 ORDER BY host_id;
 
---1	"RAD-SRV01"	"Radiology"	"high"
---4	"BILL-SRV01"	"Billing"	"medium"
---5	"PHARM-SRV01"	"Pharmacy"	"high"
---6	"LAB-SRV01"	"Laboratory"	"high"
+--1	"RAD-SRV01"		"Radiology"			"high"
+--4	"BILL-SRV01"	"Billing"			"medium"
+--5	"PHARM-SRV01"	"Pharmacy"			"high"
+--6	"LAB-SRV01"		"Laboratory"		"high"
 --7	"ADMIN-WKS03"	"Administration"	"low"
---8	"GUEST-AP02"	"Guest Network"	"low"
+--8	"GUEST-AP02"	"Guest Network"		"low"
 --10 "WEB-SRV01"	"Patient Portal"	"medium"
---12 "HR-SRV01"	"Human Resources"	"medium"
+--12 "HR-SRV01"		"Human Resources"	"medium"
 
 --4.2
 
@@ -561,7 +561,7 @@ VALUES (
     TIMESTAMP '2026-02-13 10:15:00'
 );
 
---==Verification=============
+--======Verification=============
 
 SELECT
     t.ticket_id,
@@ -578,7 +578,7 @@ WHERE t.event_id = 31;
 
 --5.3
 
---Indentify=======
+--======Indentify=======
 SELECT
     t.ticket_id,
     t.status,
@@ -628,7 +628,7 @@ WHERE t.ticket_id = 2;
 --2	"closed"	"2026-02-13 12:00:00"	6	"unauthorized_access"	true
 
 --5.4
---=====Find orphaned tickets========
+--=======Find orphaned tickets========
 SELECT
     t.ticket_id,
     t.status,
@@ -699,9 +699,9 @@ WHERE h.hostname = 'ADMIN-WKS03'
   AND e.event_type = 'failed_login'
 ORDER BY t.opened_at ASC;
 
---16	"2026-02-01 03:15:00"	"closed"	"low"	2	"failed_login"	"2026-02-01 03:16:00"	"Repeated failed RDP logins from external IP"	"ADMIN-WKS03"
---19	"2026-02-01 03:15:00"	"closed"	"low"	1	"failed_login"	"2026-02-01 03:14:00"	"Repeated failed RDP logins from external IP"	"ADMIN-WKS03"
---1	"2026-02-01 03:30:00"	"closed"	"medium"	4	"failed_login"	"2026-02-01 03:22:00"	"Failed login count exceeded threshold"	"ADMIN-WKS03"
+--16	"2026-02-01 03:15:00"	"closed"	"low"		2	"failed_login"	"2026-02-01 03:16:00"	"Repeated failed RDP logins from external IP"	"ADMIN-WKS03"
+--19	"2026-02-01 03:15:00"	"closed"	"low"		1	"failed_login"	"2026-02-01 03:14:00"	"Repeated failed RDP logins from external IP"	"ADMIN-WKS03"
+--1		"2026-02-01 03:30:00"	"closed"	"medium"	4	"failed_login"	"2026-02-01 03:22:00"	"Failed login count exceeded threshold"			"ADMIN-WKS03"
 
 --=====Delete Redundant ticket======
 DELETE FROM ticket
@@ -737,7 +737,7 @@ WHERE h.hostname = 'ADMIN-WKS03'
 ORDER BY e.event_time ASC;
 
 --16	"2026-02-01 03:15:00"	2	"2026-02-01 03:16:00"	"Repeated failed RDP logins from external IP"	"ADMIN-WKS03"
---1	"2026-02-01 03:30:00"	4	"2026-02-01 03:22:00"	"Failed login count exceeded threshold"	"ADMIN-WKS03"
+--1		"2026-02-01 03:30:00"	4	"2026-02-01 03:22:00"	"Failed login count exceeded threshold"			"ADMIN-WKS03"
 
 --Part6--Automation: Stop Repeating Yourself--
 
@@ -912,7 +912,7 @@ ORDER BY
 --tickets, and decommissioned status makes this the highest-priority host in the executive risk summary.
 
 --2. BACKUP-SRV01--Critical Security Risk
---BACKUP-SRV01 in It Operations has one critical event and one open or escalated ticket.  The critical
+--BACKUP-SRV01 in IT Operations has one critical event and one open or escalated ticket.  The critical
 --event is an unauthorized-access incident, and the host itself is classified as critical. Because 
 --backup infrastructure can be particularly important to business recovery, unauthorized access to this
 --system warrants immediate attention.
