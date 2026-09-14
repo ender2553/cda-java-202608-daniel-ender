@@ -1,7 +1,15 @@
 package org.example;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Queue;
 import java.util.Scanner;
+import java.util.Set;
+
 
 /**
  * VehicleSimulator.java
@@ -12,10 +20,12 @@ import java.util.Scanner;
 public class VehicleSimulator {
 
     private final List<Vehicle> fleet;
+    private final Queue<Vehicle> serviceLine;
     private final Scanner scanner;
 
     public VehicleSimulator(List<Vehicle> fleet, Scanner scanner) {
         this.fleet = fleet;
+        this.serviceLine = new LinkedList<>();
         this.scanner = scanner;
     }
 
@@ -51,6 +61,11 @@ public class VehicleSimulator {
                     System.out.println("Goodbye!");
                     running = false;
                 }
+
+                case 7 -> viewMakes();
+                case 8 -> viewInventoryByMake();
+                case 9 -> sendToServiceLine();
+                case 10 -> serviceNextVehicle();
                 default -> System.out.println("Not a valid option - try again.");
             }
             System.out.println();
@@ -65,6 +80,10 @@ public class VehicleSimulator {
         System.out.println("4. Refuel a vehicle");
         System.out.println("5. Honk a vehicle");
         System.out.println("6. Exit");
+        System.out.println("7. View makes in the fleet");
+        System.out.println("8. View inventory by make");
+        System.out.println("9. Send a vehicle to the service line");
+        System.out.println("10. Service the next vehicle in line");
     }
 
     private void viewFleet() {
@@ -78,11 +97,53 @@ public class VehicleSimulator {
         }
     }
 
+    private void viewMakes() {
+        Set<String> makes = new HashSet<>();
+
+        for (Vehicle vehicle : fleet) {
+            makes.add(vehicle.getMake());
+        }
+
+        System.out.println("Unique makes in the fleet: " + makes);
+    }
+
+    private void viewInventoryByMake() {
+        Map<String, Integer> inventory = new HashMap<>();
+
+        for (Vehicle vehicle : fleet) {
+            String make = vehicle.getMake();
+            inventory.put(make, inventory.getOrDefault(make, 0) + 1);
+        }
+
+        for (Map.Entry<String, Integer> entry : inventory.entrySet()) {
+            System.out.println(entry.getKey() + ": " + entry.getValue() + " vehicle(s)");
+        }
+    }
+
+    private void sendToServiceLine() {
+        Vehicle vehicle = selectVehicle();
+        if (vehicle == null) return;
+
+        serviceLine.offer(vehicle);
+        System.out.println("Sent to service line: " + vehicle.describe());
+    }
+
+    private void serviceNextVehicle() {
+        Vehicle vehicle = serviceLine.poll();
+
+        if (vehicle == null) {
+            System.out.println("The service line is empty.");
+            return;
+        }
+
+        System.out.println("Serviced: " + vehicle.describe());
+    }
+
     private void addVehicle() {
         // FUTURE ENHANCEMENT (interfaces & polymorphism day): this menu
         // will grow to include Plane, Boat, Spaceship, Train, etc. via a
         // shared interface instead of three hardcoded cases.
-        System.out.println("Vehicle type: 1) Car  2) Motorcycle  3) Truck");
+        System.out.println("Vehicle type: 1) Car  2) Motorcycle  3) Truck  4) Bus");
         int type = readInt("Choose a type: ");
 
         String make = readLine("Make: ");
@@ -98,6 +159,10 @@ public class VehicleSimulator {
             case 3 -> {
                 double cargo = readDouble("Cargo capacity (tons): ");
                 vehicle = new Truck(make, model, year, new Engine(engineType), startingFuel, cargo);
+            }
+            case 4 -> {
+                int passengerCapacity = readInt("Passenger capacity: ");
+                vehicle = new Bus(make, model, year, new Engine(engineType), startingFuel, passengerCapacity);
             }
             default -> {
                 System.out.println("Not a valid type - vehicle not added.");

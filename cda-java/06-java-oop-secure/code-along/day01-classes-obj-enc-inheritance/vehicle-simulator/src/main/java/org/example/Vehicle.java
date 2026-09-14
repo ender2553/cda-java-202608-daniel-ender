@@ -30,6 +30,7 @@ public abstract class Vehicle {
     private double fuelLevel;      // encapsulated, mutable state
     private int mileage;           // encapsulated, mutable state
 
+    // Constructor
     protected Vehicle(String make, String model, int year, Engine engine, double startingFuel) {
         this.make = make;
         this.model = model;
@@ -38,7 +39,7 @@ public abstract class Vehicle {
         this.fuelLevel = startingFuel;
         this.mileage = 0;
     }
-
+    //Getters and Setters (none used here)
     public String getMake() {
         return make;
     }
