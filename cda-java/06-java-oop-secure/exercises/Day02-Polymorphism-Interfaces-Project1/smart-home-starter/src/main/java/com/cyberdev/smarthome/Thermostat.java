@@ -16,19 +16,28 @@ package com.cyberdev.smarthome;
  */
 public class Thermostat extends SmartDevice {
 
-    // TODO 5 [OOP2-5]: field, constructor, activate(), powerDrawWatts()
+    private final int targetTempFahrenheit;
 
     public Thermostat(String deviceId, String location, int targetTempFahrenheit) {
         super(deviceId, location);
-        throw new UnsupportedOperationException("TODO 5 [OOP2-5]: validate targetTempFahrenheit and assign it");
+
+        if (targetTempFahrenheit < 50 || targetTempFahrenheit > 90) {
+            throw new IllegalArgumentException(
+                    "targetTempFahrenheit must be between 50 and 90"
+            );
+        }
+
+        this.targetTempFahrenheit = targetTempFahrenheit;
     }
 
     @Override
     public String activate() {
-        throw new UnsupportedOperationException("TODO 5 [OOP2-5]: implement activate()");
+        return "Thermostat set to " + targetTempFahrenheit + "°F";
     }
 
+    @Override
     public double powerDrawWatts() {
-        throw new UnsupportedOperationException("TODO 5 [OOP2-5]: implement powerDrawWatts()");
+        return 12.5;
     }
 }
+

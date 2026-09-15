@@ -25,26 +25,25 @@ public class SmartHomeHub {
         return devices.size();
     }
 
-    /**
-     * TODO 8 [OOP2-8]: Return a List<String> containing the result of
-     * calling activate() on EVERY device in this hub, in the order they
-     * were added. This is the payoff of Controllable: one loop, any
-     * number of unrelated device types.
-     */
     public List<String> activateAll() {
-        throw new UnsupportedOperationException("TODO 8 [OOP2-8]: implement activateAll()");
+        List<String> results = new ArrayList<>();
+
+        for (Controllable device : devices) {
+            results.add(device.activate());
+        }
+
+        return results;
     }
 
-    /**
-     * TODO 9 [OOP2-9]: Return a List<Monitorable> containing only the
-     * devices in this hub that ALSO implement Monitorable.
-     *
-     * Use instanceof PATTERN MATCHING (e.g. `if (d instanceof Monitorable m)`)
-     * rather than a blind cast \u2014 a blind cast risks a ClassCastException
-     * the moment this hub contains a Controllable that ISN'T Monitorable
-     * (which, right now, is most of them).
-     */
     public List<Monitorable> findMonitorableDevices() {
-        throw new UnsupportedOperationException("TODO 9 [OOP2-9]: implement findMonitorableDevices()");
+        List<Monitorable> monitorableDevices = new ArrayList<>();
+
+        for (Controllable device : devices) {
+            if (device instanceof Monitorable m) {
+                monitorableDevices.add(m);
+            }
+        }
+
+        return monitorableDevices;
     }
 }

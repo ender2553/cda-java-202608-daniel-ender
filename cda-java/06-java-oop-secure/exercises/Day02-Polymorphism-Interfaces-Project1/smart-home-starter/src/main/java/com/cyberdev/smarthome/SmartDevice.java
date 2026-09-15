@@ -39,7 +39,16 @@ public abstract class SmartDevice implements Controllable {
 
     protected SmartDevice(String deviceId, String location) {
         // TODO 1 [OOP2-1]
-        throw new UnsupportedOperationException("TODO 1 [OOP2-1]: validate and assign deviceId/location");
+        if (deviceId == null || deviceId.isBlank()) {
+            throw new IllegalArgumentException("deviceId must not be null or blank");
+        }
+
+        if (location == null || location.isBlank()) {
+            throw new IllegalArgumentException("location must not be null or blank");
+        }
+
+        this.deviceId = deviceId;
+        this.location = location;
     }
 
     public String getDeviceId() {
@@ -51,30 +60,42 @@ public abstract class SmartDevice implements Controllable {
     }
 
     // TODO 2 [OOP2-2]: declare the abstract powerDrawWatts() method here
-
+    public abstract double powerDrawWatts();
 
     public String runDiagnostics() {
         // TODO 3 [OOP2-3]
-        throw new UnsupportedOperationException("TODO 3 [OOP2-3]: implement runDiagnostics()");
+        return deviceId + " @ " + location + ": "
+                + activate() + " (draws " + powerDrawWatts() + "W)";
     }
 
     @Override
     public String getDeviceName() {
         // TODO 4 [OOP2-4]
-        throw new UnsupportedOperationException("TODO 4 [OOP2-4]: implement getDeviceName()");
+        return deviceId + " (" + location + ")";
     }
 
     @Override
     public String toString() {
         // TODO 4 [OOP2-4]
-        throw new UnsupportedOperationException("TODO 4 [OOP2-4]: implement toString()");
+        return deviceId + " @ " + location;
     }
 
     // TODO: Assuming that every SmartDevice subtype shares the same equality definition.
     //  What code should you add here?
     // Add code here:
 
+    //I would override equals() and hashCode() in SmartDevice,
+    // using the shared identifying fields (deviceId and location)
+    // so all subclasses inherit the same equality definition.
+
+    //@Override
+    //public boolean equals(Object obj) {
+    //    return super.equals(obj);
+   // }
 
 
-
+    // @Override
+   // public int hashCode() {
+    //    return super.hashCode();
+   // }
 }

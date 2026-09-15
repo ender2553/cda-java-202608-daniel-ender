@@ -20,24 +20,32 @@ package com.cyberdev.smarthome;
  */
 public class SmartLight extends SmartDevice {
 
-    // TODO 6 [OOP2-6]: field, constructor, activate(), powerDrawWatts(), toString()
+    private final int brightnessPercent;
 
     public SmartLight(String deviceId, String location, int brightnessPercent) {
         super(deviceId, location);
-        throw new UnsupportedOperationException("TODO 6 [OOP2-6]: validate brightnessPercent and assign it");
+
+        if (brightnessPercent < 0 || brightnessPercent > 100) {
+            throw new IllegalArgumentException(
+                    "brightnessPercent must be between 0 and 100"
+            );
+        }
+
+        this.brightnessPercent = brightnessPercent;
     }
 
     @Override
     public String activate() {
-        throw new UnsupportedOperationException("TODO 6 [OOP2-6]: implement activate()");
+        return "Light on at " + brightnessPercent + "% brightness";
     }
 
+    @Override
     public double powerDrawWatts() {
-        throw new UnsupportedOperationException("TODO 6 [OOP2-6]: implement powerDrawWatts()");
+        return brightnessPercent * 0.08;
     }
 
     @Override
     public String toString() {
-        throw new UnsupportedOperationException("TODO 6 [OOP2-6]: implement toString() using super.toString()");
+        return super.toString() + " | brightness: " + brightnessPercent + "%";
     }
 }

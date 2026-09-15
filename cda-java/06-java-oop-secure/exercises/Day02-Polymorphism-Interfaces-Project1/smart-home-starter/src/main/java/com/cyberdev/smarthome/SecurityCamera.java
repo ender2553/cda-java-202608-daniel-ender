@@ -29,24 +29,40 @@ package com.cyberdev.smarthome;
  */
 public class SecurityCamera implements Controllable, Monitorable {
 
-    // TODO 7 [OOP2-7]: fields, constructor, activate(), getDeviceName(), logEvent()
+    private final String name;
+    private final double batteryPercent;
 
     public SecurityCamera(String name, double batteryPercent) {
-        throw new UnsupportedOperationException("TODO 7 [OOP2-7]: validate and assign fields");
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("name must not be blank");
+        }
+
+        if (batteryPercent < 0 || batteryPercent > 100) {
+            throw new IllegalArgumentException(
+                    "batteryPercent must be between 0 and 100"
+            );
+        }
+
+        this.name = name;
+        this.batteryPercent = batteryPercent;
     }
 
     @Override
     public String activate() {
-        throw new UnsupportedOperationException("TODO 7 [OOP2-7]: implement activate()");
+        return "Camera '" + name + "' recording (battery: " + batteryPercent + "%)";
     }
 
     @Override
     public String getDeviceName() {
-        throw new UnsupportedOperationException("TODO 7 [OOP2-7]: implement getDeviceName()");
+        return name;
     }
 
     @Override
     public String logEvent(String description) {
-        throw new UnsupportedOperationException("TODO 7 [OOP2-7]: implement logEvent()");
+        if (description == null || description.isBlank()) {
+            throw new IllegalArgumentException("description must not be blank");
+        }
+
+        return "[EVENT] " + name + ": " + description;
     }
 }
