@@ -26,8 +26,6 @@ public class ServiceJdbcTemplateRepository implements ServiceRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    // TODO [REPO7]: Implement mapRow() below to build a Service from
-    // one ResultSet row (columns: service_id, host_id, name, port, status).
     private final RowMapper<Service> mapper = this::mapRow;
 
     public ServiceJdbcTemplateRepository(JdbcTemplate jdbcTemplate) {
@@ -36,50 +34,104 @@ public class ServiceJdbcTemplateRepository implements ServiceRepository {
 
     @Override
     public List<Service> findAll() {
-        // TODO [REPO1]: select every service, ordered by service_id.
-        throw new UnsupportedOperationException("TODO");
+        String sql = """
+                SELECT service_id, host_id, name, port, status
+                FROM service
+                ORDER BY service_id
+                """;
+
+        return jdbcTemplate.query(sql, mapper);
     }
 
     @Override
     public List<Service> findByHostId(int hostId) {
-        // TODO [REPO2]: select services for one host. Use a PreparedStatement
-        // placeholder for hostId -- never concatenate it into the SQL string.
-        throw new UnsupportedOperationException("TODO");
+        String sql = """
+                SELECT service_id, host_id, name, port, status
+                FROM service
+                WHERE host_id = ?
+                ORDER BY service_id
+                """;
+
+        return jdbcTemplate.query(sql, mapper, hostId);
     }
 
     @Override
     public Service findById(int serviceId) {
-        // TODO [REPO3]: use jdbcTemplate.queryForObject and handle the
-        // case where no row matches (see TicketJdbcTemplateRepository.findById
-        // for the exception to catch).
-        throw new UnsupportedOperationException("TODO");
+        String sql = """
+            SELECT service_id, host_id, name, port, status
+            FROM service
+            WHERE service_id = ?
+            """;
+
+        List<Service> services = jdbcTemplate.query(sql, mapper, serviceId);
+
+        return services.isEmpty() ? null : services.get(0);
     }
 
     @Override
     public Service add(Service service) {
-        // TODO [REPO4]: insert a new row and use PostgreSQL's `returning`
-        // clause to get the generated service_id back in one round trip.
-        // Return a NEW Service built with that generated id -- do not try
-        // to mutate the Service you were given; serviceId is final.
-        throw new UnsupportedOperationException("TODO");
+        String sql = """
+                INSERT INTO service (host_id, name, port, status)
+                VALUES (?, ?, ?, ?)
+                RETURNING service_id
+                """;
+
+        int serviceId = jdbcTemplate.queryForObject(
+                sql,
+                Integer.class,
+                service.getHostId(),
+                service.getName(),
+                service.getPort(),
+                service.getStatus().name()
+        );
+
+        return new Service(
+                serviceId,
+                service.getHostId(),
+                service.getName(),
+                service.getPort(),
+                service.getStatus()
+        );
     }
 
     @Override
     public boolean update(Service service) {
-        // TODO [REPO5]: update name, port, and status for the given
-        // serviceId. Return true only if a row was actually changed.
-        throw new UnsupportedOperationException("TODO");
+        String sql = """
+                UPDATE service
+                SET name = ?, port = ?, status = ?
+                WHERE service_id = ?
+                """;
+
+        int rowsAffected = jdbcTemplate.update(
+                sql,
+                service.getName(),
+                service.getPort(),
+                service.getStatus().name(),
+                service.getServiceId()
+        );
+
+        return rowsAffected > 0;
     }
 
     @Override
     public boolean deleteById(int serviceId) {
-        // TODO [REPO6]: delete the row. Return true only if a row was
-        // actually removed.
-        throw new UnsupportedOperationException("TODO");
+        String sql = """
+                DELETE FROM service
+                WHERE service_id = ?
+                """;
+
+        int rowsAffected = jdbcTemplate.update(sql, serviceId);
+
+        return rowsAffected > 0;
     }
 
     private Service mapRow(ResultSet rs, int rowNum) throws SQLException {
-        // TODO [REPO7]: build and return a Service from the current row.
-        throw new UnsupportedOperationException("TODO");
+        return new Service(
+                rs.getInt("service_id"),
+                rs.getInt("host_id"),
+                rs.getString("name"),
+                rs.getInt("port"),
+                ServiceStatus.valueOf(rs.getString("status"))
+        );
     }
 }
