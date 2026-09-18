@@ -3,6 +3,7 @@ package learn.secops.data;
 import learn.secops.models.EventType;
 import learn.secops.models.SecurityEvent;
 import learn.secops.models.Severity;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.postgresql.ds.PGSimpleDataSource;
