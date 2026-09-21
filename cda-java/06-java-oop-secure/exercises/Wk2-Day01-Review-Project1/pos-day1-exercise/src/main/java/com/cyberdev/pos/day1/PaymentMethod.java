@@ -13,14 +13,19 @@ public abstract class PaymentMethod {
     private final String cardholderName;
     private final String last4;
 
-    // TODO [POS1-5]: Validate cardholderName (must not be null/blank) and last4 (must be
-    // exactly 4 digits -- use a regex or manual digit check). Throw ValidationException
-    // (com.cyberdev.pos.exception), NOT a raw IllegalArgumentException, for either failure.
-    // Only assign the fields once both checks pass. Every subclass constructor routes
-    // through this one via super(...), so fixing validation here protects the whole
-    // hierarchy.
+    // TODO [POS1-5]: Validate cardholderName and last4.
     protected PaymentMethod(String cardholderName, String last4) {
-        throw new UnsupportedOperationException("TODO [POS1-5]: validate cardholderName/last4 (throw ValidationException) and assign fields (fail closed)");
+
+        if (cardholderName == null || cardholderName.isBlank()) {
+            throw new ValidationException("Cardholder name must not be null or blank");
+        }
+
+        if (last4 == null || !last4.matches("\\d{4}")) {
+            throw new ValidationException("Last4 must be exactly 4 digits");
+        }
+
+        this.cardholderName = cardholderName;
+        this.last4 = last4;
     }
 
     public String getCardholderName() {
@@ -33,11 +38,26 @@ public abstract class PaymentMethod {
 
     public abstract String describe();
 
-    // TODO [POS1-10]: Override equals()/hashCode() for this abstract base class. Two
-    // PaymentMethods are equal if they share the same cardholderName AND last4, REGARDLESS
-    // of concrete subclass (a CreditCard and a GiftCard with the same holder/last4 should be
-    // equal PaymentMethods) -- use `instanceof PaymentMethod`, NOT `getClass() ==
-    // o.getClass()`, since all comparable state lives in this base class and no subclass
-    // adds its own. Use Objects.hash(cardholderName, last4) for hashCode(). Remember:
-    // overriding equals() WITHOUT hashCode() silently breaks HashSet/HashMap behavior.
+    // TODO [POS1-10]: Override equals()/hashCode().
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (!(o instanceof PaymentMethod)) {
+            return false;
+        }
+
+        PaymentMethod that = (PaymentMethod) o;
+
+        return Objects.equals(cardholderName, that.cardholderName)
+                && Objects.equals(last4, that.last4);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(cardholderName, last4);
+    }
 }
+

@@ -26,10 +26,10 @@ public final class GiftCard extends PaymentMethod {
         return balance;
     }
 
-    // TODO [POS1-7]: return a human-readable description including last4 and balance,
-    // e.g. "Gift card ending in 9876 (balance 25.00)".
     @Override
     public String describe() {
-        throw new UnsupportedOperationException("TODO [POS1-7]: implement describe() for GiftCard");
+        return "Gift card ending in " + getLast4()
+                + " (balance " + balance + ")";
     }
 }
+

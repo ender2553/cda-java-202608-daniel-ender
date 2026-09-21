@@ -18,12 +18,9 @@ public final class TerminalRegister {
     private final Queue<Cart> pendingSettlement = new ArrayDeque<>();
     private final Map<String, BigDecimal> terminalDailyTotals = new HashMap<>();
 
-    // TODO [POS1-8]: Record the transactionId as processed. Return true if this is the
-    // first time it has been seen, or false if it is a duplicate (fail closed -- do not
-    // reprocess a duplicate transaction id). Hint: Set.add(...) already returns exactly
-    // this boolean.
+    // TODO [POS1-8]: Record the transactionId as processed.
     public boolean recordTransactionId(String transactionId) {
-        throw new UnsupportedOperationException("TODO [POS1-8]: use the Set to reject duplicate transaction ids (fail closed)");
+        return processedTransactionIds.add(transactionId);
     }
 
     public boolean hasProcessed(String transactionId) {
@@ -32,13 +29,12 @@ public final class TerminalRegister {
 
     // TODO [POS1-9]: Enqueue the cart for settlement (FIFO).
     public void enqueueForSettlement(Cart cart) {
-        throw new UnsupportedOperationException("TODO [POS1-9]: enqueue cart onto the pending settlement Queue");
+        pendingSettlement.add(cart);
     }
 
-    // TODO [POS1-9]: Dequeue and return the next cart for settlement (FIFO). Must return
-    // null (not throw) when the queue is empty.
+    // TODO [POS1-9]: Dequeue and return the next cart for settlement (FIFO).
     public Cart settleNext() {
-        throw new UnsupportedOperationException("TODO [POS1-9]: dequeue next cart for settlement, return null when empty");
+        return pendingSettlement.poll();
     }
 
     public int pendingSettlementCount() {
@@ -59,3 +55,5 @@ public final class TerminalRegister {
         return terminalDailyTotals.getOrDefault(merchantId, BigDecimal.ZERO);
     }
 }
+
+

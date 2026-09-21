@@ -12,14 +12,18 @@ public final class LineItem {
     private final Product product;
     private final int quantity;
 
-    // TODO [POS1-1]: Validate the constructor arguments. `product` must not be null, and
-    // `quantity` must be strictly greater than 0 (fail closed -- reject 0 and negative
-    // quantities). Throw ValidationException (com.cyberdev.pos.exception), NOT a raw
-    // IllegalArgumentException -- ValidationException IS-A PosException, the app-wide base
-    // exception type, so callers only ever need to catch POS-specific exception types. Only
-    // assign the fields once both checks pass.
+    // TODO [POS1-1]: Validate the constructor arguments.
     public LineItem(Product product, int quantity) {
-        throw new UnsupportedOperationException("TODO [POS1-1]: validate product/quantity (throw ValidationException) and assign fields (fail closed on quantity <= 0)");
+        if (product == null) {
+            throw new ValidationException("Product must not be null");
+        }
+
+        if (quantity <= 0) {
+            throw new ValidationException("Quantity must be greater than 0");
+        }
+
+        this.product = product;
+        this.quantity = quantity;
     }
 
     public Product getProduct() {
@@ -34,3 +38,4 @@ public final class LineItem {
         return product.getUnitPrice().multiply(BigDecimal.valueOf(quantity));
     }
 }
+

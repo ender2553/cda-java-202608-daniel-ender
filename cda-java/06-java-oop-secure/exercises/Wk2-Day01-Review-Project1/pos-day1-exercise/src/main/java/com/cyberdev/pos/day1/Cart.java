@@ -1,7 +1,10 @@
 package com.cyberdev.pos.day1;
 
+import com.cyberdev.pos.exception.ValidationException;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -12,17 +15,18 @@ public final class Cart {
 
     private final List<LineItem> items = new ArrayList<>();
 
-    // TODO [POS1-2]: Add the item to the cart's backing list. Reject a null item (fail
-    // closed) before adding.
+    // TODO [POS1-2]: Add the item to the cart's backing list.
     public void addItem(LineItem item) {
-        throw new UnsupportedOperationException("TODO [POS1-2]: validate and add item to the cart's backing list");
+        if (item == null) {
+            throw new ValidationException("Line item must not be null");
+        }
+
+        items.add(item);
     }
 
-    // TODO [POS1-3]: Return the cart's items WITHOUT leaking a live reference to the
-    // backing list -- a caller must not be able to mutate the cart via the returned List.
-    // Use an unmodifiable view (e.g. Collections.unmodifiableList) or a defensive copy.
+    // TODO [POS1-3]: Return the cart's items WITHOUT leaking a live reference.
     public List<LineItem> getItems() {
-        throw new UnsupportedOperationException("TODO [POS1-3]: return an immutable view or copy of items, never the live backing list");
+        return Collections.unmodifiableList(items);
     }
 
     public BigDecimal getTotal() {
@@ -37,3 +41,4 @@ public final class Cart {
         return items.isEmpty();
     }
 }
+

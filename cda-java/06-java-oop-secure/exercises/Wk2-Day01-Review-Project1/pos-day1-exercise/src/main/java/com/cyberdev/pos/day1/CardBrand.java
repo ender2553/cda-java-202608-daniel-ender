@@ -11,14 +11,40 @@ public enum CardBrand {
     DISCOVER,
     UNKNOWN;
 
-    // TODO [POS1-4]: Implement ALLOW-LIST prefix matching:
-    //   starts with "4"        -> VISA
-    //   starts with "34"/"37"  -> AMEX
-    //   starts with "6011"     -> DISCOVER
-    //   starts with "5"        -> MASTERCARD
-    //   anything else (including null, blank, or non-digit input) -> UNKNOWN
-    // This method must NEVER throw -- always fail closed to UNKNOWN.
+    // TODO [POS1-4]: Implement ALLOW-LIST prefix matching.
     public static CardBrand fromNumber(String cardNumber) {
-        throw new UnsupportedOperationException("TODO [POS1-4]: allow-list prefix matching, fail closed to UNKNOWN, never throw");
+
+        // Fail closed for null or blank input
+        if (cardNumber == null || cardNumber.isBlank()) {
+            return UNKNOWN;
+        }
+
+        // Fail closed if any character is not a digit
+        for (int i = 0; i < cardNumber.length(); i++) {
+            if (!Character.isDigit(cardNumber.charAt(i))) {
+                return UNKNOWN;
+            }
+        }
+
+        // Allow-list prefix matching
+        if (cardNumber.startsWith("34") || cardNumber.startsWith("37")) {
+            return AMEX;
+        }
+
+        if (cardNumber.startsWith("6011")) {
+            return DISCOVER;
+        }
+
+        if (cardNumber.startsWith("5")) {
+            return MASTERCARD;
+        }
+
+        if (cardNumber.startsWith("4")) {
+            return VISA;
+        }
+
+        return UNKNOWN;
     }
 }
+
+

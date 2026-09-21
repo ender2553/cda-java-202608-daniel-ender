@@ -49,17 +49,19 @@ public final class CreditCard extends PaymentMethod implements Refundable {
         return expirationYear == currentYear && expirationMonth < currentMonth;
     }
 
-    // TODO [POS1-6]: return a human-readable description including the brand and last4,
-    // e.g. "VISA card ending in 4242 (Alice)".
     @Override
     public String describe() {
-        throw new UnsupportedOperationException("TODO [POS1-6]: implement describe() for CreditCard");
+        return brand + " card ending in " + getLast4()
+                + " (" + getCardholderName() + ")";
     }
 
-    // TODO [POS1-6]: fail closed -- return false for a null, zero, or negative amount;
-    // return true for a valid positive amount.
     @Override
     public boolean refund(BigDecimal amount) {
-        throw new UnsupportedOperationException("TODO [POS1-6]: implement refund() for CreditCard, fail closed on bad amount");
+        if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
+            return false;
+        }
+
+        return true;
     }
 }
+
