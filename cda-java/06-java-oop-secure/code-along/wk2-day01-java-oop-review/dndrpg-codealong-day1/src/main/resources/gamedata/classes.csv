@@ -1,0 +1,5 @@
+characterClass,baseHp,baseAttack,baseDefense,description
+WARRIOR,30,8,5,A stalwart front-line fighter who trades finesse for raw durability.
+MAGE,18,12,2,An experienced spellcaster whose attacks hit far harder than their armor suggests.
+ROGUE,22,10,3,A quick striker who relies on precision over brute strength.
+CLERIC,26,7,4,A resilient healer who can still hold their own in a fight.
