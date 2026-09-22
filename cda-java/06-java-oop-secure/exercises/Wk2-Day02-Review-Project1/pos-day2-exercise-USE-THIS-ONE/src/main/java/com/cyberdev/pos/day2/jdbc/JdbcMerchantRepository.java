@@ -46,6 +46,19 @@ public final class JdbcMerchantRepository implements MerchantRepository {
     // project's own DataAccessException.
     @Override
     public Optional<Merchant> findByMerchantId(String merchantId) {
-        throw new UnsupportedOperationException("TODO [POS2-4]: parameterized findByMerchantId lookup via rowMapper, wrap failures in DataAccessException");
+        if (merchantId == null) {
+            return Optional.empty();
+        }
+
+        try {
+            return jdbcTemplate.query(
+                    "SELECT merchant_id, display_name " +
+                            "FROM merchant WHERE merchant_id = ?",
+                    rowMapper,
+                    merchantId
+            ).stream().findFirst();
+        } catch (org.springframework.dao.DataAccessException e) {
+            throw new DataAccessException("Failed to find merchant by ID", e);
+        }
     }
 }

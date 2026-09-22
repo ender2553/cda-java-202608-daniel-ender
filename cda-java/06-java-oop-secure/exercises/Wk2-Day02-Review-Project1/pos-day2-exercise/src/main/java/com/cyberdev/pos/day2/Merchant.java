@@ -1,5 +1,7 @@
 package com.cyberdev.pos.day2;
 
+import java.util.Objects;
+
 public final class Merchant {
     private final String merchantId;
     private final String displayName;
@@ -29,4 +31,18 @@ public final class Merchant {
     // same merchant", e.g. one is a stale copy before a rename). Use
     // Objects.hash(merchantId) for hashCode(). Remember: overriding equals() WITHOUT
     // hashCode() silently breaks HashSet/HashMap lookups.
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Merchant)) return false;
+        Merchant merchant = (Merchant) o;
+        return merchantId.equals(merchant.merchantId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(merchantId);
+    }
 }
+

@@ -1,5 +1,7 @@
 package com.cyberdev.pos.day2;
 
+import java.util.Objects;
+
 public final class Merchant {
     private final String merchantId;
     private final String displayName;
@@ -23,10 +25,23 @@ public final class Merchant {
         return displayName;
     }
 
-    // TODO [POS2-9]: Override equals()/hashCode() for Merchant. Merchant is an ENTITY type:
-    // equality is by merchantId IDENTITY alone -- do NOT compare displayName (two Merchant
-    // instances with the same merchantId but a different displayName still represent "the
-    // same merchant", e.g. one is a stale copy before a rename). Use
-    // Objects.hash(merchantId) for hashCode(). Remember: overriding equals() WITHOUT
-    // hashCode() silently breaks HashSet/HashMap lookups.
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (!(o instanceof Merchant)) {
+            return false;
+        }
+
+        Merchant other = (Merchant) o;
+        return merchantId.equals(other.merchantId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(merchantId);
+    }
 }
+

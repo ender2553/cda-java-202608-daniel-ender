@@ -18,7 +18,7 @@ public final class DatabaseConfig {
     public static DataSource createDataSource() {
         String url = System.getenv().getOrDefault("POS_DB_URL", "jdbc:postgresql://localhost:5432/quickpay_pos");
         String user = System.getenv().getOrDefault("POS_DB_USER", "quickpay_app_user");
-        String password = System.getenv().getOrDefault("POS_DB_PASSWORD", "");
+        String password = System.getenv().getOrDefault("POS_DB_PASSWORD", "changeme");
 
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("org.postgresql.Driver");

@@ -22,7 +22,10 @@ public final class TransactionService {
     // constructor. Reject a null repository by throwing ValidationException
     // (com.cyberdev.pos.exception), fail closed.
     public TransactionService(TransactionRepository repository) {
-        throw new UnsupportedOperationException("TODO [POS2-5]: store repository via constructor injection, reject null with ValidationException");
+        if (repository == null) {
+            throw new ValidationException("repository must not be null");
+        }
+        this.repository = repository;
     }
 
     // TODO [POS2-6] / TODO [POS2-7]: Build a TransactionRecord from the cart's total
@@ -32,8 +35,40 @@ public final class TransactionService {
     // IllegalStateException -- if a record with that id already exists, so a duplicate sale
     // is never recorded twice (POS2-7). Reject a null/blank cart/merchantId/transactionId
     // with ValidationException.
-    public TransactionRecord recordSale(Cart cart, String merchantId, String transactionId, String memo) {
-        throw new UnsupportedOperationException("TODO [POS2-6]/[POS2-7]: build+save TransactionRecord from cart total, reject duplicate transactionId with DuplicateTransactionException before saving");
+    public TransactionRecord recordSale(
+            Cart cart,
+            String merchantId,
+            String transactionId,
+            String memo) {
+
+        if (cart == null) {
+            throw new ValidationException("cart must not be null");
+        }
+
+        if (merchantId == null || merchantId.isBlank()) {
+            throw new ValidationException("merchantId must not be blank");
+        }
+
+        if (transactionId == null || transactionId.isBlank()) {
+            throw new ValidationException("transactionId must not be blank");
+        }
+
+        if (repository.findById(transactionId).isPresent()) {
+            throw new DuplicateTransactionException(
+                    "Transaction already exists: " + transactionId);
+        }
+
+        TransactionRecord record = new TransactionRecord(
+                transactionId,
+                merchantId,
+                cart.getTotal(),
+                memo,
+                Instant.now()
+        );
+
+        repository.save(record);
+
+        return record;
     }
 
     public TransactionRecord recordSale(Cart cart, String merchantId) {

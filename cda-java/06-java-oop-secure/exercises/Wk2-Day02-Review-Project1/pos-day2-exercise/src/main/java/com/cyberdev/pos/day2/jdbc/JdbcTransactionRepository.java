@@ -41,7 +41,22 @@ public final class JdbcTransactionRepository implements TransactionRepository {
     // leak out directly.
     @Override
     public void save(TransactionRecord record) {
-        throw new UnsupportedOperationException("TODO [POS2-1]: save record via a parameterized INSERT (no string concatenation), wrap failures in DataAccessException");
+        String sql = "INSERT INTO transaction "
+                + "(transaction_id, merchant_id, amount, memo, occurred_at) "
+                + "VALUES (?, ?, ?, ?, ?)";
+
+        try {
+            jdbcTemplate.update(
+                    sql,
+                    record.getTransactionId(),
+                    record.getMerchantId(),
+                    record.getAmount(),
+                    record.getMemo(),
+                    java.sql.Timestamp.from(record.getTimestamp())
+            );
+        } catch (org.springframework.dao.DataAccessException e) {
+            throw new DataAccessException("Failed to save transaction", e);
+        }
     }
 
     // TODO [POS2-2]: Look up a record by transactionId with a "?" PARAMETERIZED
@@ -51,7 +66,26 @@ public final class JdbcTransactionRepository implements TransactionRepository {
     // org.springframework.dao.DataAccessException in this project's DataAccessException.
     @Override
     public Optional<TransactionRecord> findById(String transactionId) {
-        throw new UnsupportedOperationException("TODO [POS2-2]: parameterized findById lookup via rowMapper, wrap failures in DataAccessException");
+        if (transactionId == null) {
+            return Optional.empty();
+        }
+
+        String sql = "SELECT transaction_id, merchant_id, amount, memo, occurred_at "
+                + "FROM transaction WHERE transaction_id = ?";
+
+        try {
+            List<TransactionRecord> results =
+                    jdbcTemplate.query(sql, rowMapper, transactionId);
+
+            if (results.isEmpty()) {
+                return Optional.empty();
+            }
+
+            return Optional.of(results.get(0));
+
+        } catch (org.springframework.dao.DataAccessException e) {
+            throw new DataAccessException("Failed to find transaction by ID", e);
+        }
     }
 
     // TODO [POS2-3]: THIS METHOD IS VULNERABLE TO SQL INJECTION AS SHIPPED.
@@ -71,12 +105,17 @@ public final class JdbcTransactionRepository implements TransactionRepository {
         if (keyword == null) {
             return List.of();
         }
+
         try {
-            // VULNERABLE: the SQL TEXT itself is built by string concatenation, so an
-            // attacker-controlled keyword can inject clause fragments.
             String sql = "SELECT transaction_id, merchant_id, amount, memo, occurred_at "
-                    + "FROM transaction WHERE memo LIKE '%" + keyword + "%'";
-            return jdbcTemplate.query(sql, rowMapper);
+                    + "FROM transaction WHERE memo LIKE ?";
+
+            return jdbcTemplate.query(
+                    sql,
+                    rowMapper,
+                    "%" + keyword + "%"
+            );
+
         } catch (org.springframework.dao.DataAccessException e) {
             throw new DataAccessException("Failed to search transactions by memo", e);
         }

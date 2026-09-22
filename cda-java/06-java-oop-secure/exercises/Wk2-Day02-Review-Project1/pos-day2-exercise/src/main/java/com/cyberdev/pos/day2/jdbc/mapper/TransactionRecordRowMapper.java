@@ -20,7 +20,20 @@ public final class TransactionRecordRowMapper implements RowMapper<TransactionRe
 
     @Override
     public TransactionRecord mapRow(ResultSet rs, int rowNum) throws SQLException {
-        throw new UnsupportedOperationException(
-                "TODO [POS2-8]: map a ResultSet row to a TransactionRecord (see schema/schema.sql for column names)");
+        String transactionId = rs.getString("transaction_id");
+        String merchantId = rs.getString("merchant_id");
+        java.math.BigDecimal amount = rs.getBigDecimal("amount");
+        String memo = rs.getString("memo");
+
+        java.time.Instant timestamp =
+                rs.getObject("occurred_at", java.time.OffsetDateTime.class).toInstant();
+
+        return new TransactionRecord(
+                transactionId,
+                merchantId,
+                amount,
+                memo,
+                timestamp
+        );
     }
 }
