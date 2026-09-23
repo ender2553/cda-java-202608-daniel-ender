@@ -75,8 +75,7 @@ public final class CashierAccount {
 
     @Override
     public String toString() {
-        // Deliberately does not include salt/pinHash -- never echo secret material via a
-        // convenience method that logging code might call without thinking.
+
         return "CashierAccount{cashierId='" + cashierId + "'}";
     }
 }

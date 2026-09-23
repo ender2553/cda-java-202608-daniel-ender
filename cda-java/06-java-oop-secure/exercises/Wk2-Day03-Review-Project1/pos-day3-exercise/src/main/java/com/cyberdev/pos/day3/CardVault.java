@@ -63,33 +63,34 @@ public final class CardVault {
     // together (see decrypt() below, which expects this exact layout). Wrap any
     // GeneralSecurityException in CryptoException.
     public byte[] encrypt(String plaintext, SecretKey key) {
-        //TODO: [POS3-8] - Replace UnsupportedOperationException and check the arguments passed in and throw the proper exception.
-        //throw new UnsupportedOperationException(
-                //"AES-256-GCM encrypt with a fresh random IV every call, packaged as IV || ciphertext");
+        if (plaintext == null) {
+            throw new IllegalArgumentException("plaintext must not be null");
+        }
 
-        //TODO: [POS3-8] - Uncomment try/catch code and fix the code so data is properly encrypted.
-        /*
+        if (key == null) {
+            throw new IllegalArgumentException("key must not be null");
+        }
+
         try {
-            byte[] iv = new byte[0]; //TODO: [POS3-8]
-            secureRandom.nextBytes("replace me"); //TODO: [POS3-8]
+            byte[] iv = new byte[IV_LENGTH_BYTES];
+            secureRandom.nextBytes(iv);
 
-            Cipher cipher = Cipher.getInstance("replace me"); //TODO: [POS3-8]
-            GCMParameterSpec spec = new GCMParameterSpec(GCM_TAG_LENGTH_BITS, iv); //TODO: [POS3-8]
-            cipher.init("replace me with 3 params"); //TODO: [POS3-8]
-            byte[] ciphertext = cipher.doFinal(plaintext.getBytes(StandardCharsets.UTF_8));
+            Cipher cipher = Cipher.getInstance(TRANSFORMATION);
+            GCMParameterSpec spec = new GCMParameterSpec(GCM_TAG_LENGTH_BITS, iv);
+            cipher.init(Cipher.ENCRYPT_MODE, key, spec);
+
+            byte[] ciphertext = cipher.doFinal(
+                    plaintext.getBytes(StandardCharsets.UTF_8)
+            );
 
             return ByteBuffer.allocate(IV_LENGTH_BYTES + ciphertext.length)
                     .put(iv)
                     .put(ciphertext)
                     .array();
+
         } catch (GeneralSecurityException e) {
-            throw new Exception("AES-GCM encryption failed", e); //TODO: [POS3-8] Update Exception to proper custom exception
+            throw new CryptoException("AES-GCM encryption failed", e);
         }
-        */
-
-        return new byte[0];
-
-
     }
 
     // NOTE [POS3-9]: Un-packages the IV that was prepended by encrypt() for
@@ -120,8 +121,10 @@ public final class CardVault {
 
         try {
             ByteBuffer buffer = ByteBuffer.wrap(stored);
+
             byte[] iv = new byte[IV_LENGTH_BYTES];
             buffer.get(iv);
+
             byte[] ciphertext = new byte[buffer.remaining()];
             buffer.get(ciphertext);
 
@@ -129,7 +132,7 @@ public final class CardVault {
             GCMParameterSpec spec = new GCMParameterSpec(GCM_TAG_LENGTH_BITS, iv);
             cipher.init(Cipher.DECRYPT_MODE, key, spec);
             byte[] plaintext = cipher.doFinal(ciphertext);
-            return new String(new byte[0], StandardCharsets.UTF_8);  //TODO [POS3-9]: update with correct code
+            return new String(plaintext, StandardCharsets.UTF_8);  //TODO [POS3-9]: update with correct code
         } catch (AEADBadTagException e) {
             throw new CryptoException("Ciphertext failed integrity check (wrong key or tampered/truncated data)", e);
         } catch (GeneralSecurityException e) {

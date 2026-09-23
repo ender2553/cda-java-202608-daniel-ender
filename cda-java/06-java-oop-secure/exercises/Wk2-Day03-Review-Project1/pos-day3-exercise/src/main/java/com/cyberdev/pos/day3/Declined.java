@@ -10,6 +10,8 @@ public record Declined(String reason) implements AuthorizationResult {
     // TODO [POS3-2]: Validate reason (non-null, non-blank), throwing ValidationException on
     // failure.
     public Declined {
-        throw new UnsupportedOperationException("TODO [POS3-2]: validate reason, throwing ValidationException on failure");
+        if (reason == null || reason.isBlank()) {
+            throw new ValidationException("reason must not be null or blank");
+        }
     }
 }

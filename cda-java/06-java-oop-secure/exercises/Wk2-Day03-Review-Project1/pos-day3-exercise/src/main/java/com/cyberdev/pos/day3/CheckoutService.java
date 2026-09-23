@@ -47,7 +47,20 @@ public final class CheckoutService {
     // Only the Approved case may call `transactionService.recordSale(cart, merchantId)`;
     // Declined and Error must persist nothing. Return the AuthorizationResult either way.
     public AuthorizationResult checkout(Cart cart, PaymentMethod method, String merchantId) {
-        throw new UnsupportedOperationException(
-                "TODO [POS3-4/POS3-5]: authorize, then an exhaustive no-default switch that persists via transactionService ONLY on Approved");
+        Money total = new Money(cart.getTotal(), "USD");
+
+        AuthorizationResult result = authorizer.authorize(method, total);
+
+        switch (result) {
+            case Approved approved -> transactionService.recordSale(cart, merchantId);
+            case Declined declined -> {
+                // Do not persist declined transactions.
+            }
+            case Error error -> {
+                // Do not persist errored transactions.
+            }
+        }
+
+        return result;
     }
 }

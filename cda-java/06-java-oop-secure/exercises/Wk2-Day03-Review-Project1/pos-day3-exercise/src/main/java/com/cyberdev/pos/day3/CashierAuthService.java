@@ -54,8 +54,20 @@ public final class CashierAuthService {
     // call (including a re-enrollment of the same cashierId) must generate its own fresh
     // salt -- never a shared/static one.
     public void enroll(String cashierId, char[] pin) {
-        throw new UnsupportedOperationException(
-                "TODO [POS3-6]: enroll cashier with a fresh per-account SecureRandom salt + PBKDF2 hash");
+        if (cashierId == null || cashierId.isBlank()) {
+            throw new ValidationException("cashierId must not be blank");
+        }
+
+        if (pin == null || pin.length == 0) {
+            throw new ValidationException("pin must not be null or empty");
+        }
+
+        byte[] salt = new byte[SALT_LENGTH_BYTES];
+        secureRandom.nextBytes(salt);
+
+        byte[] pinHash = pbkdf2(pin, salt);
+
+        repository.save(new CashierAccount(cashierId, salt, pinHash));
     }
 
     // INSTRUCTOR NOTE [POS3-7]: Concept tested: fail-closed login that does NOT let a
@@ -87,8 +99,30 @@ public final class CashierAuthService {
     // exception alone (that distinguishability is a username-enumeration oracle). Return
     // normally (no exception) only when the PIN is correct.
     public void login(String cashierId, char[] pin) {
-        throw new UnsupportedOperationException(
-                "TODO [POS3-7]: fail-closed login -- throw AuthenticationException with an identical message for unknown cashier and wrong PIN");
+        final String failureMessage = "Authentication failed";
+
+        try {
+            if (cashierId == null || cashierId.isBlank()) {
+                throw new AuthenticationException(failureMessage);
+            }
+
+            if (pin == null || pin.length == 0) {
+                throw new AuthenticationException(failureMessage);
+            }
+
+            CashierAccount account = repository.findByCashierId(cashierId)
+                    .orElseThrow(() -> new AuthenticationException(failureMessage));
+
+            byte[] computedHash = pbkdf2(pin, account.getSalt());
+
+            if (!MessageDigest.isEqual(computedHash, account.getPinHash())) {
+                throw new AuthenticationException(failureMessage);
+            }
+        } catch (AuthenticationException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new AuthenticationException(failureMessage);
+        }
     }
 
     private byte[] pbkdf2(char[] pin, byte[] salt) {

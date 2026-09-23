@@ -11,6 +11,8 @@ public record Error(String message) implements AuthorizationResult {
     // TODO [POS3-2]: Validate message (non-null, non-blank), throwing ValidationException on
     // failure.
     public Error {
-        throw new UnsupportedOperationException("TODO [POS3-2]: validate message, throwing ValidationException on failure");
+        if (message == null || message.isBlank()) {
+            throw new ValidationException("message must not be null or blank");
+        }
     }
 }

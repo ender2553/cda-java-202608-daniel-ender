@@ -16,6 +16,12 @@ public record Approved(String authCode, Money amount) implements AuthorizationRe
     // TODO [POS3-2]: Validate authCode (non-null, non-blank) and amount (non-null), throwing
     // ValidationException on failure.
     public Approved {
-        throw new UnsupportedOperationException("TODO [POS3-2]: validate authCode/amount, throwing ValidationException on failure");
+        if (authCode == null || authCode.isBlank()) {
+            throw new ValidationException("authCode must not be null or blank");
+        }
+
+        if (amount == null) {
+            throw new ValidationException("amount must not be null");
+        }
     }
 }

@@ -44,8 +44,37 @@ public class SimulatedProcessorAuthorizer implements PaymentAuthorizer {
     // Fail closed: bad-but-plausible input must resolve to Declined/Error, never throw.
     @Override
     public AuthorizationResult authorize(PaymentMethod method, Money amount) {
-        throw new UnsupportedOperationException(
-                "TODO [POS3-3]: trust-boundary validation -- fail closed to Declined/Error, throw ValidationException only for null method/amount");
+        if (method == null) {
+            throw new ValidationException("Payment method must not be null");
+        }
+
+        if (amount == null) {
+            throw new ValidationException("Money amount must not be null");
+        }
+
+        if (amount.amount().signum() <= 0) {
+            return new Declined("Payment amount must be greater than zero");
+        }
+
+        if (method instanceof CreditCard creditCard) {
+            LocalDate today = LocalDate.now();
+
+            if (creditCard.isExpired(today.getYear(), today.getMonthValue())) {
+                return new Declined("Credit card is expired");
+            }
+
+            if (creditCard.getBrand() == CardBrand.UNKNOWN) {
+                return new Declined("Credit card brand is not recognized");
+            }
+
+            return approve(amount);
+        }
+
+        if (method instanceof GiftCard) {
+            return approve(amount);
+        }
+
+        return new Error("Unsupported payment method");
     }
 
     private AuthorizationResult approve(Money amount) {

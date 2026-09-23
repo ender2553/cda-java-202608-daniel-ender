@@ -20,7 +20,8 @@ public final class JavaFundamentals {
      * <p><strong>Example:</strong> addNumbers(4, 6) returns 10.</p>
      */
     public static int addNumbers(int a, int b) {
-        throw todo(1);
+
+        return a + b;
     }
 
     /**
@@ -29,7 +30,8 @@ public final class JavaFundamentals {
      * <p><strong>Example:</strong> doubleNumber(-3) returns -6.</p>
      */
     public static int doubleNumber(int n) {
-        throw todo(2);
+
+        return n * 2;
     }
 
     /**

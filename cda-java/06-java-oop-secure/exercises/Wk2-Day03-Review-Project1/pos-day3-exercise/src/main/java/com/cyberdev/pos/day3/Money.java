@@ -46,8 +46,23 @@ public record Money(BigDecimal amount, String currencyCode) {
     // UPPERCASED value back to currencyCode (the compact constructor's implicit parameter)
     // before the implicit field assignment runs, not just validate a local variable.
     public Money {
-        throw new UnsupportedOperationException(
-                "TODO [POS3-1]: validate amount/currencyCode and normalize currencyCode to uppercase, throwing ValidationException on failure");
+        if (amount == null) {
+            throw new ValidationException("amount must not be null");
+        }
+
+        if (amount.signum() < 0) {
+            throw new ValidationException("amount must not be negative");
+        }
+
+        if (currencyCode == null) {
+            throw new ValidationException("currencyCode must not be null");
+        }
+
+        currencyCode = currencyCode.toUpperCase();
+
+        if (!ALLOWED_CURRENCIES.contains(currencyCode)) {
+            throw new ValidationException("Unsupported currency code: " + currencyCode);
+        }
     }
 
     public Money add(Money other) {
