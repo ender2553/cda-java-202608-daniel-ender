@@ -1,0 +1,6 @@
+id,name,hp,attack,defense,xpReward,goldReward,boss
+goblin,Goblin,15,4,1,20,10,false
+skeleton,Skeleton,20,6,2,30,15,false
+orc,Orc Brute,28,8,3,40,20,false
+dire_wolf,Dire Wolf,24,7,2,35,18,false
+dragon,Ember Dragon,80,15,8,250,150,true
