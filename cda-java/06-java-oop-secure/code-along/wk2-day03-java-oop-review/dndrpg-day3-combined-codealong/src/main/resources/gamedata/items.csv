@@ -1,0 +1,6 @@
+id,name,type,attackBonus,defenseBonus,value
+rusty_sword,Rusty Sword,WEAPON,2,0,10
+iron_shield,Iron Shield,ARMOR,0,3,15
+leather_armor,Leather Armor,ARMOR,0,2,8
+minor_potion,Minor Potion,POTION,0,0,5
+flame_blade,Flame Blade,WEAPON,5,0,40
