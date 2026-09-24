@@ -40,7 +40,7 @@ public final class JavaFundamentals {
      * <p><strong>Example:</strong> rectangleArea(5, 4) returns 20.</p>
      */
     public static int rectangleArea(int l, int w) {
-        throw todo(3);
+        return l * w;
     }
 
     /**
@@ -49,7 +49,7 @@ public final class JavaFundamentals {
      * <p><strong>Example:</strong> minutesToSeconds(5) returns 300.</p>
      */
     public static int minutesToSeconds(int m) {
-        throw todo(4);
+        return m * 60;
     }
 
     /**
@@ -58,7 +58,7 @@ public final class JavaFundamentals {
      * <p><strong>Example:</strong> isEven(8) is true; isEven(7) is false.</p>
      */
     public static boolean isEven(int n) {
-        throw todo(5);
+        return n % 2 == 0;
     }
 
     /**
@@ -67,7 +67,7 @@ public final class JavaFundamentals {
      * <p><strong>Example:</strong> larger(3, 9) returns 9.</p>
      */
     public static int larger(int a, int b) {
-        throw todo(6);
+        return Math.max(a, b);
     }
 
     /**
@@ -76,7 +76,7 @@ public final class JavaFundamentals {
      * <p><strong>Example:</strong> canVote(18) is true.</p>
      */
     public static boolean canVote(int age) {
-        throw todo(7);
+        return age >= 18;
     }
 
     /**
@@ -85,7 +85,13 @@ public final class JavaFundamentals {
      * <p><strong>Example:</strong> numberSign(-4) returns "negative".</p>
      */
     public static String numberSign(int n) {
-        throw todo(8);
+        if (n > 0) {
+            return "positive";
+        } else if (n < 0) {
+            return "negative";
+        } else {
+            return "zero";
+        }
     }
 
     /**
@@ -94,7 +100,7 @@ public final class JavaFundamentals {
      * <p><strong>Example:</strong> inRange(10) and inRange(20) are true.</p>
      */
     public static boolean inRange(int n) {
-        throw todo(9);
+        return n >= 10 && n <= 20;
     }
 
     /**
@@ -103,7 +109,7 @@ public final class JavaFundamentals {
      * <p><strong>Example:</strong> 2024 and 2000 are leap years; 1900 is not.</p>
      */
     public static boolean isLeapYear(int y) {
-        throw todo(10);
+        return y % 400 == 0 || (y % 4 == 0 && y % 100 != 0);
     }
 
     /**
@@ -112,7 +118,17 @@ public final class JavaFundamentals {
      * <p><strong>Example:</strong> sumToN(5) returns 15.</p>
      */
     public static int sumToN(int n) {
-        throw todo(11);
+        if (n < 1) {
+            return 0;
+        }
+
+        int sum = 0;
+
+        for (int i = 1; i <= n; i++) {
+            sum += i;
+        }
+
+        return sum;
     }
 
     /**
@@ -121,7 +137,17 @@ public final class JavaFundamentals {
      * <p><strong>Example:</strong> factorial(5) returns 120.</p>
      */
     public static long factorial(int n) {
-        throw todo(12);
+        if (n < 0) {
+            throw new IllegalArgumentException("n must not be negative");
+        }
+
+        long result = 1;
+
+        for (int i = 1; i <= n; i++) {
+            result *= i;
+        }
+
+        return result;
     }
 
     /**

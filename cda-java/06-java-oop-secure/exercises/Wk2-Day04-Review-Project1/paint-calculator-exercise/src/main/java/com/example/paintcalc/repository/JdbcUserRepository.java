@@ -20,12 +20,53 @@ public class JdbcUserRepository implements UserRepository {
     @Override
     public UserAccount save(UserAccount user) {
         // TODO 5: implement insert/update with JdbcTemplate and ? placeholders.
-        throw new UnsupportedOperationException("TODO: implement JdbcUserRepository.save");
+
+        if (user.id() == 0) {
+            Long id = jdbc.queryForObject(
+                    """
+                    INSERT INTO paint_user (username, password_hash)
+                    VALUES (?, ?)
+                    RETURNING id
+                    """,
+                    Long.class,
+                    user.username(),
+                    user.passwordHash()
+            );
+
+            return new UserAccount(id, user.username(), user.passwordHash());
+        }
+
+        jdbc.update(
+                """
+                UPDATE paint_user
+                SET username = ?, password_hash = ?
+                WHERE id = ?
+                """,
+                user.username(),
+                user.passwordHash(),
+                user.id()
+        );
+
+        return user;
     }
 
     @Override
     public Optional<UserAccount> findByUsername(String username) {
         // TODO 6: query by username using a parameterized JdbcTemplate query.
-        return Optional.empty();
+
+        return jdbc.query(
+                """
+                SELECT id, username, password_hash
+                FROM paint_user
+                WHERE username = ?
+                """,
+                (rs, rowNum) -> new UserAccount(
+                        rs.getLong("id"),
+                        rs.getString("username"),
+                        rs.getString("password_hash")
+                ),
+                username
+        ).stream().findFirst();
     }
 }
+

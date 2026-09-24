@@ -1,6 +1,6 @@
 package com.example.paintcalc.service;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -10,26 +10,33 @@ public final class SecurityReviewExample {
 
     public static String hashPassword(String rawPassword) {
         // TODO 9: replace this plaintext return with BCrypt PasswordEncoder.encode(...).
-        return rawPassword;
+        return new BCryptPasswordEncoder().encode(rawPassword);
     }
 
     public static boolean verifyPassword(String rawPassword, String storedHash) {
         // TODO 10: use PasswordEncoder.matches(...); never compare plaintext passwords.
-        return rawPassword != null && rawPassword.equals(storedHash);
+        if (rawPassword == null || storedHash == null) {
+            return false;
+        }
+
+        return new BCryptPasswordEncoder().matches(rawPassword, storedHash);
     }
 
     public static String safeUserQuery() {
         // TODO 11: return SQL with a ? placeholder. Do not concatenate username input into SQL.
-        return "select id from paint_user where username='" + "studentInput" + "'";
+        return "select id from paint_user where username=?";
     }
 
     public static List<String> safeInventoryCopy(List<String> inventory) {
         // TODO 12: return an immutable defensive copy, not the mutable list itself.
-        return inventory;
+        return List.copyOf(inventory);
     }
 
     public static BigDecimal safeCost(BigDecimal unitPrice, int gallons) {
         // TODO 13: use BigDecimal arithmetic and setScale(2); avoid double for money.
-        return new BigDecimal(unitPrice.doubleValue() * gallons);
+        return unitPrice
+                .multiply(BigDecimal.valueOf(gallons))
+                .setScale(2);
     }
 }
+

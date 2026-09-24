@@ -13,8 +13,20 @@ public final class Room {
         this.width = DomainValidation.positive(width, "width");
         this.height = DomainValidation.positive(height, "height");
     }
-    public BigDecimal length() { return length; }
-    public BigDecimal width() { return width; }
-    public BigDecimal height() { return height; }
-    public BigDecimal wallSquareFeet() { return length.add(width).multiply(BigDecimal.valueOf(2)).multiply(height); }
+
+    public BigDecimal length() {
+        return length;
+    }
+
+    public BigDecimal width() {
+        return width;
+    }
+
+    public BigDecimal height() {
+        return height;
+    }
+
+    public BigDecimal wallSquareFeet() {
+        return length.add(width).multiply(height);
+    }
 }
