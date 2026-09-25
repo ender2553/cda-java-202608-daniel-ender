@@ -25,9 +25,52 @@ public final class ThreatIntelAlertRowMapper implements RowMapper<ThreatIntelAle
     // publication date. severity goes through Severity.parseStoredAlertSeverity (NONE is not a
     // storable alert severity -- see Severity's design note); indicator_type through
     // IndicatorType.parse.
+
     @Override
     public ThreatIntelAlert mapRow(ResultSet rs, int rowNum) throws SQLException {
-        throw new UnsupportedOperationException(
-                "TODO [SEC-9]: map the current row to a ThreatIntelAlert, null-safe for related_cve_id/description/published_at");
+        Long id = rs.getObject("id", Long.class);
+
+        String externalAlertId = rs.getString("external_alert_id");
+        String source = rs.getString("source");
+
+        IndicatorType indicatorType =
+                IndicatorType.parse(rs.getString("indicator_type"));
+
+        String indicatorValue = rs.getString("indicator_value");
+        String relatedCveId = rs.getString("related_cve_id");
+
+        Severity severity =
+                Severity.parseStoredAlertSeverity(rs.getString("severity"));
+
+        String description = rs.getString("description");
+
+        Timestamp publishedAtTimestamp =
+                rs.getTimestamp("published_at");
+
+        java.time.Instant publishedAt =
+                publishedAtTimestamp == null
+                        ? null
+                        : publishedAtTimestamp.toInstant();
+
+        Timestamp ingestedAtTimestamp =
+                rs.getTimestamp("ingested_at");
+
+        java.time.Instant ingestedAt =
+                ingestedAtTimestamp == null
+                        ? null
+                        : ingestedAtTimestamp.toInstant();
+
+        return new ThreatIntelAlert(
+                id,
+                externalAlertId,
+                source,
+                indicatorType,
+                indicatorValue,
+                relatedCveId,
+                severity,
+                description,
+                publishedAt,
+                ingestedAt
+        );
     }
 }

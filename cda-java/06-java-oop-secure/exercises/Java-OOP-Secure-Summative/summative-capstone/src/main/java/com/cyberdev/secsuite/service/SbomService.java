@@ -50,7 +50,23 @@ public class SbomService {
     // SBOM of this size; a production Jdbc implementation would add a repository method that
     // does the three-table JOIN in one query -- the service contract would not change.
     public List<ComponentVulnerabilities> findVulnerableComponents() {
-        throw new UnsupportedOperationException(
-                "TODO [SEC-7]: one ComponentVulnerabilities per component (EMPTY list when it has no CVEs); a dangling CVE link fails closed");
+        List<ComponentVulnerabilities> result = new ArrayList<>();
+
+        for (Component component : componentRepository.findAll()) {
+            List<CveCatalogEntry> cves = new ArrayList<>();
+
+            for (String cveId : componentRepository.findCveIdsByComponentId(component.getId())) {
+                CveCatalogEntry cve = cveCatalogRepository.findById(cveId)
+                        .orElseThrow(() -> new ValidationException(
+                                "Component " + component.getId()
+                                        + " references unknown CVE " + cveId));
+
+                cves.add(cve);
+            }
+
+            result.add(new ComponentVulnerabilities(component, cves));
+        }
+
+        return result;
     }
 }

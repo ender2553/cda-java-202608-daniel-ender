@@ -93,8 +93,62 @@ public class ReportService {
     // reports/ already exists, fails on a clean checkout); catching IOException and printing a
     // stack trace, then carrying on; writing with the platform default charset.
     public Path generateMarkdownReport(Path outputPath, Analyst preparedBy, List<IngestionSummary> ingestionRuns) {
-        throw new UnsupportedOperationException(
-                "TODO [SEC-16]: build the Markdown, create parent directories, write UTF-8, wrap any IOException in ReportGenerationException");
+        if (outputPath == null) {
+            throw new ValidationException("outputPath must not be null");
+        }
+
+        if (preparedBy == null) {
+            throw new ValidationException("preparedBy must not be null");
+        }
+
+        String markdown = buildMarkdown(preparedBy, ingestionRuns);
+
+        try {
+            Path parent = outputPath.toAbsolutePath().getParent();
+
+            if (parent != null) {
+                Files.createDirectories(parent);
+            }
+
+            Path tempFile = Files.createTempFile(
+                    parent,
+                    outputPath.getFileName().toString(),
+                    ".tmp"
+            );
+
+            try {
+                Files.writeString(
+                        tempFile,
+                        markdown,
+                        StandardCharsets.UTF_8
+                );
+
+                try {
+                    Files.move(
+                            tempFile,
+                            outputPath,
+                            StandardCopyOption.REPLACE_EXISTING,
+                            StandardCopyOption.ATOMIC_MOVE
+                    );
+                } catch (AtomicMoveNotSupportedException e) {
+                    Files.move(
+                            tempFile,
+                            outputPath,
+                            StandardCopyOption.REPLACE_EXISTING
+                    );
+                }
+            } finally {
+                Files.deleteIfExists(tempFile);
+            }
+
+            return outputPath;
+
+        } catch (IOException e) {
+            throw new ReportGenerationException(
+                    "Unable to generate Markdown report at " + outputPath,
+                    e
+            );
+        }
     }
 
     // INSTRUCTOR NOTE [SEC-16]: Concept tested: every module gets its own "## " section EVEN
@@ -116,8 +170,47 @@ public class ReportService {
     // cannot forge extra lines or headings). Encode ALL data values uniformly -- deciding
     // field-by-field which ones are "trusted" is how the one you got wrong becomes the hole.
     public String buildMarkdown(Analyst preparedBy, List<IngestionSummary> ingestionRuns) {
-        throw new UnsupportedOperationException(
-                "TODO [SEC-16]: header plus all eight sections in order, every data value escaped with escapeMd");
+        if (preparedBy == null) {
+            throw new ValidationException("preparedBy must not be null");
+        }
+
+        if (ingestionRuns == null) {
+            throw new ValidationException("ingestionRuns must not be null");
+        }
+
+        List<Asset> assets = assetRepository.findAll();
+
+        Map<Long, Asset> assetsById = new LinkedHashMap<>();
+        for (Asset asset : assets) {
+            assetsById.put(asset.getId(), asset);
+        }
+
+        StringBuilder md = new StringBuilder();
+
+        md.append("# SecOps Analyst Suite -- Security Assessment Report\n");
+        md.append("- **Generated:** ")
+                .append(escapeMd(TIMESTAMP.format(clock.instant())))
+                .append("\n");
+        md.append("- **Prepared by:** ")
+                .append(escapeMd(preparedBy.getUsername()))
+                .append("\n");
+        md.append("- **Scope:** ")
+                .append(escapeMd(String.valueOf(assets.size())))
+                .append(" assets, ")
+                .append(escapeMd(String.valueOf(cveCatalogRepository.findAll().size())))
+                .append(" catalogued CVEs\n\n");
+
+        md.append("> This report contains fictional training data for the SecOps Analyst Suite capstone.\n\n");
+        appendAssetInventory(md, assets);
+        appendOpenFindings(md, assetsById);
+        appendRiskRegister(md, assetsById);
+        appendSbom(md);
+        appendStrideCoverage(md, assetsById);
+        appendAlerts(md);
+        appendCorrelation(md);
+        appendIngestionSummary(md, ingestionRuns);
+
+        return md.toString();
     }
 
     private void appendAssetInventory(StringBuilder md, List<Asset> assets) {

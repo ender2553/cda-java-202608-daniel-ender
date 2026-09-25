@@ -73,25 +73,87 @@ public class JdbcThreatIntelAlertRepository implements ThreatIntelAlertRepositor
 
     @Override
     public Optional<ThreatIntelAlert> findByExternalAlertId(String externalAlertId) {
-        throw new UnsupportedOperationException(
-                "TODO [SEC-9]: exact parameterized match on external_alert_id; empty result -> Optional.empty()");
+        if (externalAlertId == null || externalAlertId.isBlank()) {
+            return Optional.empty();
+        }
+
+        try {
+            List<ThreatIntelAlert> results = jdbcTemplate.query(
+                    SELECT_COLUMNS + " WHERE external_alert_id = ?",
+                    rowMapper,
+                    externalAlertId
+            );
+
+            if (results.isEmpty()) {
+                return Optional.empty();
+            }
+
+            return Optional.of(results.get(0));
+
+        } catch (org.springframework.dao.DataAccessException e) {
+            throw new DataAccessException(
+                    "Failed to find threat intel alert by external id "
+                            + externalAlertId,
+                    e
+            );
+        }
     }
 
     @Override
     public List<ThreatIntelAlert> findAll() {
-        throw new UnsupportedOperationException(
-                "TODO [SEC-9]: SELECT every alert ORDER BY external_alert_id");
+        try {
+            return jdbcTemplate.query(
+                    SELECT_COLUMNS + " ORDER BY external_alert_id",
+                    rowMapper
+            );
+
+        } catch (org.springframework.dao.DataAccessException e) {
+            throw new DataAccessException(
+                    "Failed to find all threat intel alerts",
+                    e
+            );
+        }
     }
 
     @Override
     public List<ThreatIntelAlert> findByIndicatorType(IndicatorType indicatorType) {
-        throw new UnsupportedOperationException(
-                "TODO [SEC-9]: parameterized SELECT ... WHERE indicator_type = ? (bind name()) ORDER BY external_alert_id");
+        if (indicatorType == null) {
+            return List.of();
+        }
+
+        try {
+            return jdbcTemplate.query(
+                    SELECT_COLUMNS
+                            + " WHERE indicator_type = ?"
+                            + " ORDER BY external_alert_id",
+                    rowMapper,
+                    indicatorType.name()
+            );
+
+        } catch (org.springframework.dao.DataAccessException e) {
+            throw new DataAccessException(
+                    "Failed to find threat intel alerts by indicator type "
+                            + indicatorType,
+                    e
+            );
+        }
     }
 
     @Override
     public long count() {
-        throw new UnsupportedOperationException(
-                "TODO [SEC-9]: SELECT count(*) via queryForObject(sql, Long.class)");
+        try {
+            Long count = jdbcTemplate.queryForObject(
+                    "SELECT count(*) FROM threat_intel_alert",
+                    Long.class
+            );
+
+            return count == null ? 0L : count;
+
+        } catch (org.springframework.dao.DataAccessException e) {
+            throw new DataAccessException(
+                    "Failed to count threat intel alerts",
+                    e
+            );
+        }
     }
 }

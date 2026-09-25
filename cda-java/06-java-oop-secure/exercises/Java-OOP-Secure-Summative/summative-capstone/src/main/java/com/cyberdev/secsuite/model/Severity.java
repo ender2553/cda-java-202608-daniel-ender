@@ -45,8 +45,27 @@ public enum Severity {
     // A classifier that fails OPEN (silently puts a malformed score in some bucket) produces a
     // report that looks authoritative and is wrong -- worse than no report at all.
     public static Severity fromCvssScore(double score) {
-        throw new UnsupportedOperationException(
-                "TODO [SEC-2]: classify a CVSS v3 base score into NONE/LOW/MEDIUM/HIGH/CRITICAL; reject < 0.0, > 10.0 and NaN");
+        if (Double.isNaN(score) || Double.isInfinite(score) || score < 0.0 || score > 10.0) {
+            throw new ValidationException("CVSS score must be between 0.0 and 10.0");
+        }
+
+        if (score == 0.0) {
+            return NONE;
+        }
+
+        if (score < 4.0) {
+            return LOW;
+        }
+
+        if (score < 7.0) {
+            return MEDIUM;
+        }
+
+        if (score < 9.0) {
+            return HIGH;
+        }
+
+        return CRITICAL;
     }
 
     /**

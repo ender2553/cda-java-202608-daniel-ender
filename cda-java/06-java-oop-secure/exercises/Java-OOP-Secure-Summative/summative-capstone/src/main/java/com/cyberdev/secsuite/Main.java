@@ -280,10 +280,119 @@ public final class Main {
         if (ui == null || reportFile == null) {
             throw new ValidationException("ui and reportFile must not be null");
         }
-        throw new UnsupportedOperationException(
-                "TODO [SEC-17]: wire shared in-memory repositories and services with one Clock, seed, authenticate, then return runPipeline(...)" +
-                        "TODO: Then swap to Jdbc repositiories"
 
+// ---- (a) shared in-memory repositories -----------------------------------
+        AnalystRepository analystRepository = new InMemoryAnalystRepository();
+        AssetRepository assetRepository = new InMemoryAssetRepository();
+        CveCatalogRepository cveCatalogRepository = new InMemoryCveCatalogRepository();
+        ScanFindingRepository scanFindingRepository = new InMemoryScanFindingRepository();
+        RiskRegisterRepository riskRegisterRepository = new InMemoryRiskRegisterRepository();
+        ComponentRepository componentRepository = new InMemoryComponentRepository();
+        ThreatModelRepository threatModelRepository = new InMemoryThreatModelRepository();
+        ThreatModelEntryRepository threatModelEntryRepository = new InMemoryThreatModelEntryRepository();
+        ThreatIntelAlertRepository threatIntelAlertRepository =
+                new InMemoryThreatIntelAlertRepository();
+
+// ---- (b) one shared Clock + constructor-injected services ----------------
+        Clock clock = resolveClock();
+
+        PasswordHasher passwordHasher = new PasswordHasher();
+        EncryptionService encryptionService =
+                new EncryptionService(EncryptionKeyConfig.loadOrGenerateKey());
+
+        AuthService authService =
+                new AuthService(
+                        analystRepository,
+                        passwordHasher,
+                        encryptionService,
+                        clock
+                );
+
+        ScannerService scannerService =
+                new ScannerService(
+                        scanFindingRepository,
+                        assetRepository,
+                        cveCatalogRepository,
+                        clock
+                );
+
+        RiskRegisterService riskRegisterService =
+                new RiskRegisterService(
+                        riskRegisterRepository,
+                        assetRepository,
+                        scanFindingRepository,
+                        cveCatalogRepository,
+                        analystRepository,
+                        clock
+                );
+
+        SbomService sbomService =
+                new SbomService(
+                        componentRepository,
+                        cveCatalogRepository
+                );
+
+        ThreatModelingService threatModelingService =
+                new ThreatModelingService(
+                        threatModelRepository,
+                        threatModelEntryRepository,
+                        assetRepository,
+                        clock
+                );
+
+        ThreatIntelCsvIngestionService ingestionService =
+                new ThreatIntelCsvIngestionService(
+                        cveCatalogRepository,
+                        threatIntelAlertRepository,
+                        clock
+                );
+
+        ThreatIntelAlertService threatIntelAlertService =
+                new ThreatIntelAlertService(
+                        threatIntelAlertRepository,
+                        scanFindingRepository,
+                        assetRepository
+                );
+
+        ReportService reportService =
+                new ReportService(
+                        assetRepository,
+                        cveCatalogRepository,
+                        scannerService,
+                        riskRegisterService,
+                        sbomService,
+                        threatModelingService,
+                        threatIntelAlertService,
+                        clock
+                );
+
+// ---- (c) load reference/seed data ----------------------------------------
+        InMemorySeedLoader.load(
+                assetRepository,
+                cveCatalogRepository,
+                scanFindingRepository,
+                componentRepository,
+                threatModelRepository,
+                threatModelEntryRepository,
+                threatIntelAlertRepository
+        );
+
+// ---- (d) login gate -------------------------------------------------------
+        Analyst analyst = ui.runLoginGate(authService);
+
+// ---- (e) deterministic pipeline ------------------------------------------
+        return runPipeline(
+                analyst,
+                reportFile,
+                assetRepository,
+                threatIntelAlertRepository,
+                ingestionService,
+                scannerService,
+                riskRegisterService,
+                sbomService,
+                threatModelingService,
+                threatIntelAlertService,
+                reportService
         );
 
         /*

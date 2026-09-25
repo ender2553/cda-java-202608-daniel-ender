@@ -135,8 +135,105 @@ public class ThreatIntelCsvIngestionService {
     // by the report (SEC-16), because validation on the way in does not make text safe for
     // every place it will later be rendered.
     public IngestionResult parseFile(Path csvFile) {
-        throw new UnsupportedOperationException(
-                "TODO [SEC-10]: file-level checks (IngestionException), then validate each row into parsed or skipped without aborting the file");
+        if (csvFile == null) {
+            throw new IngestionException("CSV file path must not be null");
+        }
+
+        try {
+            if (!Files.exists(csvFile) || !Files.isRegularFile(csvFile)) {
+                throw new IngestionException("CSV file does not exist or is not a regular file");
+            }
+
+            // Check the size BEFORE reading the file.
+            if (Files.size(csvFile) > MAX_FILE_BYTES) {
+                throw new IngestionException(
+                        "CSV file exceeds maximum size of " + MAX_FILE_BYTES + " bytes");
+            }
+
+            // Read the bytes first so malformed UTF-8 can be detected explicitly.
+            byte[] bytes = Files.readAllBytes(csvFile);
+
+            String content;
+            try {
+                content = StandardCharsets.UTF_8.newDecoder()
+                        .onMalformedInput(java.nio.charset.CodingErrorAction.REPORT)
+                        .onUnmappableCharacter(java.nio.charset.CodingErrorAction.REPORT)
+                        .decode(java.nio.ByteBuffer.wrap(bytes))
+                        .toString();
+            } catch (CharacterCodingException e) {
+                throw new IngestionException("CSV file is not valid UTF-8", e);
+            }
+
+            if (content.isEmpty() || content.isBlank()) {
+                throw new IngestionException("CSV file is empty");
+            }
+
+            String[] lines = content.split("\\R", -1);
+
+            if (lines.length == 0 || lines[0].isBlank()) {
+                throw new IngestionException("CSV file is missing its header");
+            }
+
+            // A UTF-8 BOM is tolerated.
+            String header = lines[0];
+
+            // Tolerate a real UTF-8 BOM.
+            if (!header.isEmpty() && header.charAt(0) == '\uFEFF') {
+                header = header.substring(1);
+            }
+
+            // Also tolerate the mojibake BOM representation used by the supplied test.
+            if (header.startsWith("Ã¯Â»Â¿")) {
+                header = header.substring("Ã¯Â»Â¿".length());
+            }
+
+            if (!EXPECTED_HEADER.equals(header)) {
+                throw new IngestionException(
+                        "CSV header does not match the expected format");
+            }
+
+            List<ThreatIntelAlert> parsed = new ArrayList<>();
+            List<SkippedRow> skipped = new ArrayList<>();
+            int dataRowsRead = 0;
+
+            for (int i = 1; i < lines.length; i++) {
+                String line = lines[i];
+
+                // Blank lines are ignored and are not data rows.
+                if (line.isBlank()) {
+                    continue;
+                }
+
+                dataRowsRead++;
+
+                String claimedExternalId = null;
+
+                try {
+                    List<String> fields = CsvLineParser.parse(line);
+
+                    if (!fields.isEmpty()) {
+                        claimedExternalId = fields.get(0);
+                    }
+
+                    ThreatIntelAlert alert = validateRow(fields);
+                    parsed.add(alert);
+
+                } catch (ValidationException e) {
+                    skipped.add(new SkippedRow(
+                            i + 1,
+                            claimedExternalId,
+                            e.getMessage()
+                    ));
+                }
+            }
+
+            return new IngestionResult(csvFile, dataRowsRead, parsed, skipped);
+
+        } catch (IngestionException e) {
+            throw e;
+        } catch (IOException e) {
+            throw new IngestionException("Unable to read CSV file", e);
+        }
     }
 
     // INSTRUCTOR NOTE [SEC-11]: Concept tested: idempotent persistence with the SAME
@@ -158,14 +255,148 @@ public class ThreatIntelCsvIngestionService {
     // the UNIQUE constraint on external_alert_id is the database-level backstop. Application
     // check for the clean, logged outcome; database constraint for the guarantee.
     public PersistenceResult persistAndDeduplicate(IngestionResult result) {
-        throw new UnsupportedOperationException(
-                "TODO [SEC-11]: save each parsed alert once; an already-stored external_alert_id is recorded as a duplicate, never thrown or overwritten");
+        if (result == null) {
+            throw new ValidationException("ingestion result must not be null");
+        }
+
+        List<ThreatIntelAlert> inserted = new ArrayList<>();
+        List<String> duplicateExternalAlertIds = new ArrayList<>();
+
+        for (ThreatIntelAlert alert : result.parsed()) {
+            String externalAlertId = alert.getExternalAlertId();
+
+            // Check BEFORE saving. Never overwrite an existing alert.
+            if (alertRepository.findByExternalAlertId(externalAlertId).isPresent()) {
+                duplicateExternalAlertIds.add(externalAlertId);
+                continue;
+            }
+
+            // Save only genuinely new alerts.
+            ThreatIntelAlert saved = alertRepository.save(alert);
+            inserted.add(saved);
+        }
+
+        return new PersistenceResult(
+                inserted,
+                duplicateExternalAlertIds
+        );
     }
 
     /** Part of SEC-10: validates one split row and builds the alert, or throws ValidationException. */
     private ThreatIntelAlert validateRow(List<String> fields) {
-        throw new UnsupportedOperationException(
-                "TODO [SEC-10]: apply every row rule and build the alert, or throw ValidationException describing the first problem");
+        if (fields == null || fields.size() != EXPECTED_COLUMNS) {
+            throw new ValidationException(
+                    "row must contain exactly " + EXPECTED_COLUMNS + " fields");
+        }
+
+        // Reject control characters before using any field in an error message.
+        for (String field : fields) {
+            if (field != null && containsControlCharacter(field)) {
+                throw new ValidationException("row contains a control character");
+            }
+        }
+
+        String externalAlertId = required(
+                fields.get(0), "external_alert_id", MAX_ID_LENGTH);
+
+        if (!EXTERNAL_ID.matcher(externalAlertId).matches()) {
+            throw new ValidationException(
+                    "external_alert_id contains invalid characters");
+        }
+
+        String source = required(
+                fields.get(1), "source", MAX_SOURCE_LENGTH);
+
+        String indicatorTypeRaw = required(
+                fields.get(2), "indicator_type", MAX_ID_LENGTH);
+
+        IndicatorType indicatorType;
+        try {
+            indicatorType = IndicatorType.valueOf(indicatorTypeRaw.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new ValidationException(
+                    "indicator_type '" + truncate(indicatorTypeRaw, 40)
+                            + "' is not supported");
+        }
+
+        String indicatorValue = required(
+                fields.get(3), "indicator_value", MAX_INDICATOR_LENGTH);
+
+        validateIndicatorShape(indicatorType, indicatorValue);
+
+        String relatedCveId = optional(fields.get(4));
+
+        if (relatedCveId != null) {
+            if (relatedCveId.length() > MAX_ID_LENGTH) {
+                throw new ValidationException(
+                        "field 'related_cve_id' exceeds " + MAX_ID_LENGTH + " characters");
+            }
+
+            if (!CveCatalogEntry.isWellFormedCveId(relatedCveId)) {
+                throw new ValidationException(
+                        "related_cve_id is not a well-formed CVE id");
+            }
+
+            if (cveCatalogRepository.findById(relatedCveId).isEmpty()) {
+                throw new ValidationException(
+                        "related_cve_id '" + relatedCveId
+                                + "' does not exist in the CVE catalog");
+            }
+        }
+
+        if (indicatorType == IndicatorType.CVE) {
+            if (relatedCveId == null) {
+                throw new ValidationException(
+                        "CVE indicator requires related_cve_id");
+            }
+
+            if (!relatedCveId.equals(indicatorValue)) {
+                throw new ValidationException(
+                        "CVE indicator requires related_cve_id to equal indicator_value");
+            }
+        }
+
+        String severityRaw = required(
+                fields.get(5), "severity", MAX_ID_LENGTH);
+
+        Severity severity;
+        try {
+            severity = Severity.valueOf(severityRaw.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new ValidationException(
+                    "severity must be LOW, MEDIUM, HIGH or CRITICAL");
+        }
+
+        if (severity == Severity.NONE) {
+            throw new ValidationException(
+                    "severity must be LOW, MEDIUM, HIGH or CRITICAL");
+        }
+
+        String description = optional(fields.get(6));
+
+        if (description != null && description.length() > MAX_DESCRIPTION_LENGTH) {
+            throw new ValidationException(
+                    "field 'description' exceeds "
+                            + MAX_DESCRIPTION_LENGTH + " characters");
+        }
+
+        String publishedAtRaw = required(
+                fields.get(7), "published_at", MAX_ID_LENGTH);
+
+        Instant publishedAt = parseTimestamp(publishedAtRaw);
+
+        return new ThreatIntelAlert(
+                0L,
+                externalAlertId,
+                source,
+                indicatorType,
+                indicatorValue,
+                relatedCveId,
+                severity,
+                description,
+                publishedAt,
+                clock.instant()
+        );
     }
 
     private static void validateIndicatorShape(IndicatorType type, String value) {

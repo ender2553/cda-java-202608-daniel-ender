@@ -25,7 +25,22 @@ public final class ThreatModelEntryRowMapper implements RowMapper<ThreatModelEnt
     // report. mitigation may be NULL; pass it through (the model normalizes blank to null).
     @Override
     public ThreatModelEntry mapRow(ResultSet rs, int rowNum) throws SQLException {
-        throw new UnsupportedOperationException(
-                "TODO [SEC-8]: map the current row to a ThreatModelEntry using the strict enum parse methods (never call rs.next())");
+        Long id = rs.getObject("id", Long.class);
+        Long threatModelId = rs.getObject("threat_model_id", Long.class);
+        StrideCategory strideCategory =
+                StrideCategory.parse(rs.getString("stride_category"));
+        String description = rs.getString("description");
+        String mitigation = rs.getString("mitigation");
+        ThreatModelEntryStatus status =
+                ThreatModelEntryStatus.parse(rs.getString("status"));
+
+        return new ThreatModelEntry(
+                id,
+                threatModelId,
+                strideCategory,
+                description,
+                mitigation,
+                status
+        );
     }
 }

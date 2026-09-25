@@ -15,7 +15,9 @@ public record CriticalRisk(int score) implements RiskAssessment {
     public static final int MAX_SCORE = 25;
 
     public CriticalRisk {
-        throw new UnsupportedOperationException(
-                "TODO [SEC-5]: reject a score outside this band (MIN_SCORE..MAX_SCORE = 20..25) with ValidationException");
+        if (score < MIN_SCORE || score > MAX_SCORE) {
+            throw new ValidationException(
+                    "CriticalRisk score must be between " + MIN_SCORE + " and " + MAX_SCORE);
+        }
     }
 }

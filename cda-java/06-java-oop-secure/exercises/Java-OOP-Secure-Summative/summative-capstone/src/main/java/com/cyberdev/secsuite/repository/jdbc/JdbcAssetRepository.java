@@ -36,7 +36,8 @@ import java.util.Optional;
 @Profile("jdbc")
 public class JdbcAssetRepository implements AssetRepository {
 
-    private static final String SELECT_COLUMNS = "SELECT id, hostname, ip_address, owner_team, criticality FROM asset";
+    private static final String SELECT_COLUMNS =
+            "SELECT id, hostname, ip_address, owner_team, criticality FROM asset";
 
     private final JdbcTemplate jdbcTemplate;
     private final AssetRowMapper rowMapper = new AssetRowMapper();
@@ -73,9 +74,14 @@ public class JdbcAssetRepository implements AssetRepository {
             Long id = jdbcTemplate.queryForObject(
                     "INSERT INTO asset (hostname, ip_address, owner_team, criticality) "
                             + "VALUES (?, ?, ?, ?) RETURNING id",
-                    Long.class, asset.getHostname(), asset.getIpAddress(), asset.getOwnerTeam(),
+                    Long.class,
+                    asset.getHostname(),
+                    asset.getIpAddress(),
+                    asset.getOwnerTeam(),
                     asset.getCriticality().name());
+
             return asset.withId(id);
+
         } catch (org.springframework.dao.DataAccessException e) {
             throw new DataAccessException("Failed to save asset " + asset.getHostname(), e);
         }
@@ -83,20 +89,66 @@ public class JdbcAssetRepository implements AssetRepository {
 
     @Override
     public Optional<Asset> findById(Long id) {
-        throw new UnsupportedOperationException(
-                "TODO [SEC-3]: parameterized SELECT ... WHERE id = ?; empty result -> Optional.empty()");
+        if (id == null) {
+            return Optional.empty();
+        }
+
+        try {
+            List<Asset> results = jdbcTemplate.query(
+                    SELECT_COLUMNS + " WHERE id = ?",
+                    rowMapper,
+                    id
+            );
+
+            if (results.isEmpty()) {
+                return Optional.empty();
+            }
+
+            return Optional.of(results.get(0));
+
+        } catch (org.springframework.dao.DataAccessException e) {
+            throw new DataAccessException(
+                    "Failed to find asset by id " + id, e);
+        }
     }
 
     @Override
     public Optional<Asset> findByHostname(String hostname) {
-        throw new UnsupportedOperationException(
-                "TODO [SEC-3]: parameterized SELECT ... WHERE hostname = ?; empty result -> Optional.empty()");
+        if (hostname == null) {
+            return Optional.empty();
+        }
+
+        try {
+            List<Asset> results = jdbcTemplate.query(
+                    SELECT_COLUMNS + " WHERE hostname = ?",
+                    rowMapper,
+                    hostname
+            );
+
+            if (results.isEmpty()) {
+                return Optional.empty();
+            }
+
+            return Optional.of(results.get(0));
+
+        } catch (org.springframework.dao.DataAccessException e) {
+            throw new DataAccessException(
+                    "Failed to find asset by hostname " + hostname, e);
+        }
     }
 
     @Override
     public List<Asset> findAll() {
-        throw new UnsupportedOperationException(
-                "TODO [SEC-3]: SELECT every asset ORDER BY hostname");
+        try {
+            return jdbcTemplate.query(
+                    SELECT_COLUMNS + " ORDER BY hostname",
+                    rowMapper
+            );
+
+        } catch (org.springframework.dao.DataAccessException e) {
+            throw new DataAccessException(
+                    "Failed to find all assets", e);
+        }
     }
 
     // INSTRUCTOR NOTE [SEC-15]: THIS IS THE VULNERABLE STARTER, shipped AS-IS on purpose ("break
@@ -146,11 +198,18 @@ public class JdbcAssetRepository implements AssetRepository {
         if (keyword == null) {
             return List.of();
         }
+
         try {
-            String sql = SELECT_COLUMNS + " WHERE hostname LIKE '%" + keyword + "%' ORDER BY hostname";
-            return jdbcTemplate.query(sql, rowMapper);
+            String sql = SELECT_COLUMNS
+                    + " WHERE hostname LIKE ? ORDER BY hostname";
+
+            return jdbcTemplate.query(
+                    sql, rowMapper,
+                    "%" + keyword + "%"
+            );
         } catch (org.springframework.dao.DataAccessException e) {
-            throw new DataAccessException("Failed to search assets by hostname", e);
+            throw new DataAccessException(
+                    "Failed to search assets by hostname", e);
         }
     }
 }

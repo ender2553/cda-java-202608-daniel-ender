@@ -22,7 +22,18 @@ public final class ComponentRowMapper implements RowMapper<Component> {
     // would vanish from an INNER JOIN entirely (the exact failure SEC-7 guards against).
     @Override
     public Component mapRow(ResultSet rs, int rowNum) throws SQLException {
-        throw new UnsupportedOperationException(
-                "TODO [SEC-6]: map the current row to a Component, reading every column by name (never call rs.next())");
+        Long id = rs.getObject("id", Long.class);
+        String applicationName = rs.getString("application_name");
+        String componentName = rs.getString("component_name");
+        String componentVersion = rs.getString("component_version");
+        String ecosystem = rs.getString("ecosystem");
+
+        return new Component(
+                id,
+                applicationName,
+                componentName,
+                componentVersion,
+                ecosystem
+        );
     }
 }

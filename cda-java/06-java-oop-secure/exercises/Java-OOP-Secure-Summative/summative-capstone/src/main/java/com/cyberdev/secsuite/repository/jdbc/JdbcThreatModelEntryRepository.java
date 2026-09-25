@@ -56,7 +56,22 @@ public class JdbcThreatModelEntryRepository implements ThreatModelEntryRepositor
 
     @Override
     public List<ThreatModelEntry> findByThreatModelId(Long threatModelId) {
-        throw new UnsupportedOperationException(
-                "TODO [SEC-8]: parameterized SELECT for one model ORDER BY stride_category, description; empty list when none");
+        if (threatModelId == null) {
+            return List.of();
+        }
+
+        try {
+            return jdbcTemplate.query(
+                    "SELECT id, threat_model_id, stride_category, description, mitigation, status " +
+                            "FROM threat_model_entry " +
+                            "WHERE threat_model_id = ? " +
+                            "ORDER BY stride_category, description",
+                    rowMapper,
+                    threatModelId
+            );
+        } catch (org.springframework.dao.DataAccessException e) {
+            throw new DataAccessException(
+                    "Failed to find threat model entries for model " + threatModelId, e);
+        }
     }
 }

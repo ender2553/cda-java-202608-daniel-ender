@@ -15,7 +15,9 @@ public record HighRisk(int score) implements RiskAssessment {
     public static final int MAX_SCORE = 19;
 
     public HighRisk {
-        throw new UnsupportedOperationException(
-                "TODO [SEC-5]: reject a score outside this band (MIN_SCORE..MAX_SCORE = 13..19) with ValidationException");
+        if (score < MIN_SCORE || score > MAX_SCORE) {
+            throw new ValidationException(
+                    "HighRisk score must be between " + MIN_SCORE + " and " + MAX_SCORE);
+        }
     }
 }

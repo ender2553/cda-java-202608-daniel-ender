@@ -26,9 +26,23 @@ public final class AssetRowMapper implements RowMapper<Asset> {
     // reading them as Long values
     // (works, but NPEs on NULL and hides the driver's native Long support); declaring the
     // mapper to catch and swallow SQLException -- let it propagate, JdbcTemplate translates it.
+
     @Override
     public Asset mapRow(ResultSet rs, int rowNum) throws SQLException {
-        throw new UnsupportedOperationException(
-                "TODO [SEC-3]: map the current row to an Asset, reading every column by name (never call rs.next())");
+        Long id = rs.getObject("id", Long.class);
+        String hostname = rs.getString("hostname");
+        String ipAddress = rs.getString("ip_address");
+        String ownerTeam = rs.getString("owner_team");
+        Criticality criticality = Criticality.parse(
+                rs.getString("criticality")
+        );
+
+        return new Asset(
+                id,
+                hostname,
+                ipAddress,
+                ownerTeam,
+                criticality
+        );
     }
 }

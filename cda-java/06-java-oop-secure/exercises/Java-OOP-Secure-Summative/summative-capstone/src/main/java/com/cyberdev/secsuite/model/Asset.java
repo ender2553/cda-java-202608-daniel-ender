@@ -62,8 +62,44 @@ public final class Asset {
         if (id == null) {
             throw new ValidationException("asset id must not be null");
         }
-        throw new UnsupportedOperationException(
-                "TODO [SEC-1]: validate and trim every field (fail closed with ValidationException), then assign the trimmed values");
+
+        String trimmedHostname = hostname == null ? null : hostname.trim();
+        String trimmedIpAddress = ipAddress == null ? null : ipAddress.trim();
+        String trimmedOwnerTeam = ownerTeam == null ? null : ownerTeam.trim();
+
+        if (trimmedHostname == null || trimmedHostname.isBlank()) {
+            throw new ValidationException("hostname must not be blank");
+        }
+
+        if (trimmedHostname.length() > MAX_HOSTNAME_LENGTH) {
+            throw new ValidationException("hostname is too long");
+        }
+
+        if (!HOSTNAME.matcher(trimmedHostname).matches()) {
+            throw new ValidationException("invalid hostname");
+        }
+
+        if (trimmedIpAddress == null || trimmedIpAddress.isBlank()) {
+            throw new ValidationException("ip address must not be blank");
+        }
+
+        if (!IPV4.matcher(trimmedIpAddress).matches()) {
+            throw new ValidationException("invalid IPv4 address");
+        }
+
+        if (trimmedOwnerTeam == null || trimmedOwnerTeam.isBlank()) {
+            throw new ValidationException("owner team must not be blank");
+        }
+
+        if (criticality == null) {
+            throw new ValidationException("criticality must not be null");
+        }
+
+        this.id = id;
+        this.hostname = trimmedHostname;
+        this.ipAddress = trimmedIpAddress;
+        this.ownerTeam = trimmedOwnerTeam;
+        this.criticality = criticality;
     }
 
     /** GIVEN helper -- same IPv4 rule as the constructor, reused by the CSV ingestion validator. */
@@ -107,14 +143,28 @@ public final class Asset {
     // persistence. equals() and hashCode() must always be overridden together.
     @Override
     public boolean equals(Object o) {
-        throw new UnsupportedOperationException(
-                "TODO [SEC-1]: persisted Assets are equal by positive id; distinct transient id-0 Assets are not equal");
+        if (this == o) {
+            return true;
+        }
+
+        if (!(o instanceof Asset other)) {
+            return false;
+        }
+
+        if (id == 0L || other.id == 0L) {
+            return false;
+        }
+
+        return Objects.equals(id, other.id);
     }
 
     @Override
     public int hashCode() {
-        throw new UnsupportedOperationException(
-                "TODO [SEC-1]: hashCode consistent with equals (id only)");
+        if (id == 0L) {
+            return System.identityHashCode(this);
+        }
+
+        return Objects.hash(id);
     }
 
     @Override

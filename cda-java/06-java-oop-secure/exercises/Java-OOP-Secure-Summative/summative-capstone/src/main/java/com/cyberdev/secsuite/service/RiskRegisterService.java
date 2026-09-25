@@ -69,8 +69,29 @@ public class RiskRegisterService {
     // report relies on; (4) THROWING for a high score -- a critical risk is a normal answer,
     // not an error.
     public RiskAssessment assess(int likelihood, int impact) {
-        throw new UnsupportedOperationException(
-                "TODO [SEC-5]: validate 1-5 ranges and return the sealed band (Low/Medium/High/Critical) for likelihood * impact");
+        if (likelihood < 1 || likelihood > 5) {
+            throw new ValidationException("likelihood must be between 1 and 5");
+        }
+
+        if (impact < 1 || impact > 5) {
+            throw new ValidationException("impact must be between 1 and 5");
+        }
+
+        int score = likelihood * impact;
+
+        if (score <= 6) {
+            return new LowRisk(score);
+        }
+
+        if (score <= 12) {
+            return new MediumRisk(score);
+        }
+
+        if (score <= 19) {
+            return new HighRisk(score);
+        }
+
+        return new CriticalRisk(score);
     }
 
     // INSTRUCTOR NOTE [SEC-5]: Concept tested: EVERY band gets persisted -- a LowRisk is still
@@ -89,8 +110,51 @@ public class RiskRegisterService {
     // belongs to another asset, producing a risk whose evidence is about a different host.
     public RiskRegisterEntry createEntry(Long assetId, Long scanFindingId, String title, String description,
                                          int likelihood, int impact, Long ownerAnalystId) {
-        throw new UnsupportedOperationException(
-                "TODO [SEC-5]: validate, create with id 0L, then return riskRepository.save(entry)");
+
+        RiskAssessment assessment = assess(likelihood, impact);
+
+        Asset asset = assetRepository.findById(assetId)
+                .orElseThrow(() -> new ValidationException(
+                        "Unknown asset id " + assetId));
+
+        if (scanFindingId != null) {
+            ScanFinding finding = findingRepository.findById(scanFindingId)
+                    .orElseThrow(() -> new ValidationException(
+                            "Unknown scan finding id " + scanFindingId));
+
+            if (!finding.getAssetId().equals(asset.getId())) {
+                throw new ValidationException(
+                        "Scan finding " + scanFindingId + " belongs to a different asset");
+            }
+        }
+
+        if (ownerAnalystId != null) {
+            analystRepository.findById(ownerAnalystId)
+                    .orElseThrow(() -> new ValidationException(
+                            "Unknown analyst id " + ownerAnalystId));
+        }
+
+        int riskScore = assessment.score();
+
+        LocalDate dueDate = LocalDate.now(clock)
+                .plusDays(remediationWindowDays(assessment));
+
+        RiskRegisterEntry entry = new RiskRegisterEntry(
+                0L,
+                assetId,
+                scanFindingId,
+                title,
+                description,
+                likelihood,
+                impact,
+                riskScore,
+                RiskStatus.OPEN,
+                ownerAnalystId,
+                dueDate,
+                clock.instant()
+        );
+
+        return riskRepository.save(entry);
     }
 
     /**

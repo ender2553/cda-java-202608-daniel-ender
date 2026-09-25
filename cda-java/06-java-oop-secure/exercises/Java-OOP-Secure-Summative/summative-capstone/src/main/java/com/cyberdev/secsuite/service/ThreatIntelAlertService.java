@@ -60,7 +60,31 @@ public class ThreatIntelAlertService {
     // list trains the analyst reading it to trust the list a little less, and the true
     // positive gets ignored along with the noise.
     public List<CorrelationHit> correlateWithFindings() {
-        throw new UnsupportedOperationException(
-                "TODO [SEC-12]: CVE-type alerts x OPEN findings only, one hit per matching asset, sorted by hostname then alert id");
+        List<CorrelationHit> hits = new ArrayList<>();
+
+        // Only CVE alerts can correlate with CVE findings.
+        for (ThreatIntelAlert alert : alertRepository.findByIndicatorType(IndicatorType.CVE)) {
+
+            String cveId = alert.getRelatedCveId();
+
+            // Find only OPEN findings for this CVE.
+            for (ScanFinding finding : findingRepository.findOpenByCveId(cveId)) {
+
+                Asset asset = assetRepository.findById(finding.getAssetId())
+                        .orElseThrow(() -> new ValidationException(
+                                "Unknown asset id " + finding.getAssetId()
+                                        + " for finding " + finding.getId()));
+
+                hits.add(new CorrelationHit(asset, alert, finding));
+            }
+        }
+
+        // Deterministic ordering: hostname first, then external alert ID.
+        hits.sort(
+                Comparator.comparing((CorrelationHit hit) -> hit.asset().getHostname())
+                        .thenComparing(hit -> hit.alert().getExternalAlertId())
+        );
+
+        return hits;
     }
 }

@@ -81,8 +81,27 @@ public class ThreatModelingService {
     // SECURITY CALLOUT: absence of evidence is not evidence of absence. Reports that only
     // render what exists make unexamined attack surface invisible.
     public Map<StrideCategory, List<ThreatModelEntry>> strideCoverage(Long threatModelId) {
-        throw new UnsupportedOperationException(
-                "TODO [SEC-8]: all six STRIDE categories in enum order, empty lists for gaps; unknown model fails closed");
+        requireThreatModel(threatModelId);
+
+        EnumMap<StrideCategory, List<ThreatModelEntry>> coverage =
+                new EnumMap<>(StrideCategory.class);
+
+        // Create all six categories, including categories with no threats.
+        for (StrideCategory category : StrideCategory.values()) {
+            coverage.put(category, new ArrayList<>());
+        }
+
+        // Put each existing threat into its STRIDE category.
+        for (ThreatModelEntry entry : entryRepository.findByThreatModelId(threatModelId)) {
+            coverage.get(entry.getStrideCategory()).add(entry);
+        }
+
+        // Make the lists unmodifiable.
+        for (StrideCategory category : StrideCategory.values()) {
+            coverage.put(category, List.copyOf(coverage.get(category)));
+        }
+
+        return coverage;
     }
 
     private void requireThreatModel(Long threatModelId) {

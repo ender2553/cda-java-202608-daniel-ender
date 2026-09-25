@@ -66,25 +66,90 @@ public class JdbcComponentRepository implements ComponentRepository {
 
     @Override
     public Optional<Component> findById(Long id) {
-        throw new UnsupportedOperationException(
-                "TODO [SEC-6]: parameterized SELECT ... WHERE id = ?; empty result -> Optional.empty()");
+        if (id == null) {
+            return Optional.empty();
+        }
+
+        try {
+            List<Component> results = jdbcTemplate.query(
+                    SELECT_COLUMNS + " WHERE id = ?",
+                    rowMapper,
+                    id
+            );
+
+            if (results.isEmpty()) {
+                return Optional.empty();
+            }
+
+            return Optional.of(results.get(0));
+
+        } catch (org.springframework.dao.DataAccessException e) {
+            throw new DataAccessException(
+                    "Failed to find component by id " + id, e);
+        }
     }
 
     @Override
     public List<Component> findAll() {
-        throw new UnsupportedOperationException(
-                "TODO [SEC-6]: SELECT every component ORDER BY application_name, component_name, component_version");
+        try {
+            return jdbcTemplate.query(
+                    SELECT_COLUMNS
+                            + " ORDER BY application_name, component_name, component_version",
+                    rowMapper
+            );
+
+        } catch (org.springframework.dao.DataAccessException e) {
+            throw new DataAccessException(
+                    "Failed to find all components", e);
+        }
     }
 
     @Override
     public void linkCve(Long componentId, String cveId) {
-        throw new UnsupportedOperationException(
-                "TODO [SEC-6]: parameterized INSERT of one component_cve link row");
+        if (componentId == null) {
+            throw new ValidationException("componentId must not be null");
+        }
+
+        if (cveId == null || cveId.isBlank()) {
+            throw new ValidationException("cveId must not be blank");
+        }
+
+        try {
+            jdbcTemplate.update(
+                    "INSERT INTO component_cve (component_id, cve_id) VALUES (?, ?)",
+                    componentId,
+                    cveId
+            );
+
+        } catch (org.springframework.dao.DataAccessException e) {
+            throw new DataAccessException(
+                    "Failed to link CVE " + cveId
+                            + " to component " + componentId,
+                    e
+            );
+        }
     }
 
     @Override
     public List<String> findCveIdsByComponentId(Long componentId) {
-        throw new UnsupportedOperationException(
-                "TODO [SEC-6]: queryForList of cve_id for one component, ORDER BY cve_id; empty list (never null) when none");
+        if (componentId == null) {
+            return List.of();
+        }
+
+        try {
+            return jdbcTemplate.queryForList(
+                    "SELECT cve_id FROM component_cve "
+                            + "WHERE component_id = ? "
+                            + "ORDER BY cve_id",
+                    String.class,
+                    componentId
+            );
+
+        } catch (org.springframework.dao.DataAccessException e) {
+            throw new DataAccessException(
+                    "Failed to find CVEs for component " + componentId,
+                    e
+            );
+        }
     }
 }

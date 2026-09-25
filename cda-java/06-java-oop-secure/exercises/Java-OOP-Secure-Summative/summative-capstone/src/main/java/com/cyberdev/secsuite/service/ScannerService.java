@@ -75,8 +75,38 @@ public class ScannerService {
     // uq_scan_finding_open_asset_cve: application check for the clear error, database
     // constraint as the last line of defense.
     public ScanFinding recordFinding(Long assetId, String cveId, Integer port, String serviceName) {
-        throw new UnsupportedOperationException(
-                "TODO [SEC-4]: validate, create with id 0L, then return findingRepository.save(finding)");
+        if (assetId == null) {
+            throw new ValidationException("assetId must not be null");
+        }
+
+        if (cveId == null || cveId.isBlank()) {
+            throw new ValidationException("cveId must not be blank");
+        }
+
+        assetRepository.findById(assetId)
+                .orElseThrow(() -> new ValidationException("Unknown asset id " + assetId));
+
+        cveCatalogRepository.findById(cveId)
+                .orElseThrow(() -> new ValidationException("Unknown CVE " + cveId));
+
+        if (findingRepository.findOpenByAssetAndCve(assetId, cveId).isPresent()) {
+            throw new DuplicateFindingException(
+                    String.valueOf(assetId),
+                    cveId
+            );
+        }
+
+        ScanFinding finding = new ScanFinding(
+                0L,
+                assetId,
+                cveId,
+                port,
+                serviceName,
+                clock.instant(),
+                FindingStatus.OPEN
+        );
+
+        return findingRepository.save(finding);
     }
 
     /**
