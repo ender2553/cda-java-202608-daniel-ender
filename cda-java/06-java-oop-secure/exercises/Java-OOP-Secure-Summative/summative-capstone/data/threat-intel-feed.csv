@@ -1,0 +1,14 @@
+external_alert_id,source,indicator_type,indicator_value,related_cve_id,severity,description,published_at
+TI-2026-0001,NorthStar ISAC,CVE,CVE-2023-91002,CVE-2023-91002,CRITICAL,"GateKeeper VPN authentication bypass exploited in the wild, patch immediately",2026-09-01T08:00:00Z
+TI-2026-0002,PartnerCERT,IP,198.51.100.23,,HIGH,Command-and-control server observed beaconing from retail networks,2026-09-02T10:15:00Z
+TI-2026-0003,Internal SOC,DOMAIN,update-check.example.net,,MEDIUM,"Typosquatted software-update domain serving a fake installer",2026-09-03
+TI-2026-0004,PartnerCERT,FILE_HASH,e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855,CVE-2023-91001,HIGH,"Loader dropping a LogLite exploit | lure page embeds <script>alert(1)</script> and a ""payroll"" macro",2026-09-04T12:00:00+02:00
+TI-2026-0005,NorthStar ISAC,CVE,CVE-2023-91004,CVE-2023-91004,HIGH,Public gadget chain published for jsonkit deserialization,2026-09-05T09:30:00Z
+TI-2026-0006,PartnerCERT,CVE,CVE-2024-91007,CVE-2024-91007,MEDIUM,Open redirect abused in phishing campaign targeting HR portals,2026-09-06T07:00:00Z
+TI-2026-0007,Internal SOC,IP,192.0.2.77,,LOW,Internet-wide scanner noise (informational),2026-09-07T16:45:00Z
+TI-2026-0008,NorthStar ISAC,CVE,CVE-2024-91009,CVE-2024-91009,LOW,Timing side channel in date-helper discussed at a conference,2026-09-08T11:20:00Z
+TI-SEED-001,PartnerCERT,CVE,CVE-2023-91001,CVE-2023-91001,CRITICAL,Re-published: LogLite exploitation now automated in botnet tooling,2026-09-09T05:00:00Z
+TI-2026-0010,,IP,198.51.100.99,,HIGH,Row with a blank required source field,2026-09-10T10:00:00Z
+TI-2026-0011,PartnerCERT,URL,https://malicious.example/payload,,HIGH,URL is not an allowed indicator type,2026-09-11T10:00:00Z
+TI-2026-0012,Internal SOC,DOMAIN,cdn-assets.example.org,,MEDIUM,Publication date cannot be parsed,last Tuesday
+TI-2026-0013,NorthStar ISAC,CVE,CVE-2025-99999,CVE-2025-99999,CRITICAL,References a CVE that is not in the local catalog,2026-09-13T10:00:00Z
