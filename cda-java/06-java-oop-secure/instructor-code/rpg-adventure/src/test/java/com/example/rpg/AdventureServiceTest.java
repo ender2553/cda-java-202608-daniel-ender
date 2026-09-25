@@ -1,0 +1,3 @@
+package com.example.rpg;
+import com.example.rpg.domain.*; import org.junit.jupiter.api.Test; import static org.junit.jupiter.api.Assertions.*;
+class AdventureServiceTest { @Test void itemAndCharacterDefendTheirInvariants(){PlayerCharacter p=new PlayerCharacter(1,"Aria");Item sword=new Item("iron-sword","Iron Sword",ItemType.WEAPON,Rarity.COMMON,5,10);p.collect(sword);p.equip(sword);assertEquals(14,p.attackPower());assertThrows(IllegalArgumentException.class,()->new PlayerCharacter(1,"bad/name"));} @Test void recordsCopyCollections(){var p=new PlayerCharacter(1,"Aria");p.collect(new Item("p","Potion",ItemType.POTION,Rarity.COMMON,0,3));var s=SaveSnapshot.from(p);assertThrows(UnsupportedOperationException.class,()->s.inventory().clear());} }
