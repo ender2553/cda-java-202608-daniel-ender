@@ -1,0 +1,18 @@
+# Throwaway local Postgres for the in-class transaction demo.
+# Credentials are local-dev defaults for a disposable container only — override
+# them with a .env file (see .env.example) and never reuse them anywhere real.
+services:
+  ledger-db:
+    image: postgres:17
+    container_name: ledger-demo-db
+    environment:
+      POSTGRES_DB: ${LEDGER_DB_NAME:-ledger_demo}
+      POSTGRES_USER: ${LEDGER_DB_USER:-demo}
+      POSTGRES_PASSWORD: ${LEDGER_DB_PASSWORD:-demo}
+    ports:
+      - "${LEDGER_DB_PORT:-5433}:5432"   # 5433 on the host so it won't clash with a locally installed Postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 2s
+      timeout: 3s
+      retries: 15
