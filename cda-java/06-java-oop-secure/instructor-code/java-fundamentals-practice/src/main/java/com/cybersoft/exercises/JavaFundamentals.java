@@ -156,7 +156,15 @@ public final class JavaFundamentals {
      * <p><strong>Example:</strong> countEvens(10) returns 5.</p>
      */
     public static int countEvens(int n) {
-        throw todo(13);
+        int count = 0;
+
+        for (int i = 1; i <= n; i++) {
+            if (i % 2 == 0) {
+                count++;
+            }
+        }
+
+        return count;
     }
 
     /**
@@ -165,7 +173,15 @@ public final class JavaFundamentals {
      * <p><strong>Example:</strong> fizzBuzz(15) returns "FizzBuzz".</p>
      */
     public static String fizzBuzz(int n) {
-        throw todo(14);
+        if (n % 3 == 0 && n % 5 == 0) {
+            return "FizzBuzz";
+        } else if (n % 3 == 0) {
+            return "Fizz";
+        } else if (n % 5 == 0) {
+            return "Buzz";
+        } else {
+            return String.valueOf(n);
+        }
     }
 
     /**
@@ -174,7 +190,19 @@ public final class JavaFundamentals {
      * <p><strong>Example:</strong> countDigits(12345) returns 5.</p>
      */
     public static int countDigits(int n) {
-        throw todo(15);
+        if (n == 0) {
+            return 1;
+        }
+
+        n = Math.abs(n);
+        int count = 0;
+
+        while (n > 0) {
+            n = n / 10;
+            count++;
+        }
+
+        return count;
     }
 
     /**
@@ -183,7 +211,11 @@ public final class JavaFundamentals {
      * <p><strong>Example:</strong> firstCharacter("Java") returns J.</p>
      */
     public static char firstCharacter(String s) {
-        throw todo(16);
+        if (s == null || s.isEmpty()) {
+            throw new IllegalArgumentException("String cannot be null or empty");
+        }
+
+        return s.charAt(0);
     }
 
     /**
@@ -192,7 +224,15 @@ public final class JavaFundamentals {
      * <p><strong>Example:</strong> countA("Java Application") returns 4.</p>
      */
     public static int countA(String s) {
-        throw todo(17);
+        int count = 0;
+
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == 'A' || s.charAt(i) == 'a') {
+                count++;
+            }
+        }
+
+        return count;
     }
 
     /**
@@ -201,7 +241,17 @@ public final class JavaFundamentals {
      * <p><strong>Example:</strong> reverse("Java") returns "avaJ".</p>
      */
     public static String reverse(String s) {
-        throw todo(18);
+        if (s == null) {
+            throw new IllegalArgumentException("String cannot be null");
+        }
+
+        StringBuilder reversed = new StringBuilder();
+
+        for (int i = s.length() - 1; i >= 0; i--) {
+            reversed.append(s.charAt(i));
+        }
+
+        return reversed.toString();
     }
 
     /**
@@ -210,7 +260,17 @@ public final class JavaFundamentals {
      * <p><strong>Example:</strong> isPalindrome("racecar") is true.</p>
      */
     public static boolean isPalindrome(String s) {
-        throw todo(19);
+        if (s == null) {
+            return false;
+        }
+
+        for (int i = 0; i < s.length() / 2; i++) {
+            if (s.charAt(i) != s.charAt(s.length() - 1 - i)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -219,7 +279,29 @@ public final class JavaFundamentals {
      * <p><strong>Example:</strong> maskEmail("myron@example.com") returns "m****@example.com".</p>
      */
     public static String maskEmail(String email) {
-        throw todo(20);
+        if (email == null || !email.contains("@")) {
+            throw new IllegalArgumentException("Invalid email");
+        }
+
+        int atIndex = email.indexOf('@');
+
+        if (atIndex <= 0 || atIndex == email.length() - 1) {
+            throw new IllegalArgumentException("Invalid email");
+        }
+
+        String username = email.substring(0, atIndex);
+        String domain = email.substring(atIndex);
+
+        StringBuilder masked = new StringBuilder();
+        masked.append(username.charAt(0));
+
+        for (int i = 1; i < username.length(); i++) {
+            masked.append('*');
+        }
+
+        masked.append(domain);
+
+        return masked.toString();
     }
 
     /**
@@ -228,7 +310,17 @@ public final class JavaFundamentals {
      * <p><strong>Example:</strong> arraySum(new int[]{2,4,6}) returns 12.</p>
      */
     public static int arraySum(int[] a) {
-        throw todo(21);
+        if (a == null) {
+            throw new IllegalArgumentException("Array cannot be null");
+        }
+
+        int sum = 0;
+
+        for (int value : a) {
+            sum += value;
+        }
+
+        return sum;
     }
 
     /**
@@ -237,7 +329,19 @@ public final class JavaFundamentals {
      * <p><strong>Example:</strong> findMax(new int[]{-8,-2,-5}) returns -2.</p>
      */
     public static int findMax(int[] a) {
-        throw todo(22);
+        if (a == null || a.length == 0) {
+            throw new IllegalArgumentException("Array cannot be null or empty");
+        }
+
+        int max = a[0];
+
+        for (int value : a) {
+            if (value > max) {
+                max = value;
+            }
+        }
+
+        return max;
     }
 
     /**
@@ -246,7 +350,19 @@ public final class JavaFundamentals {
      * <p><strong>Example:</strong> countPositive(new int[]{1,-1,2}) returns 2.</p>
      */
     public static int countPositive(int[] a) {
-        throw todo(23);
+        if (a == null) {
+            throw new IllegalArgumentException("Array cannot be null");
+        }
+
+        int count = 0;
+
+        for (int value : a) {
+            if (value > 0) {
+                count++;
+            }
+        }
+
+        return count;
     }
 
     /**
@@ -255,7 +371,17 @@ public final class JavaFundamentals {
      * <p><strong>Example:</strong> contains(new int[]{2,4,6}, 4) is true.</p>
      */
     public static boolean contains(int[] a, int target) {
-        throw todo(24);
+        if (a == null) {
+            throw new IllegalArgumentException("Array cannot be null");
+        }
+
+        for (int value : a) {
+            if (value == target) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -264,7 +390,17 @@ public final class JavaFundamentals {
      * <p><strong>Example:</strong> average(new int[]{2,4,6}) returns 4.0.</p>
      */
     public static double average(int[] a) {
-        throw todo(25);
+        if (a == null || a.length == 0) {
+            throw new IllegalArgumentException("Array cannot be null or empty");
+        }
+
+        int sum = 0;
+
+        for (int value : a) {
+            sum += value;
+        }
+
+        return (double) sum / a.length;
     }
 
     /**
@@ -273,7 +409,17 @@ public final class JavaFundamentals {
      * <p><strong>Example:</strong> {1,2,3} becomes {3,2,1}.</p>
      */
     public static int[] reverseArray(int[] a) {
-        throw todo(26);
+        if (a == null) {
+            throw new IllegalArgumentException("Array cannot be null");
+        }
+
+        int[] reversed = new int[a.length];
+
+        for (int i = 0; i < a.length; i++) {
+            reversed[i] = a[a.length - 1 - i];
+        }
+
+        return reversed;
     }
 
     /**
@@ -282,7 +428,17 @@ public final class JavaFundamentals {
      * <p><strong>Example:</strong> sumList(List.of(1,2,3)) returns 6.</p>
      */
     public static int sumList(List<Integer> a) {
-        throw todo(27);
+        if (a == null) {
+            throw new IllegalArgumentException("List cannot be null");
+        }
+
+        int sum = 0;
+
+        for (int value : a) {
+            sum += value;
+        }
+
+        return sum;
     }
 
     /**
@@ -291,7 +447,19 @@ public final class JavaFundamentals {
      * <p><strong>Example:</strong> [4,-2,8,-5,3] becomes [4,8,3].</p>
      */
     public static List<Integer> removeNegatives(List<Integer> a) {
-        throw todo(28);
+        if (a == null) {
+            throw new IllegalArgumentException("List cannot be null");
+        }
+
+        List<Integer> result = new ArrayList<>();
+
+        for (int value : a) {
+            if (value >= 0) {
+                result.add(value);
+            }
+        }
+
+        return result;
     }
 
     /**
@@ -300,7 +468,13 @@ public final class JavaFundamentals {
      * <p><strong>Example:</strong> [red,blue,red,green] returns 3.</p>
      */
     public static int uniqueCount(List<String> a) {
-        throw todo(29);
+        if (a == null) {
+            throw new IllegalArgumentException("List cannot be null");
+        }
+
+        Set<String> unique = new HashSet<>(a);
+
+        return unique.size();
     }
 
     /**
@@ -309,7 +483,20 @@ public final class JavaFundamentals {
      * <p><strong>Example:</strong> [Java,Python,Java,C#,Python] returns Java and Python.</p>
      */
     public static Set<String> findDuplicates(List<String> a) {
-        throw todo(30);
+        if (a == null) {
+            throw new IllegalArgumentException("List cannot be null");
+        }
+
+        Set<String> seen = new HashSet<>();
+        Set<String> duplicates = new HashSet<>();
+
+        for (String value : a) {
+            if (!seen.add(value)) {
+                duplicates.add(value);
+            }
+        }
+
+        return duplicates;
     }
 
     /**
@@ -318,7 +505,17 @@ public final class JavaFundamentals {
      * <p><strong>Example:</strong> [java,sql,java] maps java to 2 and sql to 1.</p>
      */
     public static Map<String, Integer> wordCount(List<String> a) {
-        throw todo(31);
+        if (a == null) {
+            throw new IllegalArgumentException("List cannot be null");
+        }
+
+        Map<String, Integer> counts = new HashMap<>();
+
+        for (String word : a) {
+            counts.put(word, counts.getOrDefault(word, 0) + 1);
+        }
+
+        return counts;
     }
 
     /**
@@ -327,7 +524,11 @@ public final class JavaFundamentals {
      * <p><strong>Example:</strong> getScore(Map.of("Ana",90), "Sam") returns -1.</p>
      */
     public static int getScore(Map<String, Integer> m, String s) {
-        throw todo(32);
+        if (m == null || s == null) {
+            throw new IllegalArgumentException("Map and student name cannot be null");
+        }
+
+        return m.getOrDefault(s, -1);
     }
 
     /**
@@ -336,7 +537,17 @@ public final class JavaFundamentals {
      * <p><strong>Example:</strong> A queue containing Ana then Bo serves Ana first.</p>
      */
     public static String serveNext(Queue<String> q) {
-        throw todo(33);
+        if (q == null) {
+            throw new IllegalArgumentException("Queue cannot be null");
+        }
+
+        String customer = q.poll();
+
+        if (customer == null) {
+            return "No customers";
+        }
+
+        return customer;
     }
 
 
@@ -352,37 +563,96 @@ public final class JavaFundamentals {
         private final String accountNumber;
         private BigDecimal balance;
 
-        /**
-         * Exercise 34: Create an account with a nonblank number and nonnegative starting balance.
-         */
-        public BankAccount(String n, BigDecimal b) {
-            throw todo(34);
+        public BankAccount(String accountNumber, BigDecimal startingBalance) {
+            if (accountNumber == null || accountNumber.isBlank()) {
+                throw new IllegalArgumentException("Account number cannot be blank");
+            }
+
+            if (startingBalance == null || startingBalance.compareTo(BigDecimal.ZERO) < 0) {
+                throw new IllegalArgumentException("Starting balance cannot be negative");
+            }
+
+            this.accountNumber = accountNumber;
+            this.balance = startingBalance;
         }
 
-        /**
-         * Exercise 34: Add a strictly positive amount to the balance.
-         */
-        public void deposit(BigDecimal a) {
-            throw todo(34);
+        public void deposit(BigDecimal amount) {
+            if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
+                throw new IllegalArgumentException("Deposit must be positive");
+            }
+
+            balance = balance.add(amount);
         }
 
-        /**
-         * Exercise 34: Subtract a positive amount only when sufficient funds exist; report success.
-         */
-        public boolean withdraw(BigDecimal a) {
-            throw todo(34);
+        public void withdraw(BigDecimal amount) {
+            if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
+                throw new IllegalArgumentException("Withdrawal must be positive");
+            }
+
+            if (amount.compareTo(balance) > 0) {
+                throw new IllegalArgumentException("Insufficient funds");
+            }
+
+            balance = balance.subtract(amount);
         }
 
-        /**
-         * Exercise 34: Return the current balance without exposing a writable field.
-         */
         public BigDecimal getBalance() {
-            throw todo(34);
+            return balance;
+        }
+    }
+
+    /**
+     * Exercise 34: Create an account with a nonblank number and nonnegative starting balance.
+     */
+    public BankAccount(String n, BigDecimal b) {
+        if (n == null || n.isBlank()) {
+            throw new IllegalArgumentException("Account number cannot be blank");
         }
 
-        public String getAccountNumber() {
-            return accountNumber;
+        if (b == null || b.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("Starting balance cannot be negative");
         }
+
+        this.accountNumber = n;
+        this.balance = b;
+    }
+
+    /**
+     * Exercise 34: Add a strictly positive amount to the balance.
+     */
+    public void deposit(BigDecimal a) {
+        if (a == null || a.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Deposit must be positive");
+        }
+
+        balance = balance.add(a);
+    }
+
+    /**
+     * Exercise 34: Subtract a positive amount only when sufficient funds exist; report success.
+     */
+    public boolean withdraw(BigDecimal a) {
+        if (a == null || a.compareTo(BigDecimal.ZERO) <= 0) {
+            return false;
+        }
+
+        if (a.compareTo(balance) > 0) {
+            return false;
+        }
+
+        balance = balance.subtract(a);
+        return true;
+    }
+
+    /**
+     * Exercise 34: Return the current balance without exposing a writable field.
+     */
+    public BigDecimal getBalance() {
+        return balance;
+    }
+
+    public String getAccountNumber() {
+        return accountNumber;
     }
 
     /**
@@ -395,18 +665,21 @@ public final class JavaFundamentals {
         private final String name;
         private final BigDecimal monthlySalary;
 
-        /**
-         * Exercise 35: Create an employee with a nonblank name and nonnegative monthly salary.
-         */
         public Employee(String n, BigDecimal s) {
-            throw todo(35);
+            if (n == null || n.isBlank()) {
+                throw new IllegalArgumentException("Employee name cannot be blank");
+            }
+
+            if (s == null || s.compareTo(BigDecimal.ZERO) < 0) {
+                throw new IllegalArgumentException("Monthly salary cannot be negative");
+            }
+
+            this.name = n;
+            this.monthlySalary = s;
         }
 
-        /**
-         * Exercise 35: Return monthly salary multiplied by 12.
-         */
         public BigDecimal calculateAnnualSalary() {
-            throw todo(35);
+            return monthlySalary.multiply(BigDecimal.valueOf(12));
         }
 
         public String getName() {
@@ -422,45 +695,39 @@ public final class JavaFundamentals {
      * has area PI times 4.</p>
      */
     public interface Shape {
-        /**
-         * Exercise 36: Return the area of this shape.
-         */
         double calculateArea();
     }
 
     public static class Rectangle implements Shape {
         private final double length, width;
 
-        /**
-         * Exercise 36: Create a rectangle with positive length and width.
-         */
         public Rectangle(double l, double w) {
-            throw todo(36);
+            if (l <= 0 || w <= 0) {
+                throw new IllegalArgumentException("Length and width must be positive");
+            }
+
+            this.length = l;
+            this.width = w;
         }
 
-        /**
-         * Exercise 36: Return length multiplied by width.
-         */
         public double calculateArea() {
-            throw todo(36);
+            return length * width;
         }
     }
 
     public static class Circle implements Shape {
         private final double radius;
 
-        /**
-         * Exercise 36: Create a circle with a positive radius.
-         */
         public Circle(double r) {
-            throw todo(36);
+            if (r <= 0) {
+                throw new IllegalArgumentException("Radius must be positive");
+            }
+
+            this.radius = r;
         }
 
-        /**
-         * Exercise 36: Return PI multiplied by radius squared.
-         */
         public double calculateArea() {
-            throw todo(36);
+            return Math.PI * radius * radius;
         }
     }
 
@@ -471,7 +738,19 @@ public final class JavaFundamentals {
      * <p><strong>Example:</strong> [2,7,11,15] with target 9 returns [0,1].</p>
      */
     public static int[] twoSum(int[] a, int target) {
-        throw todo(37);
+        if (a == null) {
+            throw new IllegalArgumentException("Array cannot be null");
+        }
+
+        for (int i = 0; i < a.length; i++) {
+            for (int j = i + 1; j < a.length; j++) {
+                if (a[i] + a[j] == target) {
+                    return new int[]{i, j};
+                }
+            }
+        }
+
+        return new int[]{};
     }
 
     /**
@@ -480,7 +759,27 @@ public final class JavaFundamentals {
      * <p><strong>Example:</strong> {8,3,12,5,9} returns 9.</p>
      */
     public static int secondLargest(int[] a) {
-        throw todo(38);
+        if (a == null || a.length < 2) {
+            throw new IllegalArgumentException("Array must contain at least two distinct values");
+        }
+
+        int largest = Integer.MIN_VALUE;
+        int second = Integer.MIN_VALUE;
+
+        for (int value : a) {
+            if (value > largest) {
+                second = largest;
+                largest = value;
+            } else if (value > second && value < largest) {
+                second = value;
+            }
+        }
+
+        if (second == Integer.MIN_VALUE) {
+            throw new IllegalArgumentException("Array must contain two distinct values");
+        }
+
+        return second;
     }
 
     /**
@@ -489,7 +788,28 @@ public final class JavaFundamentals {
      * <p><strong>Example:</strong> isValidPassword("SecurePass1!") is true.</p>
      */
     public static boolean isValidPassword(String p) {
-        throw todo(39);
+        if (p == null || p.length() < 12) {
+            return false;
+        }
+
+        boolean hasUppercase = false;
+        boolean hasLowercase = false;
+        boolean hasDigit = false;
+        boolean hasSpecial = false;
+
+        for (char c : p.toCharArray()) {
+            if (Character.isUpperCase(c)) {
+                hasUppercase = true;
+            } else if (Character.isLowerCase(c)) {
+                hasLowercase = true;
+            } else if (Character.isDigit(c)) {
+                hasDigit = true;
+            } else {
+                hasSpecial = true;
+            }
+        }
+
+        return hasUppercase && hasLowercase && hasDigit && hasSpecial;
     }
 
 
@@ -499,8 +819,18 @@ public final class JavaFundamentals {
      * <p><strong>Example:</strong> SUCCESS, FAILED, FAILED, FAILED, SUCCESS returns true.</p>
      */
     public static boolean suspiciousLoginActivity(List<String> a) {
-        throw todo(40);
+        if (a == null) {
+            throw new IllegalArgumentException("List cannot be null");
+        }
+
+        for (int i = 0; i <= a.size() - 3; i++) {
+            if ("FAILED".equals(a.get(i))
+                    && "FAILED".equals(a.get(i + 1))
+                    && "FAILED".equals(a.get(i + 2))) {
+                return true;
+            }
+        }
+
+        return false;
     }
-
-
 }

@@ -56,7 +56,7 @@ public final class LedgerCoreApp {
         //       SELECT account_id, tax_id_encrypted FROM ledgercore.account_holders;
         //     The value must be unreadable Base64, not 123-45-6789.
         //   - Run twice: the stored value changes every run (fresh IV each time).
-        FieldCipher fieldCipher = new FieldCipher(new byte[0]); // key is currently unused — see FieldCipher TODO
+        FieldCipher fieldCipher = FieldCipher.fromEnvironment(FieldCipher.from Environment); // key is currently unused — see FieldCipher TODO
         LedgerRepository repository = new LedgerRepository(database.getDataSource(), fieldCipher);
         TransferService transferService = new TransferService(database.getDataSource());
 

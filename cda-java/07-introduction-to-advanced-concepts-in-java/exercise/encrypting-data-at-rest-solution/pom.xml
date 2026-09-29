@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.rti.ledgercore</groupId>
+  <artifactId>ledgercore-postgres</artifactId>
+  <version>1.0.0</version>
+  <packaging>jar</packaging>
+
+  <name>LedgerCore (Student Starter, PostgreSQL)</name>
+  <description>
+    Starter baseline for the Advanced Java Security module. Compiles and runs,
+    but the security-critical method bodies are the insecure/naive starting
+    point each lab fixes. Every gap is marked with a "// TODO (lab): ..." comment.
+  </description>
+
+  <properties>
+    <maven.compiler.release>21</maven.compiler.release>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <postgresql.version>42.7.7</postgresql.version>
+  </properties>
+
+  <dependencies>
+    <!-- PostgreSQL JDBC driver. Connection settings come from .env — see db.DatabaseConfig. -->
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>${postgresql.version}</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <finalName>ledgercore-postgres</finalName>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.13.0</version>
+      </plugin>
+    </plugins>
+  </build>
+</project>
