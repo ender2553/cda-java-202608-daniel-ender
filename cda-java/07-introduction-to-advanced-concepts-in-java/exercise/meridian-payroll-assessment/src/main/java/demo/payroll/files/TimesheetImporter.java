@@ -3,6 +3,7 @@ package demo.payroll.files;
 import demo.payroll.domain.TimesheetSummary;
 import org.springframework.stereotype.Component;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
@@ -20,10 +21,10 @@ public class TimesheetImporter {
     private final DataFiles files;
     private final ImportStats stats;
 
-    private int entries;
-    private int overtime;
-    private int rejected;
-    private double totalHours;
+    private long entries;
+    private long overtime;
+    private long rejected;
+    private long totalHours;
 
     public TimesheetImporter(DataFiles files, ImportStats stats) {
         this.files = files;
@@ -31,38 +32,39 @@ public class TimesheetImporter {
     }
 
     public TimesheetSummary summarize() {
-        try {
-            Path path = files.requireTimesheets();
-            long count = Files.lines(path).count();
-            System.out.println("Reading " + count + " lines...");
 
-            entries = 0;
-            overtime = 0;
-            rejected = 0;
-            totalHours = 0;
+        Path path = files.requireTimesheets();
 
-            List<String> lines = Files.readAllLines(path);
-            lines.parallelStream().forEach(line -> {
-                if (line.equals(TimesheetGenerator.HEADER)) {
-                    return;
+        entries = 0;
+        overtime = 0;
+        rejected = 0;
+        totalHours = 0;
+
+        try (BufferedReader reader = Files.newBufferedReader(path)){
+
+            String lines;
+            while ((lines = reader.readLine()) != null) {
+                if (lines.equals(TimesheetGenerator.HEADER)) {
+                    continue;
                 }
-                long hundredths = parse(line);
+                long hundredths = parse(lines);
                 if (hundredths < 0) {
                     rejected++;
-                    return;
+                    continue;
                 }
                 entries++;
                 if (hundredths > OVERTIME_AFTER) {
                     overtime++;
                 }
-                totalHours += hundredths / 100.0;
-            });
+                totalHours += hundredths;
+            }
 
             stats.recordLines(entries + rejected);
-            return new TimesheetSummary(entries, Math.round(totalHours * 100), overtime, rejected);
+            return new TimesheetSummary(entries, totalHours, overtime, rejected);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
+
     }
 
     /** One line: employee_id,work_date,hours. Returns the hours in hundredths, or -1 if the line is bad. */

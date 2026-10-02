@@ -15,6 +15,7 @@ import demo.payroll.service.MigrationService;
 import demo.payroll.service.PayrollService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+import demo.payroll.domain.employeeSummary;
 
 import javax.sql.DataSource;
 import java.math.BigDecimal;
@@ -25,7 +26,9 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
 
-/** The payroll office console: a numeric menu over the services. */
+/**
+ * The payroll office console: a numeric menu over the services.
+ */
 @Component
 public class ConsoleMenu implements CommandLineRunner {
 
@@ -66,7 +69,7 @@ public class ConsoleMenu implements CommandLineRunner {
         long maxHeapMb = Runtime.getRuntime().maxMemory() / (1024 * 1024);
         while (true) {
             System.out.printf("""
-
+                    
                     === Meridian Payroll - payroll office console (max heap about %d MB) ===
                      1) Search employees
                      2) View employee profile
@@ -89,8 +92,7 @@ public class ConsoleMenu implements CommandLineRunner {
             try {
                 handle(choice);
             } catch (Exception e) {
-                System.out.println("Error: " + e.getMessage());
-                e.printStackTrace(System.out);
+                System.out.println("Operation failed. Please check your input and try again.");
             }
         }
     }
@@ -101,7 +103,8 @@ public class ConsoleMenu implements CommandLineRunner {
                 String prefix = ask("Last name starts with");
                 String sort = ask("Sort by column (e.g. last_name)");
                 int limit = askInt("How many results", 10);
-                List<Employee> found = employees.search(prefix, sort.isEmpty() ? "last_name" : sort);
+                List<employeeSummary> found =
+                        employees.search(prefix, sort.isEmpty() ? "last_name" : sort);
                 found.stream().limit(limit).forEach(System.out::println);
                 System.out.println(found.size() + " found.");
             }
@@ -119,12 +122,22 @@ public class ConsoleMenu implements CommandLineRunner {
                 System.out.println("Direct-deposit account updated.");
             }
             case "4" -> {
-                PayRunResult result = payroll.runPayroll(ask("Department code (such as ENG)"), askDate("Pay date", NEXT_PAYDAY));
-                System.out.printf("Payroll complete: %s, %d stubs, total %s, pay date %s%n",
-                        result.deptCode(), result.stubs(), result.total(), result.payDate());
+                String deptCode = ask("Department code (such as ENG)");
+                LocalDate payDate = askDate("Pay date", NEXT_PAYDAY);
+
+                try {
+                    PayRunResult result = payroll.runPayroll(deptCode, payDate);
+                    System.out.printf(
+                            "Payroll complete: %s, %d stubs, total %s, pay date %s%n",
+                            result.deptCode(), result.stubs(),
+                            result.total(), result.payDate());
+                } catch (RuntimeException e) {
+                    System.out.println("Payroll failed. No payroll changes were saved.");
+                }
             }
             case "5" -> checkFunding();
-            case "6" -> System.out.println("Failure injection is now " + (failureInjector.toggle() ? "ON" : "off") + ".");
+            case "6" ->
+                    System.out.println("Failure injection is now " + (failureInjector.toggle() ? "ON" : "off") + ".");
             case "7" -> {
                 ExportResult result = exporter.export(askDate("From date", null), askDate("To date", null));
                 System.out.println("Exported " + result.rows() + " rows to " + result.path());

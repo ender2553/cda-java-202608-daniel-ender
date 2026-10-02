@@ -9,10 +9,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Path;
+import java.sql.Date;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Component
 public class PayHistoryExporter {
@@ -26,22 +25,77 @@ public class PayHistoryExporter {
     }
 
     public ExportResult export(LocalDate from, LocalDate to) {
-        List<Map<String, Object>> rows = jdbc.queryForList(
-                "SELECT * FROM pay_stubs p JOIN employees e USING (employee_id) WHERE pay_date BETWEEN ? AND ?",
-                java.sql.Date.valueOf(from), java.sql.Date.valueOf(to));
+        if (from == null || to == null) {
+            throw new IllegalArgumentException("Both export dates are required.");
+        }
+
+        if (from.isAfter(to)) {
+            throw new IllegalArgumentException("From date must not be after to date.");
+        }
+
         files.ensureDirectory();
         Path out = files.payHistoryFile(from, to);
-        try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(out.toFile()));
-            if (!rows.isEmpty()) {
-                writer.write(String.join(",", rows.get(0).keySet()) + "\n");
-            }
-            for (Map<String, Object> row : rows) {
-                writer.write(row.values().stream().map(String::valueOf).collect(Collectors.joining(",")) + "\n");
-            }
+
+        AtomicLong rowsWritten = new AtomicLong();
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(out.toFile()))) {
+
+            writer.write("employee_id,first_name,last_name,pay_date,gross,net");
+            writer.newLine();
+
+            jdbc.query(
+                    """
+                    SELECT p.employee_id,
+                           e.first_name,
+                           e.last_name,
+                           p.pay_date,
+                           p.gross,
+                           p.net
+                    FROM pay_stubs p
+                    JOIN employees e ON e.employee_id = p.employee_id
+                    WHERE p.pay_date BETWEEN ? AND ?
+                    ORDER BY p.pay_date, p.employee_id
+                    """,
+                    rs -> {
+                        try {
+                            writer.write(csv(rs.getString("employee_id")));
+                            writer.write(",");
+                            writer.write(csv(rs.getString("first_name")));
+                            writer.write(",");
+                            writer.write(csv(rs.getString("last_name")));
+                            writer.write(",");
+                            writer.write(csv(rs.getDate("pay_date").toString()));
+                            writer.write(",");
+                            writer.write(csv(rs.getBigDecimal("gross").toString()));
+                            writer.write(",");
+                            writer.write(csv(rs.getBigDecimal("net").toString()));
+                            writer.newLine();
+
+                            rowsWritten.incrementAndGet();
+                        } catch (IOException e) {
+                            throw new UncheckedIOException(e);
+                        }
+                    },
+                    Date.valueOf(from),
+                    Date.valueOf(to)
+            );
+
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
-        return new ExportResult(out, rows.size());
+
+        return new ExportResult(out, rowsWritten.get());
+    }
+
+    private static String csv(String value) {
+        if (value == null) {
+            return "";
+        }
+
+        if (value.contains(",") || value.contains("\"") || value.contains("\n") || value.contains("\r")) {
+            return "\"" + value.replace("\"", "\"\"") + "\"";
+        }
+
+        return value;
     }
 }
