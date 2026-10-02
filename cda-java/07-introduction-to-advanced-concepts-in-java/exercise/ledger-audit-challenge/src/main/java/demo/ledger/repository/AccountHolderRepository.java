@@ -17,8 +17,12 @@ import java.util.List;
 public class AccountHolderRepository {
 
     private static final Logger log = LoggerFactory.getLogger(AccountHolderRepository.class);
+<<<<<<< HEAD
     private static final SimpleDateFormat TIMESTAMP =
             new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+=======
+    private static final SimpleDateFormat TIMESTAMP = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+>>>>>>> eef98d81ed6911bd573b01686b011daec4ac2a51
 
     private final JdbcClient jdbc;
     private final FieldCipher cipher;
