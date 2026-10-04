@@ -33,16 +33,17 @@ public class PayrollService {
         this.transaction = new TransactionTemplate(transactionManager);
     }
     public PayRunResult runPayroll(String deptCode, LocalDate payDate) {
-        if(deptCode == null || deptCode.isBlank())
+        if (deptCode == null || deptCode.isBlank()) {
             throw new IllegalArgumentException("department code cannot be blank");
+        }
 
         List<PayLine> lines = jdbc.sql("""
-        SELECT employee_id, annual_salary
-        FROM employees
-        WHERE dept_code = :dept
-          AND active
-        ORDER BY employee_id
-        """)
+            SELECT employee_id, annual_salary
+            FROM employees
+            WHERE dept_code = :dept
+              AND active
+            ORDER BY employee_id
+            """)
                 .param("dept", deptCode)
                 .query((rs, n) -> {
                     BigDecimal gross = rs.getBigDecimal("annual_salary")
@@ -51,96 +52,123 @@ public class PayrollService {
                     return new PayLine(
                             rs.getString("employee_id"),
                             gross,
-                            gross.multiply(NET_RATE).setScale(2, RoundingMode.HALF_UP)
+                            gross.multiply(NET_RATE)
+                                    .setScale(2, RoundingMode.HALF_UP)
                     );
                 })
                 .list();
-        BigDecimal total = lines.stream().map(PayLine::net).reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        BigDecimal total = lines.stream()
+                .map(PayLine::net)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
         try {
             transaction.executeWithoutResult(status -> {
+
+                // Lock the funding account so payroll runs are serialized.
+                BigDecimal balance = jdbc.sql("""
+                    SELECT balance
+                    FROM funding_accounts
+                    WHERE account_id = 'FND-0001'
+                    FOR UPDATE
+                    """)
+                        .query(BigDecimal.class)
+                        .single();
+
+                // A payroll run already exists if any active employee
+                // in this department already has a stub for this date.
                 int existingStubs = jdbc.sql("""
-        SELECT COUNT(*)
-        FROM pay_stubs ps
-        JOIN employees e ON e.employee_id = ps.employee_id
-        WHERE e.dept_code = :dept
-        AND e.active
-        AND ps.pay_date = :payDate
-        """)
+                    SELECT COUNT(*)
+                    FROM pay_stubs ps
+                    JOIN employees e
+                      ON e.employee_id = ps.employee_id
+                    WHERE e.dept_code = :dept
+                      AND e.active = true
+                      AND ps.pay_date = :payDate
+                    """)
                         .param("dept", deptCode)
                         .param("payDate", payDate)
                         .query(Integer.class)
                         .single();
+
                 if (existingStubs > 0) {
                     throw new IllegalStateException(
-                            "Payroll already exists for this department and date");
+                            "Payroll already exists for "
+                            + deptCode + " on " + payDate);
                 }
 
-                BigDecimal balance = jdbc.sql(""" 
-                                SELECT balance 
-                                FROM funding_accounts 
-                                WHERE account_id = 'FND-0001' 
-                                FOR UPDATE
-                                """)
-                        .query(BigDecimal.class)
-                        .single();
                 if (balance.compareTo(total) < 0) {
-                    throw new IllegalStateException("Insufficient payroll funding");
+                    throw new IllegalStateException(
+                            "Insufficient payroll funding");
                 }
 
+                // Deduct funding inside the SAME transaction as the stubs.
                 BigDecimal newBalance = balance.subtract(total);
-                jdbc.sql(""" 
-                                UPDATE funding_accounts
-                                SET balance = :balance
-                                WHERE account_id = 'FND-0001' 
-                                """)
+
+                jdbc.sql("""
+                    UPDATE funding_accounts
+                    SET balance = :balance
+                    WHERE account_id = 'FND-0001'
+                    """)
                         .param("balance", newBalance)
                         .update();
 
                 int written = 0;
 
                 for (PayLine line : lines) {
-                    jdbc.sql(""" 
-                                    INSERT INTO pay_stubs (employee_id, pay_date, gross, net) 
-                                    VALUES (:emp, :date, :gross, :net) 
-                                    """)
+                    jdbc.sql("""
+                        INSERT INTO pay_stubs
+                            (employee_id, pay_date, gross, net)
+                        VALUES
+                            (:emp, :date, :gross, :net)
+                        """)
                             .param("emp", line.employeeId())
                             .param("date", payDate)
                             .param("gross", line.gross())
                             .param("net", line.net())
                             .update();
-                    failureInjector.maybeFail(written++, lines.size());
+
+                    failureInjector.maybeFail(++written, lines.size());
                 }
             });
+
         } catch (RuntimeException e) {
             log.error("Payroll transaction failed", e);
+
             throw new IllegalStateException(
                     "Payroll failed. No payroll changes were saved.", e);
         }
+
+        // Only write the completion audit AFTER the transaction commits.
         try {
-
             jdbc.sql("""
-
-            INSERT INTO payroll_audit (event, dept_code, detail, created_at)
-
-            VALUES ('PAY_RUN_COMPLETED', :dept, :detail)
-
-            """)
+                INSERT INTO payroll_audit
+                    (event, dept_code, detail, created_at)
+                VALUES
+                    ('PAY_RUN_COMPLETED', :dept, :detail, now())
+                """)
                     .param("dept", deptCode)
                     .param("detail", lines.size() + " stubs, " + total)
                     .update();
+
         } catch (RuntimeException e) {
-            log.warn("Payroll completed, but audit recording failed");
+            log.warn("Payroll completed, but audit recording failed", e);
         }
 
-
-
-        return new PayRunResult(deptCode, payDate, lines.size(), total);
+        return new PayRunResult(
+                deptCode,
+                payDate,
+                lines.size(),
+                total);
     }
 
     public FundingCheck checkFunding() {
         return jdbc.sql("""
-                SELECT opening_balance, balance, (SELECT COALESCE(SUM(net), 0) FROM pay_stubs) AS stub_total
-                FROM funding_accounts WHERE account_id = 'FND-0001'""")
+                SELECT opening_balance, balance, 
+                (SELECT COALESCE(SUM(net), 0) 
+                FROM pay_stubs) AS stub_total
+                FROM funding_accounts 
+                WHERE account_id = 'FND-0001'""")
                 .query((rs, n) -> {
                     BigDecimal opening = rs.getBigDecimal("opening_balance");
                     BigDecimal current = rs.getBigDecimal("balance");

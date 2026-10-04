@@ -61,7 +61,7 @@ public class EmployeeRepository {
 
     public List<Employee> findById(String id) {
         return jdbc.query(
-                "SELECT * FROM employees WHERE employee_id = ?",
+                "SELECT * " + "FROM employees WHERE employee_id = ?",
                 mapper,
                 id);
     }
