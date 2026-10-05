@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/transactions")
@@ -25,7 +26,7 @@ public class TransactionController {
      * Spring maps to HTTP 400 automatically.
      */
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody TransactionRequest request) {
+    public ResponseEntity<Void> create(@Valid @RequestBody TransactionRequest request) {
         // In a real service we would persist the transaction here.
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

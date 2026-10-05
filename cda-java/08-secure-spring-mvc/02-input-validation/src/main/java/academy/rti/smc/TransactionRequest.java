@@ -1,5 +1,7 @@
 package academy.rti.smc;
 
+import jakarta.validation.constraints.*;
+
 import java.math.BigDecimal;
 
 /**
@@ -22,15 +24,21 @@ import java.math.BigDecimal;
 public class TransactionRequest {
 
     // TODO: add Bean Validation (@NotBlank)
+    @NotBlank
     private String accountId;
 
     // TODO: add Bean Validation (@NotNull @Positive @Digits(integer = 12, fraction = 2))
+    @NotNull
+    @Positive
+    @Digits(integer = 12, fraction = 2)
     private BigDecimal amount;
 
     // TODO: add Bean Validation (@Pattern(regexp = "^[A-Z]{3}$"))
+    @Pattern(regexp = "^[A-Z]{3}$")
     private String currency;
 
     // TODO: add Bean Validation (@Size(max = 280))
+    @Size(max = 280)
     private String memo;
 
     public String getAccountId() {
