@@ -2,6 +2,7 @@ package academy.rti.smc;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -40,23 +41,23 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            // Carried-forward control: secure transport / CORS (deliberately scoped, not the focus).
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .csrf(csrf -> csrf.disable())
-            .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            // Carried-forward control: security response headers.
-            .headers(headers -> headers
-                .contentSecurityPolicy(csp -> csp.policyDirectives("default-src 'none'; frame-ancestors 'none'"))
-                .frameOptions(frame -> frame.deny())
-            )
-            // TODO: require authentication + hasRole('TRANSACTOR') on /api/transactions; keep /api/health public.
-            // INSECURE BASELINE — everything is open to everyone. No authentication, no role check.
-            .authorizeHttpRequests(auth -> auth
-                .anyRequest().permitAll()
-            )
-            // HTTP Basic is wired so credentials can be supplied, but the rules above
-            // never actually require them.
-            .httpBasic(Customizer.withDefaults());
+                // Carried-forward control: secure transport / CORS (deliberately scoped, not the focus).
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .csrf(csrf -> csrf.disable())
+                .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                // Carried-forward control: security response headers.
+                .headers(headers -> headers
+                        .contentSecurityPolicy(csp -> csp.policyDirectives("default-src 'none'; frame-ancestors 'none'"))
+                        .frameOptions(frame -> frame.deny())
+                )
+                // TODO: require authentication + hasRole('TRANSACTOR') on /api/transactions; keep /api/health public.
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.GET, "/api/health").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/transactions").hasRole("TRANSACTOR")
+                        .anyRequest().authenticated()
+                )
+                // HTTP Basic is wired so credentials can be supplied.
+                .httpBasic(Customizer.withDefaults());
 
         return http.build();
     }
@@ -67,10 +68,12 @@ public class SecurityConfig {
                 .password(encoder.encode("viewer-pass"))
                 .roles("VIEWER")
                 .build();
+
         UserDetails transactor = User.withUsername("transactor")
                 .password(encoder.encode("transactor-pass"))
                 .roles("TRANSACTOR")
                 .build();
+
         return new InMemoryUserDetailsManager(viewer, transactor);
     }
 
@@ -85,8 +88,13 @@ public class SecurityConfig {
         config.setAllowedOrigins(List.of("https://app.rti.academy"));
         config.setAllowedMethods(List.of("GET", "POST"));
         config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+
+        UrlBasedCorsConfigurationSource source =
+                new UrlBasedCorsConfigurationSource();
+
         source.registerCorsConfiguration("/api/**", config);
+
         return source;
     }
 }
+

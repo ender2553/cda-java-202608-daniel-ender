@@ -2,8 +2,14 @@ package academy.rti.smc;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 /**
  * STARTER (insecure baseline) SecurityConfig.
@@ -28,7 +34,54 @@ public class SecurityConfig {
         // TODO: configure security headers + least-privilege CORS
         http
                 .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
+                .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
+
+                // Add the required Referrer-Policy header.
+                .headers(headers -> headers
+                        .referrerPolicy(referrer -> referrer
+                                .policy(
+                                        org.springframework.security.web.header.writers
+                                                .ReferrerPolicyHeaderWriter.ReferrerPolicy.NO_REFERRER
+                                )
+                        )
+                )
+
+                // Enable the CORS configuration defined below.
+                .cors(cors -> cors
+                        .configurationSource(corsConfigurationSource())
+                );
+
         return http.build();
     }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        // Allow exactly the trusted frontend.
+        configuration.setAllowedOrigins(
+                List.of("https://app.example.com")
+        );
+
+        // Methods required by the API.
+        configuration.setAllowedMethods(
+                List.of(
+                        HttpMethod.GET.name(),
+                        HttpMethod.POST.name()
+                )
+        );
+
+        // JSON requests use Content-Type.
+        configuration.setAllowedHeaders(
+                List.of("Content-Type")
+        );
+
+        UrlBasedCorsConfigurationSource source =
+                new UrlBasedCorsConfigurationSource();
+
+        source.registerCorsConfiguration("/api/**", configuration);
+
+        return source;
+    }
 }
+
