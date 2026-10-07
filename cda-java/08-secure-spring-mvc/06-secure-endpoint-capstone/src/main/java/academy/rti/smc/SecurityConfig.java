@@ -1,7 +1,10 @@
 package academy.rti.smc;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,6 +12,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
 public class SecurityConfig {
@@ -44,11 +53,15 @@ public class SecurityConfig {
                 //   As written everything is open, so:
                 //      test #2 (anonymous POST -> 401) FAILS
                 //      test #3 (viewer POST    -> 403) FAILS
-                .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.GET,"/api/health").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/api/transactions").hasRole("TRANSACTOR")
+                        .anyRequest().authenticated()
+                )
 
                 // TODO (Authentication): enable HTTP Basic so credentials are
                 //      actually checked: .httpBasic(Customizer.withDefaults())
-
+                .httpBasic(Customizer.withDefaults())
                 // TODO (CSRF stance): this is a stateless JSON API authenticated
                 //      per-request with HTTP Basic, so disable CSRF deliberately:
                 //      .csrf(csrf -> csrf.disable())
@@ -60,18 +73,35 @@ public class SecurityConfig {
                 //      framework defaults. Test #7 asserts X-Content-Type-Options
                 //      is present; Spring sets nosniff by default so #7 may pass,
                 //      but the deliberate hardening below is missing:
-                //      .headers(h -> h
-                //          .contentTypeOptions(Customizer.withDefaults())
-                //          .frameOptions(f -> f.deny())
-                //          .httpStrictTransportSecurity(Customizer.withDefaults()))
+                      .headers(h -> h
+                          .contentTypeOptions(Customizer.withDefaults())
+                          .frameOptions(f -> f.deny())
+                          .httpStrictTransportSecurity(Customizer.withDefaults())
+                          .referrerPolicy(ref ->
+                                      ref.policy(ReferrerPolicyHeaderWriter.ReferrerPolicy.NO_REFERRER)))
+
 
                 // TODO (Secure transport - least-privilege CORS): no CORS config.
                 //      Test #8 (allow https://app.example.com, deny
                 //      https://evil.example.com) FAILS because nothing is allowed.
                 //      Add: .cors(Customizer.withDefaults()) plus a
                 //      CorsConfigurationSource bean allowing only app.example.com.
-                ;
+                .cors(Customizer.withDefaults());
 
         return http.build();
+    }
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource(){
+        CorsConfiguration config = new CorsConfiguration();
+
+        config.setAllowedOrigins(List.of("https://app.example.com"));
+        config.setAllowedMethods(List.of("GET", "POST"));
+        config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        config.setAllowCredentials(false);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/api/**", config);
+
+        return source;
     }
 }

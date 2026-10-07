@@ -1,5 +1,6 @@
 package academy.rti.smc;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,11 +25,11 @@ public class TransactionController {
 
     // Create a transaction.
     //
-    // TODO (Bean Validation): annotate the body parameter with @Valid so the
+    // COMPLETE (Bean Validation): annotate the body parameter with @Valid so the
     //      constraints on TransactionRequest are enforced and a bad body yields
     //      400 instead of 201. As written there is NO @Valid, so test #4 FAILS.
     @PostMapping("/transactions")
-    public ResponseEntity<Map<String, Object>> create(@RequestBody TransactionRequest request) {
+    public ResponseEntity<Map<String, Object>> create(@Valid @RequestBody TransactionRequest request) {
         String id = UUID.randomUUID().toString();
         Map<String, Object> body = Map.of(
                 "id", id,
