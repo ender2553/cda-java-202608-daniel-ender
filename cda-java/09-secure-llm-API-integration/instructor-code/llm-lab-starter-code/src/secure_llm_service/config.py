@@ -36,13 +36,26 @@ class Config:
 
 def load_config(env: dict | None = None) -> Config:
     env = os.environ if env is None else env
-    # TODO(Lesson 3): SECURITY ISSUE — hardcoded fallback credential + silent
+    # COMPLETE(Lesson 3): SECURITY ISSUE — hardcoded fallback credential + silent
     #   defaults. A missing key should fail loudly, not fall back to a literal.
     #   Replace the defaults below with env-only reads and a fail-fast check.
+    required = [
+        "LLM_API_KEY",
+        "LLM_API_BASE",
+        "LLM_MODEL",
+    ]
+
+    missing = [name for name in required if not env.get(name)]
+
+    if missing:
+        raise ConfigError(
+            "Missing required configuration: " + ", ".join(missing)
+        )
+
     return Config(
-        api_key=env.get("LLM_API_KEY", "INSECURE-DEFAULT-KEY-REPLACE-IN-LESSON-3"),
-        api_base=env.get("LLM_API_BASE", "https://api.your-provider.example").rstrip("/"),
-        model=env.get("LLM_MODEL", "your-model-name"),
+        api_key=env["LLM_API_KEY"],
+        api_base=env["LLM_API_BASE"].rstrip("/"),
+        model=env["LLM_MODEL"],
         timeout_seconds=float(env.get("LLM_TIMEOUT_SECONDS", "10")),
         max_retries=int(env.get("LLM_MAX_RETRIES", "2")),
         retry_backoff_seconds=float(env.get("LLM_RETRY_BACKOFF_SECONDS", "5")),
