@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Widget Store — Product Search</title>
+  <style>
+    :root {
+      --bg: #f5f6f8; --card: #ffffff; --ink: #1c2430; --muted: #5a6473;
+      --line: #d9dee6; --accent: #2457d6; --danger: #b42318; --code-bg: #0f1623; --code-ink: #e6edf7;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; background: var(--bg); color: var(--ink);
+      font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
+    header {
+      background: var(--card); border-bottom: 1px solid var(--line); padding: 16px 20px;
+    }
+    header h1 { margin: 0; font-size: 20px; }
+    header p { margin: 4px 0 0; color: var(--muted); font-size: 14px; }
+    .wrap { max-width: 920px; margin: 0 auto; padding: 20px 16px 48px; }
+    .card {
+      background: var(--card); border: 1px solid var(--line); border-radius: 10px;
+      padding: 18px; margin-bottom: 20px;
+    }
+    .card h2 { margin: 0 0 12px; font-size: 17px; }
+    label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 4px; }
+    input[type=text], input[type=password] {
+      width: 100%; padding: 10px 12px; font-size: 15px; border: 1px solid var(--line);
+      border-radius: 8px; background: #fff; color: var(--ink);
+    }
+    .row { display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; }
+    .row .grow { flex: 1 1 260px; }
+    button {
+      padding: 10px 16px; font-size: 15px; font-weight: 600; cursor: pointer;
+      border: 1px solid var(--accent); background: var(--accent); color: #fff; border-radius: 8px;
+    }
+    button.secondary { background: #fff; color: var(--accent); }
+    .chips { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px; }
+    .chips button {
+      font-size: 12.5px; font-weight: 500; padding: 6px 10px;
+      background: #eef2fb; color: var(--accent); border-color: #cfdcfa;
+    }
+    .chips .warn { background: #fdeeec; color: var(--danger); border-color: #f4c8c2; }
+    .chips-label { font-size: 12px; color: var(--muted); margin: 12px 0 2px; text-transform: uppercase; letter-spacing: .04em; }
+    pre {
+      background: var(--code-bg); color: var(--code-ink); padding: 12px 14px; border-radius: 8px;
+      overflow-x: auto; font-size: 13px; margin: 14px 0 0; white-space: pre-wrap; word-break: break-word;
+    }
+    table { width: 100%; border-collapse: collapse; margin-top: 14px; font-size: 14px; }
+    th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+    th { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+    .error { color: var(--danger); font-weight: 600; margin-top: 14px; }
+    .note { color: var(--muted); font-size: 13px; margin-top: 10px; }
+    .loginresult { margin-top: 12px; font-weight: 600; }
+    .ok { color: #1a7f37; } .bad { color: var(--danger); }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Widget Store</h1>
+    <p>Internal catalog &amp; staff login — <strong>teaching sandbox, fake data only</strong></p>
+  </header>
+
+  <main class="wrap">
+    <section class="card">
+      <h2>Product search</h2>
+      <div class="row">
+        <div class="grow">
+          <label for="q">Search products by name</label>
+          <input type="text" id="q" placeholder="e.g. Widget" autocomplete="off">
+        </div>
+        <button id="searchBtn">Search</button>
+      </div>
+
+      <label style="display:flex; align-items:center; gap:8px; margin-top:12px; cursor:pointer;">
+        <input type="checkbox" id="secure">
+        <span><strong>Secure mode (search only)</strong> — run the parameterized (fixed) search instead. Try the same payloads with this on. (Login is not covered.)</span>
+      </label>
+
+      <div class="chips-label">Example searches (instructor)</div>
+      <div class="chips">
+        <button data-q="Widget" class="fill">Normal: Widget</button>
+        <button data-q="' UNION SELECT username, password, role FROM users --" class="fill">Read: dump users</button>
+      </div>
+      <div class="chips-label">Vandalise (changes data — reset with schema.sql afterward)</div>
+      <div class="chips">
+        <button data-q="'; UPDATE products SET price = 0.01 --" class="fill warn">Set all prices to 0.01</button>
+        <button data-q="'; UPDATE users SET password = 'pwned' --" class="fill warn">Overwrite all passwords</button>
+        <button data-q="'; DELETE FROM products --" class="fill warn">Delete all products</button>
+        <button data-q="'; DROP TABLE products --" class="fill warn">Drop the products table</button>
+      </div>
+
+      <div id="searchOut"></div>
+    </section>
+
+    <section class="card">
+      <h2>Staff login</h2>
+      <div class="row">
+        <div class="grow">
+          <label for="u">Username</label>
+          <input type="text" id="u" placeholder="alice" autocomplete="off">
+        </div>
+        <div class="grow">
+          <label for="p">Password</label>
+          <input type="password" id="p" placeholder="sunshine" autocomplete="off">
+        </div>
+        <button id="loginBtn" class="secondary">Log in</button>
+      </div>
+      <div id="loginOut" class="loginresult"></div>
+      <p class="note">Try logging in with a password you read from the search box above.</p>
+    </section>
+  </main>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+
+    async function runSearch() {
+      const q = $('q').value;
+      const secure = $('secure').checked;
+      const res = await fetch('/api/search?secure=' + secure + '&q=' + encodeURIComponent(q));
+      const data = await res.json();
+      const label = secure ? 'SQL the app sent (secure / parameterized):' : 'SQL the app sent to the database:';
+      let html = '<pre>' + label + '\n' + escapeHtml(data.sql) + '</pre>';
+      if (data.error && data.error.indexOf('Multiple ResultSets') !== -1) {
+        // A stacked "; UPDATE/DELETE/DROP" ran. The SELECT part returned nothing
+        // the page can show, but the extra statement already changed the database.
+        html += '<div class="error">A stacked statement ran. The search returned nothing usable &mdash; '
+             +  'but your extra <code>;&nbsp;UPDATE/DELETE/DROP</code> already executed on the database. '
+             +  'Search again (or dump the users) to see the damage.</div>';
+      } else if (data.error) {
+        html += '<div class="error">The database pushed back: ' + escapeHtml(data.error) + '</div>';
+      } else {
+        html += '<table><thead><tr><th>Name</th><th>Category</th><th>Price</th></tr></thead><tbody>';
+        if (data.results.length === 0) {
+          html += '<tr><td colspan="3" class="note">No rows.</td></tr>';
+        } else {
+          for (const r of data.results) {
+            html += '<tr><td>' + escapeHtml(r.name) + '</td><td>' + escapeHtml(r.category)
+                  + '</td><td>' + escapeHtml(r.price) + '</td></tr>';
+          }
+        }
+        html += '</tbody></table>';
+        html += '<p class="note">These columns are meant to be product name / category / price. '
+             +  'If you see usernames and passwords here, a UNION read just pulled them from the users table.</p>';
+      }
+      $('searchOut').innerHTML = html;
+    }
+
+    async function runLogin() {
+      const body = new URLSearchParams({ username: $('u').value, password: $('p').value });
+      const res = await fetch('/api/login', { method: 'POST', body });
+      const data = await res.json();
+      $('loginOut').innerHTML = data.success
+        ? '<span class="ok">Logged in as ' + escapeHtml(data.username) + ' (' + escapeHtml(data.role) + ').</span>'
+        : '<span class="bad">Login failed.</span>';
+    }
+
+    function escapeHtml(s) {
+      return (s == null ? '' : String(s)).replace(/[&<>"']/g, c => (
+        { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+    }
+
+    $('searchBtn').addEventListener('click', runSearch);
+    $('q').addEventListener('keydown', e => { if (e.key === 'Enter') runSearch(); });
+    $('loginBtn').addEventListener('click', runLogin);
+    document.querySelectorAll('.fill').forEach(b =>
+      b.addEventListener('click', () => { $('q').value = b.dataset.q; runSearch(); }));
+  </script>
+</body>
+</html>
