@@ -1,0 +1,10 @@
+# Build output
+target/
+logs/
+
+# Local secrets — never commit
+.env
+
+# IDE
+.idea/
+*.iml
