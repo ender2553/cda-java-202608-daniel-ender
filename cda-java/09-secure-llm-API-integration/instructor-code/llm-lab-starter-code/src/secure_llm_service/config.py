@@ -18,7 +18,7 @@ class ConfigError(RuntimeError):
     """Raised when required configuration is missing or invalid."""
 
 
-@dataclass(frozen=True)
+@dataclass
 class Config:
     api_key: str
     api_base: str

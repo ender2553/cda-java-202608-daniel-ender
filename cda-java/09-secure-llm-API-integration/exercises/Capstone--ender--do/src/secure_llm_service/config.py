@@ -1,0 +1,64 @@
+"""Configuration loading.
+
+STARTER — Lesson 3 (API Key Management and Secrets Handling).
+
+This naive version hardcodes a fallback credential and reads config with silent
+defaults. Your job in Lesson 3:
+  - Read every secret from the environment ONLY (no literal default value).
+  - Raise ConfigError listing any missing required variables — never a value.
+  - Ensure the key never appears in a default, a print(), or an exception message.
+"""
+from __future__ import annotations
+
+import os
+from dataclasses import dataclass
+
+
+class ConfigError(RuntimeError):
+    """Raised when required configuration is missing or invalid."""
+
+
+@dataclass
+class Config:
+    api_key: str
+    api_base: str
+    model: str
+    timeout_seconds: float = 10.0
+    max_retries: int = 2
+    retry_backoff_seconds: float = 5.0
+    max_input_chars: int = 2000
+    max_output_length: int = 8000
+
+    @property
+    def masked_key(self) -> str:
+        return "***" if self.api_key else ""
+
+
+def load_config(env: dict | None = None) -> Config:
+    env = os.environ if env is None else env
+    # COMPLETE(Lesson 3): SECURITY ISSUE — hardcoded fallback credential + silent
+    #   defaults. A missing key should fail loudly, not fall back to a literal.
+    #   Replace the defaults below with env-only reads and a fail-fast check.
+    required = [
+        "LLM_API_KEY",
+        "LLM_API_BASE",
+        "LLM_MODEL",
+    ]
+
+    missing = [name for name in required if not env.get(name)]
+
+    if missing:
+        raise ConfigError(
+            "Missing required configuration: " + ", ".join(missing)
+        )
+
+    return Config(
+        api_key=env["LLM_API_KEY"],
+        api_base=env["LLM_API_BASE"].rstrip("/"),
+        model=env["LLM_MODEL"],
+        timeout_seconds=float(env.get("LLM_TIMEOUT_SECONDS", "10")),
+        max_retries=int(env.get("LLM_MAX_RETRIES", "2")),
+        retry_backoff_seconds=float(env.get("LLM_RETRY_BACKOFF_SECONDS", "5")),
+        max_input_chars=int(env.get("LLM_MAX_INPUT_CHARS", "2000")),
+        max_output_length=int(env.get("LLM_MAX_OUTPUT_LENGTH", "8000")),
+    )
