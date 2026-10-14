@@ -1,0 +1,15 @@
+# Runs VitalLedger containerized with an H2 in-memory store.
+# Secrets come from the git-ignored .env file (copy from .env.example first),
+# never from this committed compose file.
+services:
+  vitalledger:
+    build: .
+    image: vitalledger-student:1.0.0
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env            # provides VITALLEDGER_AES_KEY (required)
+    environment:
+      # Belt-and-suspenders: the app also fails fast if the key is blank.
+      VITALLEDGER_AES_KEY: ${VITALLEDGER_AES_KEY}
+    restart: unless-stopped
