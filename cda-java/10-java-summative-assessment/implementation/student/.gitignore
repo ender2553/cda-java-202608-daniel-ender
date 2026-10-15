@@ -1,0 +1,33 @@
+# ---- Secrets: never commit real credentials or key material ----
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+id_rsa
+id_ed25519
+*_rsa
+*_ecdsa
+credentials.json
+secrets.*
+
+# ---- Build output ----
+target/
+build/
+*.class
+
+# ---- IDE / OS ----
+.idea/
+*.iml
+.vscode/
+.DS_Store
+*.log
+
+# ---- H2 file DB (if file mode ever enabled) ----
+*.mv.db
+*.trace.db
+data/
