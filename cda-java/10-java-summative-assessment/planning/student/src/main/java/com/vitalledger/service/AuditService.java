@@ -30,11 +30,16 @@ public class AuditService {
     @Transactional(propagation = Propagation.MANDATORY)
     public void record(String actor, String action, String targetRef) {
         // TODO(phase C): persist a new AuditEntry(actor, action, targetRef) via auditRepository, inside the caller's transaction.
+        auditRepository.save(new AuditEntry(actor, action, targetRef));
     }
 
     @Transactional(readOnly = true)
     public List<AuditResponse> recent() {
         // TODO(phase C): return all audit entries newest-first, each mapped via AuditResponse.from.
-        throw new UnsupportedOperationException("TODO(phase C)");
+        return auditRepository.findAllByOrderByOccurredAtDesc()
+                .stream()
+                .map(AuditResponse::from)
+                .toList();
     }
 }
+

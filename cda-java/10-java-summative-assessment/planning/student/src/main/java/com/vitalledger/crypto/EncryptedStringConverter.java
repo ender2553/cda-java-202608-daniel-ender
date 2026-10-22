@@ -38,12 +38,27 @@ public class EncryptedStringConverter implements AttributeConverter<String, Stri
     @Override
     public String convertToDatabaseColumn(String attribute) {
         // TODO(phase B): encrypt the attribute via cipher() so the column stores ciphertext at rest.
-        throw new UnsupportedOperationException("TODO(phase B)");
+
+        // Preserve null values instead of attempting to encrypt them.
+        if (attribute == null) {
+            return null;
+        }
+
+        // Encrypt the value before it is written to the database.
+        return cipher().encrypt(attribute);
     }
 
     @Override
     public String convertToEntityAttribute(String dbData) {
         // TODO(phase B): decrypt the stored ciphertext via cipher() when the entity is read back.
-        throw new UnsupportedOperationException("TODO(phase B)");
+
+        // Preserve null values instead of attempting to decrypt them.
+        if (dbData == null) {
+            return null;
+        }
+
+        // Decrypt the database value before returning it to the entity.
+        return cipher().decrypt(dbData);
     }
 }
+
