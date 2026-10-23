@@ -1,0 +1,106 @@
+/* Global box-sizing reset */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+/* Root font size and REM-based typography */
+:root {
+    font-size: 100%;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1rem;
+    line-height: 1.5;
+    background: #f0f0f0;
+    color: #222222;
+    margin: 20px;
+}
+
+/* Accessible color palette */
+/*
+   Body text: #222222
+   Background: #f0f0f0
+   Contrast ratio: approximately 13:1
+   WCAG AA requirement for normal text: 4.5:1
+*/
+
+/* REM-based heading scale */
+h1 {
+    font-size: 2rem;
+}
+
+h2 {
+    font-size: 1.5rem;
+}
+
+h3 {
+    font-size: 1.25rem;
+}
+
+/* Grouping selector */
+h1,
+h2,
+h3 {
+    color: #003594;
+}
+
+/* Class selector */
+.page-intro {
+    font-size: 1.125rem;
+    font-weight: bold;
+}
+
+/* ID selector */
+#page-header {
+    background-color: #e6e6e6;
+    padding: 15px;
+    text-align: center;
+}
+
+/* Card styling */
+.card {
+    width: 320px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    background: #ffffff;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 40px;
+}
+
+/* Card header styling */
+.card-header {
+    font-weight: bold;
+    border-bottom: 2px solid #0b5e2f;
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+}
+
+/* Descendant selector */
+main a {
+    color: #003594;
+    text-decoration: none;
+}
+
+/* Descendant selector hover effect */
+main a:hover {
+    text-decoration: underline;
+}
+
+/* Accessible image caption */
+figcaption {
+    font-size: 0.875rem;
+    color: #595959;
+    margin-top: 8px;
+}
+
+/*
+   Caption text: #595959
+   Background: #ffffff
+   Contrast ratio: approximately 7:1
+   WCAG AA requirement for normal text: 4.5:1
+*/
+
