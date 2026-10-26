@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dallas Cowboys Fan Page</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header id="page-header">
+        <h1>Dallas Cowboys</h1>
+        <p class="page-intro">America's Team — Football, Tradition, and Teamwork!</p>
+    </header>
+
+    <nav aria-label="Main navigation">
+        <ul>
+            <li><a href="#about">About</a></li>
+            <li><a href="#record">Season Record</a></li>
+            <li><a href="#games">Upcoming Games</a></li>
+            <li><a href="#profile">Account &amp; Profile</a></li>
+        </ul>
+    </nav>
+
+    <div class="page-layout">
+        <main class="main-content">
+            <section class="card" id="about">
+                <h2 class="card-header">About the Cowboys</h2>
+                <p>
+                    The Dallas Cowboys are a professional American football team
+                    based in the Dallas–Fort Worth area of Texas. They compete in
+                    the National Football League (NFL) as a member of the NFC East
+                    division.
+                </p>
+                <p>
+                    The Cowboys play their home games at AT&amp;T Stadium in
+                    Arlington, Texas.
+                </p>
+                <p>
+                    Visit the
+                    <a href="https://www.nfl.com/teams/dallas-cowboys/">
+                        official NFL Dallas Cowboys page
+                    </a>
+                    for more team information.
+                </p>
+            </section>
+
+            <section class="card" id="record">
+                <h2 class="card-header">2026 Season Record</h2>
+                <p>
+                    As of October 22, 2026, the Dallas Cowboys have a regular
+                    season record of 2 wins and 4 losses.
+                </p>
+            </section>
+
+            <section class="card">
+                <h2 class="card-header">Dallas Cowboys Image</h2>
+                <figure>
+                    <img
+                        src="https://placehold.co/600x300/002244/ffffff?text=Dallas+Cowboys"
+                        alt="Placeholder image representing the Dallas Cowboys"
+                        width="600"
+                        height="300">
+                    <figcaption>
+                        A placeholder image for the Dallas Cowboys fan page.
+                    </figcaption>
+                </figure>
+            </section>
+
+            <section class="card" id="profile">
+                <h2 class="card-header">Account &amp; Profile Form</h2>
+
+                <form action="#" method="get">
+                    <fieldset>
+                        <legend>Personal Information</legend>
+
+                        <p>
+                            <label for="full-name">Full name:</label>
+                            <input
+                                type="text"
+                                id="full-name"
+                                name="fullName"
+                                minlength="2"
+                                maxlength="100">
+                        </p>
+
+                        <p>
+                            <label for="email">Email:</label>
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                maxlength="254">
+                        </p>
+
+                        <p>
+                            <label for="age">Age:</label>
+                            <input
+                                type="number"
+                                id="age"
+                                name="age"
+                                min="0"
+                                max="120"
+                                step="1">
+                        </p>
+
+                        <p>
+                            <label for="birth-date">Date:</label>
+                            <input
+                                type="date"
+                                id="birth-date"
+                                name="birthDate"
+                                min="1900-01-01"
+                                max="2026-10-26"
+                                step="1">
+                        </p>
+
+                        <p>
+                            <label for="postal-code">Postal code:</label>
+                            <input
+                                type="text"
+                                id="postal-code"
+                                name="postalCode"
+                                pattern="^[0-9]{5}$"
+                                title="Enter exactly five digits, such as 75001."
+                                minlength="5"
+                                maxlength="5">
+                        </p>
+
+                        <p>
+                            <label for="homepage">Homepage:</label>
+                            <input
+                                type="url"
+                                id="homepage"
+                                name="homepage"
+                                maxlength="2048">
+                        </p>
+
+                        <p>
+                            <label for="country">Country:</label>
+                            <select id="country" name="country">
+                                <option value="">Choose a country</option>
+                                <option value="us">United States</option>
+                                <option value="ca">Canada</option>
+                                <option value="uk">United Kingdom</option>
+                                <option value="au">Australia</option>
+                            </select>
+                        </p>
+
+                        <p>
+                            <label for="message">Message:</label>
+                            <textarea
+                                id="message"
+                                name="message"
+                                rows="4"
+                                maxlength="2000"></textarea>
+                        </p>
+
+                        <p>
+                            <input type="checkbox" id="not-robot">
+                            <label for="not-robot">I am not a robot</label>
+                        </p>
+
+                        <button type="submit">Submit Form</button>
+                    </fieldset>
+                </form>
+            </section>
+        </main>
+
+        <aside class="sidebar" id="games">
+            <section class="card">
+                <h2 class="card-header">Upcoming Games</h2>
+                <ul>
+                    <li>October 26: At Philadelphia Eagles</li>
+                    <li>November 1: Arizona Cardinals at Dallas</li>
+                    <li>November 8: At Indianapolis Colts</li>
+                </ul>
+            </section>
+        </aside>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Dallas Cowboys Fan Page</p>
+    </footer>
+</body>
+</html>
+

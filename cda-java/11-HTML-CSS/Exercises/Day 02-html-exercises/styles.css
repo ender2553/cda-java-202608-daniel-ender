@@ -1,106 +1,178 @@
-/* Global box-sizing reset */
-*,
-*::before,
-*::after {
-    box-sizing: border-box;
-}
-
-/* Root font size and REM-based typography */
 :root {
-    font-size: 100%;
+font-size: 100%;
 }
 
 body {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 1rem;
-    line-height: 1.5;
-    background: #f0f0f0;
-    color: #222222;
-    margin: 20px;
+font-family: Arial, Helvetica, sans-serif;
+background-color: #f0f0f0;
+color: #222222;
+line-height: 1.6;
+margin: 0;
 }
 
-/* Accessible color palette */
-/*
-   Body text: #222222
-   Background: #f0f0f0
-   Contrast ratio: approximately 13:1
-   WCAG AA requirement for normal text: 4.5:1
-*/
-
-/* REM-based heading scale */
-h1 {
-    font-size: 2rem;
-}
-
-h2 {
-    font-size: 1.5rem;
-}
-
-h3 {
-    font-size: 1.25rem;
-}
-
-/* Grouping selector */
+/* Headings */
 h1,
 h2,
 h3 {
-    color: #003594;
+color: #003594;
 }
 
-/* Class selector */
-.page-intro {
-    font-size: 1.125rem;
-    font-weight: bold;
+.page-layout {
+display: grid;
+grid-template-areas:
+"header"
+"main"
+"sidebar"
+"footer";
+grid-template-columns: minmax(0, 1fr);
+gap: 1rem;
+padding: 1rem;
 }
 
-/* ID selector */
 #page-header {
-    background-color: #e6e6e6;
-    padding: 15px;
-    text-align: center;
+grid-area: header;
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 1rem;
+background-color: #e6e6e6;
+padding: 1rem;
+text-align: center;
 }
 
-/* Card styling */
+.navbar {
+display: flex;
+justify-content: space-between;
+align-items: center;
+flex-wrap: wrap;
+gap: 1rem;
+width: 100%;
+box-sizing: border-box;
+padding: 1rem;
+background-color: #003594;
+}
+
+.brand {
+color: #ffffff;
+font-size: 1.25rem;
+font-weight: bold;
+text-decoration: none;
+}
+
+.nav-links {
+display: flex;
+flex-wrap: wrap;
+gap: 1rem;
+}
+
+.nav-links a {
+color: #ffffff;
+text-decoration: none;
+}
+
+.nav-links a:hover {
+text-decoration: underline;
+}
+
+.page-intro {
+font-size: 1.125rem;
+font-weight: bold;
+}
+
+/* Main content region */
+.main-content {
+grid-area: main;
+display: flex;
+flex-wrap: wrap;
+align-content: start;
+gap: 1rem;
+min-width: 0;
+}
+
+.sidebar {
+grid-area: sidebar;
+min-width: 0;
+padding: 1rem;
+border: 1px solid #cccccc;
+border-radius: 8px;
+background-color: #ffffff;
+}
+
 .card {
-    width: 320px;
-    padding: 20px;
-    border: 1px solid #ddd;
-    background: #ffffff;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 40px;
+flex: 1 1 240px;
+min-width: 0;
+padding: 1rem;
+border: 1px solid #cccccc;
+border-radius: 8px;
+background-color: #ffffff;
+overflow-wrap: anywhere;
+box-sizing: border-box;
 }
 
-/* Card header styling */
 .card-header {
-    font-weight: bold;
-    border-bottom: 2px solid #0b5e2f;
-    padding-bottom: 8px;
-    margin-bottom: 12px;
+margin-top: 0;
 }
 
-/* Descendant selector */
-main a {
-    color: #003594;
-    text-decoration: none;
+.card img {
+display: block;
+max-width: 100%;
+height: auto;
 }
 
-/* Descendant selector hover effect */
-main a:hover {
-    text-decoration: underline;
+figure {
+margin: 0;
 }
 
-/* Accessible image caption */
 figcaption {
-    font-size: 0.875rem;
-    color: #595959;
-    margin-top: 8px;
+font-size: 0.875rem;
+margin-top: 0.5rem;
 }
 
-/*
-   Caption text: #595959
-   Background: #ffffff
-   Contrast ratio: approximately 7:1
-   WCAG AA requirement for normal text: 4.5:1
-*/
+main a,
+.sidebar a {
+color: #003594;
+text-decoration: none;
+}
 
+main a:hover,
+.sidebar a:hover {
+text-decoration: underline;
+}
+
+footer {
+grid-area: footer;
+padding: 1rem;
+text-align: center;
+background-color: #e6e6e6;
+}
+
+@media (min-width: 768px) {
+.page-layout {
+grid-template-areas:
+"header header"
+"main sidebar"
+"footer footer";
+grid-template-columns: minmax(0, 2fr) minmax(240px, 1fr);
+}
+
+#page-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    text-align: left;
+}
+
+#page-header > h1,
+#page-header > .page-intro {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.navbar {
+    width: auto;
+    flex: 1 1 100%;
+}
+
+
+}

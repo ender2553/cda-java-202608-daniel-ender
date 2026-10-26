@@ -8,14 +8,33 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <div class="page-layout">
+
+
     <header id="page-header">
-        <h1>Dallas Cowboys</h1>
-        <p class="page-intro">America's Team — Football, Tradition, and Teamwork!</p>
+        <nav class="navbar" aria-label="Main navigation">
+            <a class="brand" href="cowboys.html">Dallas Cowboys</a>
+
+            <div class="nav-links">
+                <a href="#about">About</a>
+                <a href="#record">2026 Record</a>
+                <a href="#image">Team Image</a>
+                <a href="#games">Upcoming Games</a>
+            </div>
+        </nav>
+
+        <div class="header-intro">
+            <h1>Dallas Cowboys</h1>
+            <p class="page-intro">
+                America's Team — Football, Tradition, and Teamwork!
+            </p>
+        </div>
     </header>
 
-    <main>
-        <section class="card">
+    <main class="main-content">
+        <section class="card" id="about">
             <h2 class="card-header">About the Cowboys</h2>
+
             <p>
                 The Dallas Cowboys are a professional American football team
                 based in the Dallas–Fort Worth area of Texas. They compete
@@ -24,16 +43,17 @@
             </p>
 
             <p>
-                The Cowboys play their home games at AT&T Stadium in
+                The Cowboys play their home games at AT&amp;T Stadium in
                 Arlington, Texas.
             </p>
         </section>
 
-        <section class="card">
+        <section class="card" id="record">
             <h2 class="card-header">2026 Season Record</h2>
+
             <p>
-                As of October 22, 2026, the Dallas Cowboys have a regular-season
-                record of 2 wins and 4 losses.
+                As of October 22, 2026, the Dallas Cowboys have a
+                regular-season record of 2 wins and 4 losses.
             </p>
 
             <p>
@@ -47,8 +67,8 @@
             </p>
         </section>
 
-        <section>
-            <h2>Dallas Cowboys Image</h2>
+        <section class="card" id="image">
+            <h2 class="card-header">Dallas Cowboys Image</h2>
 
             <figure>
                 <img
@@ -62,8 +82,10 @@
                 </figcaption>
             </figure>
         </section>
+    </main>
 
-        <section>
+    <aside class="sidebar" aria-labelledby="games">
+        <section id="games">
             <h2>Upcoming Games</h2>
 
             <ul>
@@ -87,11 +109,13 @@
                 </a>.
             </p>
         </section>
-    </main>
+    </aside>
 
     <footer>
         <p>Created for my HTML Exercise 3.</p>
     </footer>
+
+</div>
+
 </body>
 </html>
-
