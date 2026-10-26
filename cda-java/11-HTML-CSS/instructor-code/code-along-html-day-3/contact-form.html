@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <style>
+            input:invalid {border: 2px solid red}
+            input:valid {border: 2px solid green}
+        </style>
+    </head>
+    <body>
+        <form action="/contact-form.html" method="post">
+            <label for="fullname">Full Name
+                <input type="text" name="fullname" required
+                 pattern="[a-zA-Z\s'-]+" maxlength="50"
+                title="We need your full name here.">
+            </label>
+            <label for="email">Email
+                <input type="email" id="email" name="email" required>
+            </label>
+             <label for="promocode">Promo Code
+                <input type="text" id="code" name="code"
+                 pattern="[A-Z0-9]{6}" maxlength="6"
+                 title="Six Upper Case Letters or Digits"
+                >
+            </label>
+           <label for="qty">Quantity
+                <input type="number" id="qty" name="qty" required>
+            </label>
+
+            <fieldset>
+                <legend>Your Message</legend>
+                <label for="topic">Topic</label>
+                <select id="topic" name="topic">
+                    <option value="support">Support</option>
+                    <option value="billing">Billing</option>    
+                </select>
+                <textarea>
+
+                </textarea>
+            </fieldset>
+    
+            <button type="submit">Send</button>
+        </form> 
+    </body>
+</html>

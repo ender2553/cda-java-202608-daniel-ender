@@ -1,0 +1,128 @@
+/* ==========================================================================
+   BARELY THERE UI - COLOR PALETTE & VARIABLES
+   Light, airy neutral palette with high-contrast text for WCAG compliance.
+   ========================================================================== */
+:root {
+  --ui-bg: #FAFAFA;            /* Warm off-white canvas */
+  --ui-surface: #FFFFFF;       /* Pure white elements */
+  --ui-border: #E5E7EB;        /* Hairline 1px borders */
+  --text-primary: #111827;     /* High-contrast slate charcoal */
+  --text-muted: #6B7280;       /* Secondary neutral text */
+  --accent-color: #2563EB;     /* Subtle blue for links & focus */
+  --accent-bg-hover: #F3F4F6;  /* Soft grey hover state */
+}
+
+/* Global Reset & Body Styling */
+body {
+  background-color: var(--ui-bg);
+  color: var(--text-primary);
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+/* Subtle Barely-There UI Element Styling */
+.district-header {
+  background-color: var(--ui-surface);
+  border-bottom: 1px solid var(--ui-border);
+}
+
+.district-title {
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+.district-nav {
+  border-right: 1px solid var(--ui-border);
+  background-color: var(--ui-surface);
+}
+
+.district-nav a {
+  color: var(--text-primary);
+  text-decoration: none;
+  display: block;
+  transition: background-color 0.2s ease;
+}
+
+.district-nav a:hover,
+.district-nav a:focus {
+  background-color: var(--accent-bg-hover);
+  color: var(--accent-color);
+}
+
+/* Subtle Card UI Containers */
+.ui-card,
+.event-card {
+  background-color: var(--ui-surface);
+  border: 1px solid var(--ui-border);
+  border-radius: 8px;
+}
+
+.district-aside {
+  border-left: 1px solid var(--ui-border);
+  background-color: var(--ui-surface);
+}
+
+.district-footer {
+  border-top: 1px solid var(--ui-border);
+  background-color: var(--ui-surface);
+}
+
+/* Grid Area Assignments */
+.district-header { grid-area: header; }
+.district-nav    { grid-area: nav; }
+.district-main   { grid-area: main; }
+.district-aside  { grid-area: aside; }
+.district-footer { grid-area: footer; }
+
+/* ==========================================================================
+   CSS GRID LAYOUT (Holy Grail Structure)
+   ========================================================================== */
+
+/* 1. Mobile First Layout: Single-column layout */
+.grid-container {
+  display: grid;
+  min-height: 100vh;
+  grid-template-rows: auto auto 1fr auto auto;
+  grid-template-areas:
+    "header"
+    "nav"
+    "main"
+    "aside"
+    "footer";
+}
+
+/* 2. Tablet View (Medium Screens): 2-Column Layout */
+@media (min-width: 768px) {
+  .grid-container {
+    grid-template-columns: 240px 1fr;
+    grid-template-rows: auto 1fr auto auto;
+    grid-template-areas:
+      "header header"
+      "nav    main"
+      "aside  aside"
+      "footer footer";
+  }
+  
+  /* Adjust borders for tablet layout */
+  .district-aside {
+    border-left: none;
+    border-top: 1px solid var(--ui-border);
+  }
+}
+
+/* 3. Desktop View (Large Screens): 3-Column Holy Grail Layout */
+@media (min-width: 992px) {
+  .grid-container {
+    grid-template-columns: 240px 1fr 260px; /* Sidebar | Main | Aside */
+    grid-template-rows: auto 1fr auto;
+    grid-template-areas:
+      "header header header"
+      "nav    main   aside"
+      "footer footer footer";
+  }
+
+  /* Adjust borders for desktop 3-column layout */
+  .district-aside {
+    border-top: none;
+    border-left: 1px solid var(--ui-border);
+  }
+}
