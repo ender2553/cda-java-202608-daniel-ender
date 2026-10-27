@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Security-Policy"
+          content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; object-src 'none'">
+  
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Report a Suspicious Charge | Riverbend Credit Union</title>
+    <link rel="icon" href="logo.svg">
+    <link rel="stylesheet" href="styles.css">
+   
+  </head>
+  <body>
+    <header class="site-header">
+      <img src="logo.svg" alt="" width="40" height="40">
+      <p class="brand">Riverbend Credit Union <span>(a fictional bank for this demo)</span></p>
+    </header>
+
+    <main>
+      <h1>Report a Suspicious Charge</h1>
+
+      <section class="notice" aria-labelledby="notice-heading">
+        <h2 id="notice-heading">Member notice</h2>
+        <p>We will never ask for your verification code by phone or email.</p>
+        <!-- Stand-in for untrusted content that slipped into the page (for example, from a database).
+        <script>console.log("Inline script ran. If an attacker had injected this, it would have run too.");</script> -->
+      </section>
+
+      <form action="/submit" method="post" enctype="multipart/form-data">
+        <p class="form-intro">Fields Marked with asterisk(*) are required.</p>
+        
+        <div class="field">
+          <label for="email">Email Address<span class="req" aria-hidden="true">*</span></label>
+          <input type="email" name="email" autocomplete="email" required
+         pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$">
+        </div>
+
+        <div class="field">
+          <label for="code">Verification Code<span class="req" aria-hidden="true">*</span></label>
+          <input type="text" name="code" inputmode="numeric"
+                 required pattern="[0-9]{6}" maxlength="6">
+        </div>
+
+        <div class="field">
+          <label for="amount">Charge amount in dollars<span class="req" aria-hidden="true">*</span></label>
+          <input type="number" name="amount" required min="0.01" step="0.01">
+        </div>
+
+        <div class="field">
+          <label for="details">What Happened (Optional)</label>
+          <textarea name="details" placeholder="For Example: I don't recoginize this store." rows="4" maxlength="1000"></textarea>
+        </div>
+
+        <div class="field">
+          <label for="receipt">Screenshot or receipt (optional - png or jpeg only please)</label>
+          <input type="file" name="receipt"  accept="image/png,image/jpeg">
+        </div>
+
+        <button type="submit">Send report</button>
+      </form>
+    </main>
+  </body>
+</html>
