@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dallas Cowboys Fan Page</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header id="page-header">
+        <h1>Dallas Cowboys</h1>
+        <p class="page-intro">America's Team — Football, Tradition, and Teamwork!</p>
+    </header>
+
+<nav aria-label="Main navigation">
+    <ul>
+        <li><a href="#about">About</a></li>
+        <li><a href="#record">2026 Record</a></li>
+        <li><a href="#team-image">Team Image</a></li>
+        <li><a href="#upcoming-games">Upcoming Games</a></li>
+        <li><a href="#account-form">Fan Account</a></li>
+        <li><a href="#security-threats">Security Threat Mapping</a></li>
+    </ul>
+</nav>
+
+<main>
+    <section id="about" class="card">
+        <h2>About the Cowboys</h2>
+        <p>
+            The Dallas Cowboys are a professional American football team
+            based in the Dallas–Fort Worth area of Texas. They compete in
+            the National Football League (NFL) as a member of the NFC East
+            division.
+        </p>
+        <p>
+            The Cowboys play their home games at AT&amp;T Stadium in
+            Arlington, Texas.
+        </p>
+        <p>
+            Learn more on the
+            <a href="https://www.nfl.com/teams/dallas-cowboys/">
+                official NFL Dallas Cowboys page
+            </a>.
+        </p>
+    </section>
+
+    <section id="record" class="card">
+        <h2>2026 Season Record</h2>
+        <p>
+            As of October 22, 2026, the Dallas Cowboys have a regular-season
+            record of 2 wins and 4 losses.
+        </p>
+    </section>
+
+    <section id="team-image" class="card">
+        <h2>Team Image</h2>
+        <figure>
+            <img
+                src="https://placehold.co/600x300/002244/ffffff?text=Dallas+Cowboys"
+                alt="Placeholder image representing the Dallas Cowboys"
+                width="600"
+                height="300">
+            <figcaption>
+                A placeholder image representing the Dallas Cowboys.
+            </figcaption>
+        </figure>
+    </section>
+
+    <section id="account-form" class="card">
+        <h2>Create a Fan Account</h2>
+
+        <p>
+            Fields marked <span class="required-cue">(required)</span>
+            must be completed.
+        </p>
+
+        <!--
+            Trust boundary:
+            The browser collects form data and sends it to the HTTPS endpoint.
+            Server-side code must validate and safely process submitted data.
+            CSRF protection and secure account creation require a real backend.
+        -->
+
+        <form
+            action="https://httpbin.org/post"
+            method="post"
+            enctype="multipart/form-data">
+
+            <!--
+                If submission fails validation, JavaScript should display
+                the error and move focus to the first invalid field.
+            -->
+            <div
+                id="form-error"
+                class="form-error"
+                role="alert"
+                aria-live="assertive"
+                hidden>
+                Please correct the required fields and try submitting the
+                form again.
+            </div>
+
+            <div class="form-group">
+                <label for="fan_name">
+                    Fan Name <span class="required-cue">(required)</span>
+                </label>
+                <input
+                    type="text"
+                    id="fan_name"
+                    name="fan_name"
+                    autocomplete="name"
+                    aria-describedby="fan-name-help"
+                    required>
+                <small id="fan-name-help">
+                    Enter the name you want to use for your fan account.
+                </small>
+            </div>
+
+            <div class="form-group">
+                <label for="email">
+                    Email Address
+                    <span class="required-cue">(required)</span>
+                </label>
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    autocomplete="email"
+                    aria-describedby="email-help"
+                    required>
+                <small id="email-help">
+                    Enter a valid email address, such as fan@example.com.
+                </small>
+            </div>
+
+            <div class="form-group">
+                <label for="password">
+                    Password <span class="required-cue">(required)</span>
+                </label>
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    autocomplete="new-password"
+                    aria-describedby="password-help"
+                    required>
+                <small id="password-help">
+                    Choose a password for this demonstration. Do not use a
+                    real password or one you use on another website.
+                </small>
+            </div>
+
+            <div class="form-group">
+                <label for="avatar">Optional Avatar Image</label>
+                <input
+                    type="file"
+                    id="avatar"
+                    name="avatar"
+                    accept="image/png, image/jpeg, image/webp"
+                    aria-describedby="avatar-help">
+                <small id="avatar-help">
+                    Optional. Choose a PNG, JPEG, or WebP image.
+                </small>
+            </div>
+
+            <button type="submit">Submit Fan Account</button>
+        </form>
+    </section>
+
+    <section id="security-threats" class="card">
+        <h2>Security Threat Mapping</h2>
+
+        <p>
+            This table maps browser security controls to the threats they
+            mitigate, based on the HTML source and response headers
+            inspected through VS Code Live Server.
+        </p>
+
+        <table>
+            <caption>
+                Security controls, delivery methods, and identified gaps
+            </caption>
+            <thead>
+                <tr>
+                    <th scope="col">Threat</th>
+                    <th scope="col">Control</th>
+                    <th scope="col">Delivery</th>
+                    <th scope="col">Finding</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">Injection / script execution</th>
+                    <td>Content-Security-Policy (CSP)</td>
+                    <td>No meta tag or response header found</td>
+                    <td>No control present</td>
+                </tr>
+                <tr>
+                    <th scope="row">Clickjacking / framing</th>
+                    <td>X-Frame-Options or CSP frame-ancestors</td>
+                    <td>No framing control found</td>
+                    <td>No control present</td>
+                </tr>
+                <tr>
+                    <th scope="row">Protocol downgrade</th>
+                    <td>Strict-Transport-Security (HSTS)</td>
+                    <td>No response header found</td>
+                    <td>No control present</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <aside id="upcoming-games" class="card">
+        <h2>Upcoming Games</h2>
+        <ul>
+            <li>October 26: at Philadelphia</li>
+            <li>November 1: Arizona at Dallas</li>
+            <li>November 8: at Indianapolis</li>
+        </ul>
+    </aside>
+</main>
+
+<footer>
+    <p>Created for my HTML Exercise 3.</p>
+</footer>
+
+</body>
+</html>
