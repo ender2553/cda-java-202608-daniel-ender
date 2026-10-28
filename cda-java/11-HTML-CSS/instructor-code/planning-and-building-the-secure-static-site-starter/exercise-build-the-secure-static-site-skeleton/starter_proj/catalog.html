@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -9,23 +10,106 @@
 <body>
   <a class="skip-link" href="#main">Skip to main content</a>
 
-  <!-- TODO: Paste the SAME shared header + <nav aria-label="Primary"> block
+  <!-- COMPLETED: Paste the SAME shared header + <nav aria-label="Primary"> block
        used on index.html here, but move aria-current="page" onto the Catalog
        link so this page is marked current. -->
 
+  <header class="site-header">
+    <div class="brand">
+      <img src="images/logo.svg" alt="Riverside Books logo">
+      <span class="brand-name">Riverside Books</span>
+    </div>
+    <nav aria-label="Primary">
+      <a href="index.html">Home</a>
+      <a href="catalog.html" aria-current="page">Catalog</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+
   <main id="main">
-    <!-- TODO: Add a <section> with an <h1>Catalog</h1> and a short intro
+    <!-- COMPLETED: Add a <section> with an <h1>Catalog</h1> and a short intro
          paragraph. -->
+    <section aria-labelledby="catalog-heading">
+      <h1 id="catalog-heading">Catalog</h1>
+      <p>
+        Explore the Riverside Books collection, featuring stories, practical
+        knowledge, and discoveries for readers of all ages. Browse our
+        sections and discover a featured selection of books below.
+      </p>
+    </section>
 
-    <!-- TODO: Add a "Browse by section" <section> containing a card row:
-         <ul class="card-row"> with at least three <li class="card"> items,
-         each holding an <h3> and a paragraph. -->
+<!-- COMPLETED: Add a "Browse by section" <section> containing a card row:
+     <ul class="card-row"> with at least three <li class="card"> items,
+     each holding an <h3> and a paragraph. -->
+<section aria-labelledby="browse-heading">
+  <h2 id="browse-heading">Browse by Section</h2>
+  <ul class="card-row">
+    <li class="card">
+      <h3>Fiction</h3>
+      <p>
+        Discover novels, mysteries, fantasy adventures, and literary
+        stories that bring memorable characters and imaginative worlds
+        to life.
+      </p>
+    </li>
+    <li class="card">
+      <h3>Nonfiction</h3>
+      <p>
+        Explore history, science, biographies, and practical guides
+        that offer new perspectives and useful knowledge.
+      </p>
+    </li>
+    <li class="card">
+      <h3>Children's Books</h3>
+      <p>
+        Find picture books, early readers, and engaging stories that
+        encourage young readers to develop a lifelong love of books.
+      </p>
+    </li>
+  </ul>
+</section>
 
-    <!-- TODO: Add a "Featured this month" <section> with an accessible <table>.
-         Include a <caption>, a <thead> row using <th scope="col">, and a
-         <tbody> with a few rows. -->
+<!-- COMPLETED: Add a "Featured this month" <section> with an accessible <table>.
+     Include a <caption>, a <thead> row using <th scope="col">, and a
+     <tbody> with a few rows. -->
+<section aria-labelledby="featured-heading">
+  <h2 id="featured-heading">Featured This Month</h2>
+  <table>
+    <caption>Selected books featured at Riverside Books</caption>
+    <thead>
+      <tr>
+        <th scope="col">Book Title</th>
+        <th scope="col">Author</th>
+        <th scope="col">Category</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>The Secret Garden</td>
+        <td>Frances Hodgson Burnett</td>
+        <td>Classic Fiction</td>
+      </tr>
+      <tr>
+        <td>A Short History of Nearly Everything</td>
+        <td>Bill Bryson</td>
+        <td>Science</td>
+      </tr>
+      <tr>
+        <td>Charlotte's Web</td>
+        <td>E. B. White</td>
+        <td>Children's Literature</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+
   </main>
 
-  <!-- TODO: Reuse the shared <footer class="site-footer"> block here. -->
+  <!-- COMPLETED: Reuse the shared <footer class="site-footer"> block here. -->
+
+  <footer class="site-footer">
+    <p>Riverside Books &mdash; 14 Waterway Lane</p>
+  </footer>
 </body>
 </html>

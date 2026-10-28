@@ -9,12 +9,23 @@
 <body>
   <a class="skip-link" href="#main">Skip to main content</a>
 
-  <!-- TODO: Paste the SAME shared header + <nav aria-label="Primary"> block
+  <!-- COMPLETED: Paste the SAME shared header + <nav aria-label="Primary"> block
        used on index.html here, with aria-current="page" on the Contact link. -->
+  <header class="site-header">
+    <div class="brand">
+      <img src="images/logo.svg" alt="Riverside Books logo">
+      <span class="brand-name">Riverside Books</span>
+    </div>
+    <nav aria-label="Primary">
+      <a href="index.html">Home</a>
+      <a href="catalog.html">Catalog</a>
+      <a href="contact.html" aria-current="page">Contact</a>
+    </nav>
+  </header>
 
   <main id="main">
-    <section>
-      <h1>Contact us</h1>
+    <section aria-labelledby="contact-heading">
+      <h1 id="contact-heading">Contact us</h1>
       <p>Questions about an order or an upcoming event? Send a note and we will
       reply within two business days.</p>
 
@@ -29,20 +40,38 @@
              4. Keep it accessible — no placeholder-as-label, real <label> text.
            Test it: an empty required field or a malformed email must be refused
            by the browser before it sends. -->
-      <form>
+      <form method="post" action="https://example.com/contact">
         <div>
           <!-- TODO: add <label for="name">Name</label> -->
-          <input id="name" name="name" type="text">
+          <label for="name">Name</label>
+          <input
+            id="name"
+            name="name"
+            type="text"
+            required
+            minlength="2"
+            maxlength="100">
         </div>
 
         <div>
-          <!-- TODO: add <label for="email">Email</label> -->
-          <input id="email" name="email">
+          <!-- COMPLETED: add <label for="email">Email</label> -->
+          <label for="email">Email</label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            required>
         </div>
 
         <div>
-          <!-- TODO: add <label for="message">Message</label> -->
-          <textarea id="message" name="message"></textarea>
+          <!-- COMPLETED: add <label for="message">Message</label> -->
+          <label for="message">Message</label>
+          <textarea
+            id="message"
+            name="message"
+            required
+            minlength="10"
+            maxlength="2000"></textarea>
         </div>
 
         <button type="submit">Send message</button>
@@ -50,6 +79,10 @@
     </section>
   </main>
 
-  <!-- TODO: Reuse the shared <footer class="site-footer"> block here. -->
+  <!-- COMPLETED: Reuse the shared <footer class="site-footer"> block here. -->
+  <footer class="site-footer">
+    <p>Riverside Books &mdash; 14 Waterway Lane</p>
+  </footer>
 </body>
 </html>
+

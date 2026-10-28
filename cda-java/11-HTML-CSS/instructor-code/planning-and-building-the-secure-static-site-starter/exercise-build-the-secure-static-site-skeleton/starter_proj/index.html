@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -12,6 +13,7 @@
   <!-- The shared header + primary nav below is the reusable skeleton.
        Copy this SAME header block onto catalog.html and contact.html, changing
        only which link carries aria-current="page". -->
+
   <header class="site-header">
     <div class="brand">
       <img src="images/logo.svg" alt="Riverside Books logo">
@@ -25,15 +27,37 @@
   </header>
 
   <main id="main">
-    <!-- TODO: Add a <section> with a single <h1> that names the site and a
+    <!-- COMPLETED: Add a <section> with a single <h1> that names the site and a
          short introductory paragraph. -->
+    <section aria-labelledby="welcome-heading">
+      <h1 id="welcome-heading">Welcome to Riverside Books</h1>
+      <p>
+        Discover your next favorite book at Riverside Books. We celebrate
+        the joy of reading by bringing readers together with stories,
+        knowledge, and ideas from a wide range of authors.
+      </p>
+    </section>
 
-    <!-- TODO: Add a second <section> with an <h2> and a paragraph. Include one
-         external link that opens in a new tab. Because it uses
-         target="_blank", it MUST also carry rel="noopener noreferrer". -->
+<!-- COMPLETED: Add a second <section> with an <h2> and a paragraph. Include one
+     external link that opens in a new tab. Because it uses
+     target="_blank", it MUST also carry rel="noopener noreferrer". -->
+<section aria-labelledby="about-heading">
+  <h2 id="about-heading">Explore the World of Books</h2>
+  <p>
+    Whether you enjoy fiction, history, science, or children's literature,
+    our catalog helps you discover books worth reading. Browse our
+    <a href="catalog.html">book catalog</a> to explore our collection.
+  </p>
+  <p>
+    For more information about books and reading, visit
+    <a href="https://www.loc.gov/" target="_blank" rel="noopener noreferrer">the Library of Congress</a>.
+  </p>
+</section>
+
   </main>
 
   <!-- The shared footer below is part of the skeleton — reuse it on every page. -->
+
   <footer class="site-footer">
     <p>Riverside Books &mdash; 14 Waterway Lane</p>
   </footer>
