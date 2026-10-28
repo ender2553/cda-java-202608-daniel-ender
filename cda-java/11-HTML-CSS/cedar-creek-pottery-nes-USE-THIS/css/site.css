@@ -1,0 +1,114 @@
+/* Layout only — the retro look comes from NES.css (linked from the CDN). */
+
+body {
+  margin: 0;
+  font-family: "Press Start 2P", monospace;
+  font-size: 0.75rem;
+  line-height: 1.8;
+  background: #fff;
+  color: #212529;
+}
+
+header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: #209cee;
+}
+
+header a {
+  color: #fff;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+}
+
+nav {
+  display: flex;
+  gap: 1.5rem;
+}
+
+nav a[aria-current="page"] {
+  text-decoration: underline;
+}
+
+main {
+  max-width: 50rem;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+}
+
+main section {
+  margin-bottom: 2rem;
+}
+
+h1 {
+  font-size: 1.25rem;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+.hero-image {
+  display: block;
+  margin: 1rem auto 1.5rem;
+  max-width: 24rem;
+}
+
+.crew {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: 1.5rem;
+  text-align: center;
+}
+
+.crew span {
+  display: block;
+  margin-top: 0.5rem;
+}
+
+.covers {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: 1.5rem;
+}
+
+.covers figure {
+  margin: 0;
+  text-align: center;
+}
+
+.covers figcaption {
+  margin-top: 0.5rem;
+}
+
+footer {
+  padding: 1.5rem 1rem;
+  text-align: center;
+  background: #f0f0f0;
+}
+
+.csp-status {
+  color: #92cc41;
+}
+
+.csp-status--blocked {
+  color: #e76e55;
+}
+
+.csp-log {
+  display: inline-block;
+  text-align: left;
+  color: #e76e55;
+}

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Riverside Books — Contact</title>
+  <link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <!-- TODO: Paste the SAME shared header + <nav aria-label="Primary"> block
+       used on index.html here, with aria-current="page" on the Contact link. -->
+
+  <main id="main">
+    <section>
+      <h1>Contact us</h1>
+      <p>Questions about an order or an upcoming event? Send a note and we will
+      reply within two business days.</p>
+
+      <!-- FORM STUB — finish wiring this form so it is validated and submits
+           securely. This stub is intentionally incomplete:
+             1. Set the form to submit securely: method="post" to an https:// action.
+             2. Every control needs a matching <label for="..."> (associate by id).
+             3. Add the validation attributes each field needs:
+                  - Name:    required, minlength, maxlength
+                  - Email:   type="email", required
+                  - Message: required, minlength, maxlength
+             4. Keep it accessible — no placeholder-as-label, real <label> text.
+           Test it: an empty required field or a malformed email must be refused
+           by the browser before it sends. -->
+      <form>
+        <div>
+          <!-- TODO: add <label for="name">Name</label> -->
+          <input id="name" name="name" type="text">
+        </div>
+
+        <div>
+          <!-- TODO: add <label for="email">Email</label> -->
+          <input id="email" name="email">
+        </div>
+
+        <div>
+          <!-- TODO: add <label for="message">Message</label> -->
+          <textarea id="message" name="message"></textarea>
+        </div>
+
+        <button type="submit">Send message</button>
+      </form>
+    </section>
+  </main>
+
+  <!-- TODO: Reuse the shared <footer class="site-footer"> block here. -->
+</body>
+</html>
