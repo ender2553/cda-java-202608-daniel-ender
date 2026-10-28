@@ -1,0 +1,97 @@
+/* site.css — the ONE shared stylesheet every page links.
+   Keep ALL presentation here. Do not add per-page CSS and do not use inline
+   style= attributes anywhere in the HTML.
+
+   The base chrome (reset, header, nav, footer, headings) is provided so the
+   shell renders. Complete the sections marked TODO. */
+
+/* ---- Reset / box model ---- */
+* { box-sizing: border-box; }
+
+:root {
+  --ink: #1a1a1a;
+  --paper: #ffffff;
+  --brand: #0b4f6c;
+  --brand-dark: #063243;
+  --accent: #8a2f1d;
+  --muted: #444444;
+  --surface: #f4f1ea;
+  --border: #cfc9bd;
+}
+
+html { font-size: 100%; }
+
+body {
+  margin: 0;
+  font-family: Georgia, "Times New Roman", serif;
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--paper);
+}
+
+/* ---- Skip link ---- */
+.skip-link {
+  position: absolute;
+  left: -999px;
+  top: 0;
+  background: var(--brand-dark);
+  color: #ffffff;
+  padding: 0.5rem 1rem;
+  z-index: 10;
+}
+.skip-link:focus { left: 0; }
+
+/* ---- Header + primary navigation (provided) ---- */
+.site-header { background: var(--brand-dark); color: #ffffff; }
+.brand { display: flex; align-items: center; gap: 0.75rem; padding: 1rem; }
+.brand img { width: 40px; height: 40px; }
+.brand-name { font-size: 1.25rem; font-weight: bold; }
+
+nav[aria-label="Primary"] {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0 1rem 1rem;
+}
+nav[aria-label="Primary"] a {
+  color: #ffffff;
+  text-decoration: none;
+  padding: 0.35rem 0.6rem;
+  border-radius: 4px;
+}
+nav[aria-label="Primary"] a:hover,
+nav[aria-label="Primary"] a:focus { background: var(--brand); outline: 2px solid #ffffff; }
+nav[aria-label="Primary"] a[aria-current="page"] { background: var(--brand); text-decoration: underline; }
+
+/* ---- Headings + links ---- */
+h1 { color: var(--brand-dark); line-height: 1.2; }
+h2 { color: var(--brand-dark); }
+a { color: var(--accent); }
+a:focus { outline: 2px solid var(--brand); outline-offset: 2px; }
+
+/* ---- Footer (provided) ---- */
+.site-footer {
+  border-top: 1px solid var(--border);
+  margin-top: 2rem;
+  padding: 1rem;
+  color: var(--muted);
+  text-align: center;
+}
+
+/* TODO: Center and constrain <main>. Give it a max-width (about 60rem),
+   auto side margins, and comfortable padding. */
+
+/* TODO: Style the catalog card row. Make <ul class="card-row"> a Flexbox
+   container whose <li class="card"> items wrap; remove the list bullets and
+   give each card a border, padding, and the --surface background. */
+
+/* TODO: Style the featured <table> — collapse borders, add cell padding,
+   left-align text, and give the caption and header row a clear look. */
+
+/* TODO: Lay out the contact <form> — stack each label above its input, size
+   the inputs/textarea to full width, and style the submit button. Add a
+   visible :focus outline to inputs and the button. */
+
+/* TODO: Add ONE responsive rule. Use @media (min-width: 40rem) to increase
+   the header and main padding so the layout reflows on wider viewports.
+   Resize the browser to confirm the rule fires. */
