@@ -1,0 +1,9 @@
+# Response-header baseline for every page (Netlify / Cloudflare Pages format).
+# The CSP here must match the <meta> tag on each page exactly, so the two never drift.
+# The other four headers cannot be set from a <meta> tag — they only work as real response headers.
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'
+  X-Frame-Options: DENY
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: no-referrer

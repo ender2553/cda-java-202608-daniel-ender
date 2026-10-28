@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Security-Policy"
+          content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cedar Creek Pottery — About</title>
+    <link rel="stylesheet" href="css/site.css">
+    <script src="js/csp-monitor.js"></script>
+  </head>
+  <body>
+    <header>
+      <a class="brand" href="index.html">Cedar Creek Pottery</a>
+      <nav aria-label="Primary">
+        <a href="index.html">Home</a>
+        <a href="about.html" aria-current="page">About</a>
+        <a href="gallery.html">Gallery</a>
+      </nav>
+    </header>
+    <main>
+      <section>
+        <h1>About Cedar Creek Pottery</h1>
+        <p>Handmade stoneware, thrown and fired a few miles from where you're standing.</p>
+      </section>
+      <section aria-labelledby="studio-heading">
+        <h2 id="studio-heading">The studio</h2>
+        <p>We work out of a converted barn beside the creek. Every piece is wheel-thrown, trimmed by hand, and glazed in small batches so no two come out of the kiln quite alike.</p>
+        <img src="img/studio.svg" alt="Line drawing of a potter's wheel beside a brick kiln" width="640" height="360">
+      </section>
+      <section aria-labelledby="process-heading">
+        <h2 id="process-heading">How a piece is made</h2>
+        <ol class="steps">
+          <li><strong>Wedge</strong> the clay to push out air pockets.</li>
+          <li><strong>Throw</strong> the form on the wheel.</li>
+          <li><strong>Trim</strong> the foot once the clay is leather-hard.</li>
+          <li><strong>Bisque fire</strong>, glaze, then <strong>glaze fire</strong> to cone 6.</li>
+        </ol>
+      </section>
+    </main>
+    <footer>
+      <p>Cedar Creek Pottery</p>
+      <a href="https://potters-guild.example.org" target="_blank" rel="noopener noreferrer">Local Potters Guild</a>
+      <p class="csp-status" data-csp-status>CSP: checking…</p>
+    </footer>
+  </body>
+</html>

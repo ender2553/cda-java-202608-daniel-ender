@@ -1,0 +1,240 @@
+/* Cedar Creek Pottery — the one stylesheet every page links.
+   All presentation lives here so no page needs a style= attribute,
+   which keeps every page compatible with style-src 'self'. */
+
+:root {
+  --clay: #8a4b2a;
+  --clay-dark: #6b3820;
+  --cream: #faf6f0;
+  --sand: #efe4d4;
+  --ink: #2b211b;
+  --muted: #5e5048;
+  --ok: #2f6b3a;
+  --bad: #a3261b;
+  --radius: 0.5rem;
+  --max-width: 60rem;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.6;
+  color: var(--ink);
+  background: var(--cream);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  color: var(--clay-dark);
+}
+
+a:focus-visible {
+  outline: 3px solid var(--clay);
+  outline-offset: 2px;
+}
+
+code {
+  font-family: ui-monospace, Consolas, monospace;
+  background: var(--sand);
+  padding: 0 0.25em;
+  border-radius: 0.25rem;
+}
+
+/* ---------- Skeleton: header / nav / main / footer ---------- */
+
+header,
+main,
+footer {
+  padding: 1rem;
+}
+
+header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  background: var(--clay);
+}
+
+header a {
+  color: var(--cream);
+}
+
+.brand {
+  font-weight: 700;
+  font-size: 1.25rem;
+  text-decoration: none;
+}
+
+nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+nav a {
+  text-decoration: none;
+  padding: 0.25rem 0;
+  border-bottom: 2px solid transparent;
+}
+
+nav a:hover,
+nav a[aria-current="page"] {
+  border-bottom-color: var(--cream);
+}
+
+main {
+  max-width: var(--max-width);
+  margin: 0 auto;
+}
+
+section {
+  margin-bottom: 2rem;
+}
+
+h1,
+h2,
+h3 {
+  line-height: 1.2;
+}
+
+footer {
+  background: var(--sand);
+  color: var(--muted);
+  text-align: center;
+}
+
+footer p {
+  margin: 0.25rem 0;
+}
+
+/* ---------- Home ---------- */
+
+.hero {
+  padding: 2rem 0 1rem;
+}
+
+.hero h1 {
+  font-size: 2rem;
+  margin-top: 0;
+}
+
+.button {
+  display: inline-block;
+  padding: 0.6rem 1.2rem;
+  border-radius: var(--radius);
+  background: var(--clay);
+  color: var(--cream);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.button:hover {
+  background: var(--clay-dark);
+}
+
+.cards {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 1rem;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid var(--sand);
+  border-radius: var(--radius);
+  padding: 1rem;
+}
+
+.card h3 {
+  margin: 0.75rem 0 0.25rem;
+}
+
+.card p {
+  margin: 0;
+  color: var(--muted);
+}
+
+/* ---------- About ---------- */
+
+.steps li {
+  margin-bottom: 0.5rem;
+}
+
+/* ---------- Gallery ---------- */
+
+.gallery {
+  display: grid;
+  gap: 1rem;
+}
+
+figure {
+  margin: 0;
+  background: #fff;
+  border: 1px solid var(--sand);
+  border-radius: var(--radius);
+  padding: 0.75rem;
+}
+
+figcaption {
+  margin-top: 0.5rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+/* ---------- CSP status (filled in by js/csp-monitor.js) ---------- */
+
+.csp-status {
+  font-size: 0.85rem;
+  color: var(--ok);
+}
+
+.csp-status--blocked {
+  color: var(--bad);
+  font-weight: 700;
+}
+
+.csp-log {
+  font-family: ui-monospace, Consolas, monospace;
+  color: var(--bad);
+}
+
+.csp-log:empty::before {
+  content: "No violations recorded yet.";
+  color: var(--muted);
+}
+
+/* ---------- Wider screens (mobile-first: these only add) ---------- */
+
+@media (min-width: 40rem) {
+  header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+  }
+
+  .hero h1 {
+    font-size: 2.75rem;
+  }
+
+  .cards {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .gallery {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
