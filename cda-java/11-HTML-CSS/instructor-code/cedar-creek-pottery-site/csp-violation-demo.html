@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <!-- Same policy as every other page. Do NOT add 'unsafe-inline' to "fix" this page. -->
+    <meta http-equiv="Content-Security-Policy"
+          content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cedar Creek Pottery — CSP Violation Demo</title>
+    <link rel="stylesheet" href="css/site.css">
+    <script src="js/csp-monitor.js"></script>
+  </head>
+  <body>
+    <header>
+      <a class="brand" href="index.html">Cedar Creek Pottery</a>
+      <nav aria-label="Primary">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="gallery.html">Gallery</a>
+      </nav>
+    </header>
+    <main>
+      <section>
+        <h1>CSP violation demo</h1>
+        <p>This page breaks the rules on purpose. It carries the same policy as the rest of the site, plus three things that policy refuses:</p>
+        <ul>
+          <li>an inline <code>&lt;script&gt;</code> just before <code>&lt;/body&gt;</code> (blocked by <code>script-src 'self'</code>)</li>
+          <li>a <code>style=</code> attribute on the paragraph below (blocked by <code>style-src 'self'</code>)</li>
+          <li>an image from another origin (blocked by <code>img-src 'self'</code>)</li>
+        </ul>
+        <p style="color: red; font-size: 2rem;">If this paragraph is big and red, the policy is not enforcing.</p>
+        <img src="https://images.example.com/teapot.png" alt="Teapot from another site (should be blocked)" width="320" height="240">
+      </section>
+      <section aria-labelledby="log-heading">
+        <h2 id="log-heading">What the browser blocked</h2>
+        <p>Open the dev tools console too — it shows the same violations in red, and <code>"inline test"</code> never prints.</p>
+        <ol class="csp-log" data-csp-log></ol>
+      </section>
+      <section aria-labelledby="fix-heading">
+        <h2 id="fix-heading">The right fix</h2>
+        <p>Delete the inline script, move the styling into <code>css/site.css</code>, and serve the image from <code>img/</code>. Never loosen the policy to let bad practice back in.</p>
+      </section>
+    </main>
+    <footer>
+      <p>Cedar Creek Pottery</p>
+      <a href="https://potters-guild.example.org" target="_blank" rel="noopener noreferrer">Local Potters Guild</a>
+      <p class="csp-status" data-csp-status>CSP: checking…</p>
+    </footer>
+    <script>console.log("inline test");</script>
+  </body>
+</html>

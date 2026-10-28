@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Security-Policy"
+          content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cedar Creek Pottery — Gallery</title>
+    <link rel="stylesheet" href="css/site.css">
+    <script src="js/csp-monitor.js"></script>
+  </head>
+  <body>
+    <header>
+      <a class="brand" href="index.html">Cedar Creek Pottery</a>
+      <nav aria-label="Primary">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="gallery.html" aria-current="page">Gallery</a>
+      </nav>
+    </header>
+    <main>
+      <section>
+        <h1>Gallery</h1>
+        <p>A few pieces from recent firings. Every image on this page is served from the site itself, which is exactly what <code>img-src 'self'</code> allows.</p>
+      </section>
+      <section aria-labelledby="pieces-heading">
+        <h2 id="pieces-heading">Recent pieces</h2>
+        <div class="gallery">
+          <figure>
+            <img src="img/mug.svg" alt="Tall mug with a speckled oatmeal glaze" width="320" height="240">
+            <figcaption>Morning mug — oatmeal speckle</figcaption>
+          </figure>
+          <figure>
+            <img src="img/bowl.svg" alt="Wide, shallow bowl with a blue rim" width="320" height="240">
+            <figcaption>Creek bowl — celadon with cobalt rim</figcaption>
+          </figure>
+          <figure>
+            <img src="img/vase.svg" alt="Bud vase with a narrow neck in rust-red glaze" width="320" height="240">
+            <figcaption>Bud vase — iron red</figcaption>
+          </figure>
+          <figure>
+            <img src="img/studio.svg" alt="Line drawing of a potter's wheel beside a brick kiln" width="640" height="360">
+            <figcaption>The wheel and kiln where it all happens</figcaption>
+          </figure>
+        </div>
+      </section>
+    </main>
+    <footer>
+      <p>Cedar Creek Pottery</p>
+      <a href="https://potters-guild.example.org" target="_blank" rel="noopener noreferrer">Local Potters Guild</a>
+      <p class="csp-status" data-csp-status>CSP: checking…</p>
+    </footer>
+  </body>
+</html>
