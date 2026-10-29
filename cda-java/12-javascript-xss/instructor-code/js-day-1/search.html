@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html>
+    <h1>Search Results</h1>
+    <p id="echo"></p>
+    <script>
+        const term = new URLSearchParams(location.search).get('q') || '';
+        const echo = document.querySelector('#echo');
+        echo.textContent = 'You searched for ' + term;
+    </script>
+</html>

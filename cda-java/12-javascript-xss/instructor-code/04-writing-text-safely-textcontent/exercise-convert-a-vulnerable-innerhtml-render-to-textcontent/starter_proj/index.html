@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Guestbook — Vulnerable Render (Starter)</title>
+  <style>
+    body { font-family: system-ui, Arial, sans-serif; max-width: 720px; margin: 2rem auto; padding: 0 1rem; line-height: 1.5; color: #1a1a1a; }
+    h1 { font-size: 1.4rem; }
+    .note { background: #fff3cd; border: 1px solid #e0c200; border-radius: 6px; padding: .6rem .8rem; font-size: .9rem; }
+    .danger { color: #a11; font-weight: 600; }
+    label { display: block; margin: .8rem 0 .2rem; font-weight: 600; }
+    input, textarea { width: 100%; padding: .5rem; font-size: 1rem; box-sizing: border-box; }
+    button { margin: .8rem .4rem .8rem 0; padding: .55rem 1rem; font-size: 1rem; cursor: pointer; }
+    .card { border: 1px solid #ccc; border-radius: 8px; padding: 1rem; margin-top: 1rem; }
+    .out-label { font-size: .8rem; color: #666; text-transform: uppercase; letter-spacing: .05em; }
+    #name-output { font-size: 1.2rem; font-weight: 600; }
+    #comment-output { margin-top: .4rem; }
+  </style>
+</head>
+<body>
+  <h1>Community Guestbook</h1>
+
+  <p class="note">
+    <strong>Safe practice lab.</strong> This page runs entirely on your machine.
+    The only "attack" here is a benign <code>alert()</code> against this local page —
+    it makes no network calls and touches no real site. Its purpose is to let you
+    <em>see an injection fire</em> before you fix it.
+  </p>
+
+  <p>
+    This page takes a display name and a comment and shows them back in the guestbook.
+    Right now both values are written into the page with <code class="danger">innerHTML</code>,
+    which parses whatever you type as markup.
+  </p>
+
+  <label for="name-input">Display name</label>
+  <input id="name-input" type="text" value="Sam">
+
+  <label for="comment-input">Comment</label>
+  <textarea id="comment-input" rows="2">Great to be here!</textarea>
+
+  <button id="render-btn">Post to guestbook</button>
+  <button id="payload-btn" type="button">Load attack payload</button>
+
+  <div class="card">
+    <div class="out-label">Name</div>
+    <div id="name-output"></div>
+    <div class="out-label" style="margin-top:.8rem;">Comment</div>
+    <div id="comment-output"></div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

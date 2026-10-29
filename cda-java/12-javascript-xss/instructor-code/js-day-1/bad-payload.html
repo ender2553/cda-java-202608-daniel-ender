@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <input id="name" placeholder="your name">
+        <button id="go">Search</button>
+        <div id="card"></div>
+    </body>
+    <script>
+        const nameBox = document.getElementById("name");
+        const card = document.getElementById("card");
+        document.getElementById('go').addEventListener('click', ()=> {
+           window.location.assign('http://127.0.0.1:5500/search.html?q=' + nameBox.value); 
+        })
+    </script>
+</html>
