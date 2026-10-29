@@ -17,12 +17,15 @@ document.getElementById('render-btn').addEventListener('click', () => {
   const userComment = document.getElementById('comment-input').value; // untrusted source
 
   // SINK 1 (name render): untrusted value written as markup via innerHTML.
-  // TODO: this is an XSS sink — convert it to a safe text write (textContent).
-  nameOutput.innerHTML = userName;
+  // COMPLETED: this is an XSS sink — convert it to a safe text write (textContent).
+  // Untrusted user input must be rendered as text, not parsed as HTML.
+  nameOutput.textContent = userName;
 
   // SINK 2 (comment render): untrusted value written as markup via innerHTML.
-  // TODO: this is an XSS sink — rebuild it with document.createTextNode(...) + append.
-  commentOutput.innerHTML = userComment;
+  // COMPLETED: this is an XSS sink — rebuild it with document.createTextNode(...) + append.
+  // Untrusted user input must be rendered as a text node, not parsed as HTML.
+  commentOutput.replaceChildren();
+  commentOutput.append(document.createTextNode(userComment));
 });
 
 // Convenience: fills both inputs with the supplied benign payload so you can
@@ -31,3 +34,4 @@ document.getElementById('payload-btn').addEventListener('click', () => {
   document.getElementById('name-input').value = ATTACK_PAYLOAD;
   document.getElementById('comment-input').value = ATTACK_PAYLOAD;
 });
+

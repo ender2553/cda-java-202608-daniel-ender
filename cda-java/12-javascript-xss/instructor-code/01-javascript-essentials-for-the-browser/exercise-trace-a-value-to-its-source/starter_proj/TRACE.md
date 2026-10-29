@@ -8,19 +8,18 @@ form-field row and answer the reflection questions.
 |---|---|---|---|---|---|
 | `"Ledger"` | developer-authored literal | `const siteLabel` | `console.log` (not the page) | data (text) | trusted |
 | URL `name` parameter | URL query string | `const nameParam` | `console.log` (not the page) | data (text) | untrusted |
-| form field value | _fill this in_ | _fill this in_ | _fill this in_ | _fill this in_ | _fill this in_ |
+| form field value | User-supplied form field (#nameField) | const formValue | console.log (not the page) | Data (text) |Untrusted |
 
 ## Reflection
 
 1. What single question decides whether a value is trusted or untrusted?
 
-   _Your answer:_
+Answer: Who controls the value or where did it originate? Developer-authored values are trusted within their intended context, while user-supplied values are untrusted.
 
 2. The URL parameter looks like an ordinary clean string. Why is it still untrusted?
 
-   _Your answer:_
+Answer: The user can change the URL parameter to contain arbitrary input. Its appearance doesn't establish that its contents are safe.
 
-3. This script never writes any read value onto the page. Why is stopping at
-   "read and log" the safe boundary for this exercise?
+3. This script never writes any read value onto the page. Why is stopping at "read and log" the safe boundary for this exercise?
 
-   _Your answer:_
+Answer: Reading and logging the values demonstrates how to trace their sources without interpreting them as HTML or inserting them into the page. This avoids introducing potential cross-site scripting (XSS) vulnerabilities through unsafe DOM manipulation.

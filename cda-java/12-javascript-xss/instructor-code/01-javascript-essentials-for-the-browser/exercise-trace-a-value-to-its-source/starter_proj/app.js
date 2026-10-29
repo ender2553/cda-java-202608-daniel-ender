@@ -37,7 +37,7 @@ if (nameParam !== null && typeof nameParam === "string") {
 }
 
 // --- Read 2: a form field (YOUR TASK) --------------------------------------
-function readFormField() {
+//function readFormField() {
   // TODO (your task): read the value the visitor typed into #nameField and log
   // it the same way the URL read does above.
   //   1. const field = document.querySelector("#nameField");
@@ -48,8 +48,37 @@ function readFormField() {
   //
   // TRACE: value ??? | SOURCE: ??? | trusted or untrusted? ??? | text or markup? ???
   //        -> stored in ??? -> goes to ??? -> handled as ???
-  console.log("TODO: read and log the form field value.");
+  //console.log("TODO: read and log the form field value.");
+//}
+
+
+// --- Read 2: a form field --------------------------------------
+function readFormField() {
+  const field = document.querySelector("#nameField");
+
+  if (field === null) {
+    console.log("Form field was not found.");
+    return;
+  }
+
+  const formValue = field.value;
+
+  // TRACE: value formValue | SOURCE: user-supplied form field (#nameField)
+  //        | UNTRUSTED | handled as TEXT, not markup
+  //        -> stored in const formValue -> goes to console.log (NOT the page)
+
+  if (
+    typeof formValue === "string" &&
+    formValue.length > 0
+  ) {
+    const message = `Read a form field value: ${formValue}`;
+    console.log(message);
+  } else {
+    console.log("No valid form field value was present.");
+  }
 }
+
+
 
 // --- Wire up the button ----------------------------------------------------
 // The status line shows only developer-authored text. It never echoes the

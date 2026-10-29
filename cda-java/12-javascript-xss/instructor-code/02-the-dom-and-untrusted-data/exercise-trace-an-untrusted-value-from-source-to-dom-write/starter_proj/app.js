@@ -19,19 +19,21 @@ const SEEDED_NAME = '<img src=x onerror="alert(\'payload fired\')">';
 // TRACE — Origin: on which line does the value first enter JavaScript from outside,
 //         and what untrusted source is it? (URL/query param, form field, localStorage,
 //         or a server response)
-// Answer: ____________________________________________________________________
+// Answer: The value first enters through the URL query parameter read by
+// URLSearchParams on the line `const fromUrl = params.get('name');`.
+// If no URL parameter exists, the seeded untrusted value comes from SEEDED_NAME.
 function readNameFromSource() {
   const params = new URLSearchParams(location.search);
-  const fromUrl = params.get('name');       // TRACE hop — label: __________
-  const name = fromUrl !== null ? fromUrl : SEEDED_NAME; // TRACE hop — label: __________
+  const fromUrl = params.get('name');       // TRACE hop — label: potential markup
+  const name = fromUrl !== null ? fromUrl : SEEDED_NAME; // TRACE hop — label: potential markup
   return name;
 }
 
-// TRACE hop — the returned value now lives in `rawName`. Label: __________
+// TRACE hop — the returned value now lives in `rawName`. Label: potential markup
 const rawName = readNameFromSource();
 
 // TRACE hop — concatenation builds the greeting text. Does wrapping it in
-//             "Welcome, " make it safe? Label `greeting`: __________
+//             "Welcome, " make it safe? Label `greeting`: potential markup
 const greeting = 'Welcome, ' + rawName + '!';
 
 render(greeting);
@@ -42,7 +44,10 @@ function render(text) {
   // TRACE — CROSSING POINT: this is the DOM write. State what the browser does
   //         with an attacker-supplied value written here, and why this line is
   //         where `data` would cross into `markup`.
-  // Answer: __________________________________________________________________
+  // Answer: The browser parses the assigned string as HTML markup rather than
+  // treating it only as text. Attacker-controlled markup may trigger behavior,
+  // such as an onerror event handler. This line is the crossing point because
+  // innerHTML interprets the value as markup.
   box.innerHTML = text;
 }
 
@@ -50,6 +55,7 @@ function render(text) {
 // pasted payload) take the identical path to the identical crossing point.
 const nameInput = document.getElementById('name');
 nameInput.addEventListener('input', (event) => {
-  const typed = event.target.value;             // TRACE hop — source: __________, label: __________
+  const typed = event.target.value;             // TRACE hop — source: user-supplied form field, label: potential markup
   render('Welcome, ' + typed + '!');            // same crossing point as above
 });
+
