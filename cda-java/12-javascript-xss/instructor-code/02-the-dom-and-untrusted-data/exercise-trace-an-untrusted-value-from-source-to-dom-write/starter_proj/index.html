@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Greeting Banner — Trace the Untrusted Value</title>
+  <style>
+    body { font-family: system-ui, Arial, sans-serif; max-width: 640px; margin: 2rem auto; padding: 0 1rem; color: #1a1a1a; }
+    h1 { font-size: 1.4rem; }
+    .note { background: #fff8e1; border: 1px solid #f0d060; border-radius: 6px; padding: 0.75rem 1rem; font-size: 0.9rem; }
+    .greeting { background: #eef4ff; border: 1px solid #b9ccf0; border-radius: 6px; padding: 1rem; margin-top: 1rem; min-height: 2.5rem; }
+    label { display: block; margin-top: 1rem; font-weight: bold; }
+    input { width: 100%; padding: 0.5rem; font-size: 1rem; box-sizing: border-box; margin-top: 0.25rem; }
+    code { background: #f0f0f0; padding: 0.1rem 0.3rem; border-radius: 3px; }
+  </style>
+</head>
+<body>
+  <h1>Greeting Banner</h1>
+
+  <p class="note">
+    <strong>Local, contained demo.</strong> Any "exploit" on this page is a harmless
+    <code>alert()</code> that fires against this page only — there is no network call and no real
+    site involved. The seeded name below is an attacker-style value so you can watch the write
+    happen. Your job in this exercise is to <em>trace and label</em> the value, not to fix it.
+  </p>
+
+  <div class="greeting" id="greeting">Loading greeting&hellip;</div>
+
+  <label for="name">Try your own name (it flows to the same write):</label>
+  <input id="name" type="text" placeholder="Type a name or a payload like <b>hi</b>">
+
+  <script src="app.js"></script>
+</body>
+</html>

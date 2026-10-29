@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    <head>
+       
+    </head>
+    <body>
+        <h1>Greeting</h1>
+    </body>
+
+     <script defer>
+            console.log("Hello World");
+            console.log("scripts are running");
+            localStorage.setItem("greeting", "Hello World");
+            const heading = document.querySelector("h1");
+            heading.innerText = localStorage.getItem("greeting");
+            let greeting = localStorage.getItem("greeting");
+            if (greeting !== null && typeof greeting === "string"){
+                console.log("Yipeee!!!")
+            }
+            greeting = `here is your greeting: ${greeting}`
+            heading.innerText = greeting;
+    </script>   
+</html>

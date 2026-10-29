@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Community Board — Injection Sink Demo</title>
+  <style>
+    body { font: 16px/1.5 system-ui, Arial, sans-serif; max-width: 720px; margin: 2rem auto; padding: 0 1rem; color: #1a1a1a; }
+    h1 { font-size: 1.5rem; }
+    .frame { background: #fff8e1; border: 1px solid #e0c860; border-radius: 6px; padding: .75rem 1rem; margin-bottom: 1.5rem; }
+    .panel { border: 1px solid #ddd; border-radius: 6px; padding: 1rem; margin: 1rem 0; }
+    .panel h2 { font-size: 1.05rem; margin: 0 0 .5rem; }
+    .msg { background: #eef6ff; padding: .5rem .75rem; border-radius: 4px; }
+    input[type="text"] { padding: .4rem; width: 60%; }
+    button { padding: .4rem .8rem; }
+    footer { margin-top: 2rem; color: #666; font-size: .9rem; }
+    code { background: #f2f2f2; padding: 0 .25rem; border-radius: 3px; }
+  </style>
+</head>
+<body>
+  <h1>Community Board</h1>
+
+  <div class="frame">
+    <strong>Contained training demo.</strong> This page is <em>deliberately vulnerable</em>.
+    Every "attack" here is a harmless <code>alert(1)</code> against this local page only —
+    nothing reaches the network and nothing touches a real site. The goal of this exercise is
+    to <em>see</em> the injection sinks, not to fix them yet.
+  </div>
+
+  <!-- Greeting is filled in by app.js from the URL (?name=...) -->
+  <p id="greeting"></p>
+
+  <div class="panel">
+    <h2>Search the board</h2>
+    <form id="search-form">
+      <input type="text" id="search-input" placeholder="Type a search term..." autocomplete="off">
+      <button type="submit">Search</button>
+    </form>
+    <div id="search-results"></div>
+  </div>
+
+  <div class="panel">
+    <h2>Your saved draft</h2>
+    <div id="draft"></div>
+  </div>
+
+  <div class="panel">
+    <h2>Recent searches</h2>
+    <ul id="recent-list"></ul>
+  </div>
+
+  <div class="panel">
+    <h2>Server message</h2>
+    <p id="server-message"></p>
+  </div>
+
+  <script>
+    // A developer-authored CONSTANT written straight into the parse stream as the page builds.
+    // (document.write must run during initial parsing; calling it after load would blank the page.)
+    document.write('<footer>Community Board — internal training demo</footer>');
+  </script>
+
+  <script src="app.js"></script>
+</body>
+</html>

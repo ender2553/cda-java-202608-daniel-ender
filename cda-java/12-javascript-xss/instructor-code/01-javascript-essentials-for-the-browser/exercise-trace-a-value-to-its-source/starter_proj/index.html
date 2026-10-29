@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trace a Value to Its Source</title>
+  <style>
+    body { font-family: system-ui, Arial, sans-serif; max-width: 42rem; margin: 2rem auto; padding: 0 1rem; line-height: 1.5; color: #1a1a1a; }
+    h1 { font-size: 1.4rem; }
+    .note { background: #eef4ff; border: 1px solid #b9cdf0; border-radius: 6px; padding: 0.75rem 1rem; font-size: 0.95rem; }
+    .frame { background: #fff8e6; border: 1px solid #e6cf8a; border-radius: 6px; padding: 0.75rem 1rem; font-size: 0.9rem; }
+    label { display: block; font-weight: 600; margin-bottom: 0.25rem; }
+    input { padding: 0.4rem 0.5rem; font-size: 1rem; width: 16rem; }
+    button { margin-top: 0.75rem; padding: 0.5rem 1rem; font-size: 1rem; cursor: pointer; }
+    #status { margin-top: 1rem; font-size: 0.95rem; color: #244; min-height: 1.2rem; }
+    code { background: #f0f0f0; padding: 0.1rem 0.3rem; border-radius: 3px; }
+  </style>
+</head>
+<body>
+  <h1>Trace a Value to Its Source</h1>
+
+  <p class="frame">
+    <strong>Contained teaching page.</strong> Everything here runs locally in your
+    browser. This page makes no network calls and does not render any value you
+    supply. It reads values from input sources and <em>logs them to the console
+    only</em>. Open your browser's DevTools console to see the output.
+  </p>
+
+  <p class="note">
+    Try loading this page with a query string, for example
+    <code>index.html?name=Ada</code>, then open the console. Type something into
+    the field below and click the button to read a second value.
+  </p>
+
+  <form onsubmit="return false;">
+    <label for="nameField">A value you type (a form field):</label>
+    <input id="nameField" type="text" placeholder="type anything">
+    <button id="readButton" type="button">Read &amp; log values</button>
+  </form>
+
+  <p id="status">Values are logged to the console. Open DevTools to view them.</p>
+
+  <script defer src="app.js"></script>
+</body>
+</html>
