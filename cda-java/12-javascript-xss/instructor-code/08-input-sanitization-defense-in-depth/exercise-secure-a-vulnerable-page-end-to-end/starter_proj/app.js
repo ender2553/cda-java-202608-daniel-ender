@@ -33,7 +33,7 @@ function $(id) {
 // runs.
 // ===========================================================================
 function renderMessage(ticket) {
-  $("message").innerHTML = ticket.message; // VULNERABLE
+  $("message").textContent = ticket.message; // FIXED
 }
 
 // ===========================================================================
@@ -41,7 +41,10 @@ function renderMessage(ticket) {
 // DOMPurify is bundled but unused here, so the note's payloads run.
 // ===========================================================================
 function renderNote(ticket) {
-  $("note").innerHTML = ticket.note; // VULNERABLE
+  $("note").innerHTML = DOMPurify.sanitize(ticket.note, {
+    ALLOWED_TAGS: ["b", "a"],
+    ALLOWED_ATTR: ["href", "title"]
+  });                                       //FIXED
 }
 
 // ===========================================================================
@@ -50,15 +53,18 @@ function renderNote(ticket) {
 // ===========================================================================
 function renderSourceLink(ticket) {
   const link = $("sourceLink");
-  link.setAttribute("href", ticket.sourceUrl); // VULNERABLE
   link.textContent = "Open source";
-  // Reflect the danger in the monitor without needing a click:
-  if (link.protocol === "javascript:") {
-    const cell = document.querySelector(
-      '[data-vector="source-link-href"] .status'
-    );
-    cell.textContent = "ARMED (click)";
-    cell.className = "status armed";
+
+  try {
+    const url = new URL(ticket.sourceUrl, window.location.href);
+
+    if (url.protocol === "http:" || url.protocol === "https:") {
+      link.href = url.href;
+    } else {
+      link.href = "#";
+    }
+  } catch {
+    link.href = "#";                          //FIXED
   }
 }
 
@@ -67,7 +73,18 @@ function renderSourceLink(ticket) {
 // The "flexible formula" is attacker-controllable, so eval runs their code.
 // ===========================================================================
 function computePriority(ticket, severity) {
-  const weight = eval(ticket.weightingExpr); // VULNERABLE (runs arbitrary code)
+  const WEIGHT_TABLE = {
+    low: 1,
+    medium: 2,
+    high: 3
+  };
+
+  const weight = WEIGHT_TABLE[ticket.weighting];
+
+  if (typeof weight !== "number") {
+    throw new Error("Invalid priority weighting");
+  }                                       
+                                            //FIXED
   return severity * weight;
 }
 
@@ -76,30 +93,67 @@ function computePriority(ticket, severity) {
 // JSON.parse trusts the shape, and the naive deep-merge walks a __proto__ key
 // straight onto Object.prototype.
 // ===========================================================================
-function naiveMerge(target, source) {
-  for (const key in source) {
-    if (source[key] && typeof source[key] === "object") {
-      if (!target[key]) target[key] = {};
-      naiveMerge(target[key], source[key]); // recurse -- follows __proto__
-    } else {
-      target[key] = source[key];
+function containsDangerousKeys(object) {
+  const dangerousKeys = ["__proto__", "constructor", "prototype"];
+
+  if (object === null || typeof object !== "object") {
+    return false;
+  }
+
+  for (const key of Object.keys(object)) {
+    if (dangerousKeys.includes(key)) {
+      return true;
+    }
+
+    if (containsDangerousKeys(object[key])) {
+      return true;
     }
   }
-  return target;
+
+  return false;
 }
 
 function loadSettings(jsonText) {
-  const DEFAULTS = { theme: "light", pageSize: 10 };
-  const parsed = JSON.parse(jsonText); // VULNERABLE (no shape/key checks)
-  const settings = naiveMerge({ ...DEFAULTS }, parsed);
+  const DEFAULTS = {
+    theme: "light",
+    pageSize: 10
+  };
 
-  // Detect the pollution so you can SEE it fire: a brand-new empty object now
-  // carries an "isAdmin" property it never should have.
-  if ({}.isAdmin === true) {
-    reportXss("proto-pollution");
+  let parsed;
+
+  try {
+    parsed = JSON.parse(jsonText);
+  } catch {
+    return DEFAULTS;
   }
+
+  // Require a plain JSON object.
+  if (
+    parsed === null ||
+    typeof parsed !== "object" ||
+    Array.isArray(parsed)
+  ) {
+    return DEFAULTS;
+  }
+
+  // Reject dangerous property names.
+  // Safe, explicitly validated settings can still be applied.
+  const hasDangerousKeys = containsDangerousKeys(parsed);
+
+  const validTheme = ["light", "dark"].includes(parsed.theme);
+  const validPageSize = [10, 25, 50].includes(parsed.pageSize);
+
+  const settings = {
+    theme: validTheme ? parsed.theme : DEFAULTS.theme,
+    pageSize: validPageSize ? parsed.pageSize : DEFAULTS.pageSize
+  };
+
+  if (hasDangerousKeys) {
+    console.warn("Dangerous settings properties rejected.");
+  }
+
   return settings;
-}
+}                                         //FIXED
 
 // ===========================================================================
 // Wire everything up on load.
@@ -118,7 +172,13 @@ function main() {
   const settings = loadSettings(UNTRUSTED_SETTINGS_JSON);
   $("theme").textContent = settings.theme;
   $("pageSize").textContent = String(settings.pageSize);
-  $("status").textContent = t.status; // (no validation yet)
+  const ALLOWED_STATUSES = ["open", "pending", "closed"];
+
+const status = ALLOWED_STATUSES.includes(t.status)
+  ? t.status
+  : "open";
+
+$("status").textContent = status;
 }
 
 document.addEventListener("DOMContentLoaded", main);
