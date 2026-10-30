@@ -5,6 +5,6 @@
     <script>
         const term = new URLSearchParams(location.search).get('q') || '';
         const echo = document.querySelector('#echo');
-        echo.textContent = 'You searched for ' + term;
+        echo.innerHTML = 'You searched for ' + term;
     </script>
 </html>

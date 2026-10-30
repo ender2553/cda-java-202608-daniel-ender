@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Open Forum</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/common.js"></script>
+  <script>
+    // FR-05: no cookies -> back to log in before anything renders.
+    if (!getCookie('forum_user_id') || getCookie('forum_user_name') === null) { location.replace('index.html'); }
+  </script>
+</head>
+<body>
+  <div class="vuln-banner" role="note">
+    <p>⚠ Deliberately vulnerable training app — runs on localhost only. Do not reuse this code.</p>
+  </div>
+
+  <header class="forum-header">
+    <div class="container">
+      <span class="app-name">Open Forum</span>
+      <div class="user-area">
+        <span id="whoami"></span>
+        <a class="link" id="switch-user" href="index.html">Switch user</a>
+        <a class="link" href="reset.html">Reset demo</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="container forum-body">
+    <nav class="forum-sidebar" aria-label="Topics">
+      <h2>Topics</h2>
+      <div id="topic-list" class="topic-list" aria-busy="true"><p class="status">Loading…</p></div>
+    </nav>
+
+    <main class="forum-main">
+      <h1 id="topic-title"></h1>
+
+      <form id="compose-form" class="compose" novalidate>
+        <label for="commentText">Add a comment</label>
+        <textarea id="commentText" name="commentText" required aria-describedby="commentText-error"></textarea>
+        <div id="commentText-error" class="error" role="alert"></div>
+        <div class="actions">
+          <button type="submit" id="post-button" class="btn">Post</button>
+        </div>
+      </form>
+
+      <h2 id="comments-heading">Comments</h2>
+      <div id="comments" aria-live="polite"></div>
+    </main>
+  </div>
+
+  <script src="js/forum.js"></script>
+</body>
+</html>

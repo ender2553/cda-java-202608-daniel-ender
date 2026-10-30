@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Support Ticket Dashboard — Vulnerable Starter</title>
+    <style>
+      body {
+        font-family: system-ui, Arial, sans-serif;
+        margin: 0;
+        padding: 1.5rem;
+        background: #f4f5f7;
+        color: #1a1a2e;
+        line-height: 1.5;
+      }
+      h1 {
+        font-size: 1.4rem;
+      }
+      .framing {
+        background: #fff8e1;
+        border: 1px solid #f0d78c;
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
+        max-width: 720px;
+      }
+      .card {
+        background: #fff;
+        border: 1px solid #dcdfe4;
+        border-radius: 10px;
+        padding: 1rem 1.25rem;
+        margin: 1rem 0;
+        max-width: 720px;
+      }
+      .field {
+        margin: 0.4rem 0;
+      }
+      .label {
+        font-weight: 600;
+        color: #555;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        max-width: 720px;
+        background: #fff;
+      }
+      th,
+      td {
+        border: 1px solid #dcdfe4;
+        padding: 0.5rem 0.65rem;
+        text-align: left;
+        font-size: 0.9rem;
+      }
+      th {
+        background: #eef0f4;
+      }
+      .status {
+        font-weight: 700;
+      }
+      .status.pending {
+        color: #8a8f98;
+      }
+      .status.fired {
+        color: #fff;
+        background: #c0392b;
+        padding: 0.1rem 0.4rem;
+        border-radius: 4px;
+      }
+      .status.armed {
+        color: #fff;
+        background: #d68910;
+        padding: 0.1rem 0.4rem;
+        border-radius: 4px;
+      }
+      code {
+        background: #eef0f4;
+        padding: 0.05rem 0.3rem;
+        border-radius: 3px;
+        font-size: 0.85em;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Support Ticket Dashboard</h1>
+
+    <p class="framing">
+      <strong>Safe, local practice page.</strong> Every "attack" here is benign:
+      payloads only mark a row below as <em>FIRED</em> and log to the browser
+      console. Nothing calls the network or touches a real site. This starter is
+      <strong>deliberately vulnerable</strong> — your job is to secure it.
+    </p>
+
+    <section class="card" aria-label="Ticket">
+      <div class="field">
+        <span class="label">Customer:</span> <span id="customer"></span>
+      </div>
+      <div class="field">
+        <span class="label">Message:</span> <span id="message"></span>
+      </div>
+      <div class="field">
+        <span class="label">Note:</span> <span id="note"></span>
+      </div>
+      <div class="field">
+        <span class="label">Source:</span> <a id="sourceLink" href="#"></a>
+      </div>
+      <div class="field">
+        <span class="label">Priority score:</span> <span id="priority"></span>
+      </div>
+      <div class="field">
+        <span class="label">Status:</span> <span id="status"></span>
+      </div>
+      <div class="field">
+        <span class="label">Theme:</span> <span id="theme"></span> &nbsp;
+        <span class="label">Page size:</span> <span id="pageSize"></span>
+      </div>
+    </section>
+
+    <h2 style="font-size: 1.1rem">Attack Monitor</h2>
+    <table aria-label="Attack Monitor">
+      <thead>
+        <tr>
+          <th>Vector</th>
+          <th>Where</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr data-vector="message-innerHTML">
+          <td>HTML-string sink</td>
+          <td><code>message.innerHTML</code></td>
+          <td class="status pending">inert</td>
+        </tr>
+        <tr data-vector="note-richtext">
+          <td>Rich-text note (no sanitizer)</td>
+          <td><code>note.innerHTML</code></td>
+          <td class="status pending">inert</td>
+        </tr>
+        <tr data-vector="source-link-href">
+          <td>javascript: URL in href</td>
+          <td><code>sourceLink.href</code></td>
+          <td class="status pending">inert</td>
+        </tr>
+        <tr data-vector="priority-eval">
+          <td>Dynamic execution</td>
+          <td><code>eval(weightingExpr)</code></td>
+          <td class="status pending">inert</td>
+        </tr>
+        <tr data-vector="proto-pollution">
+          <td>Prototype pollution</td>
+          <td><code>JSON.parse</code> + merge</td>
+          <td class="status pending">inert</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Bundled vetted sanitizer, available for you to use (currently unused). -->
+    <script src="purify.min.js"></script>
+    <script src="untrusted.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
