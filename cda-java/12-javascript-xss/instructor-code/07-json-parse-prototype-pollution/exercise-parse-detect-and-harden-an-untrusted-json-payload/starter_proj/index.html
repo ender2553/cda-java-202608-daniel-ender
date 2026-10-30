@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Untrusted JSON Payload Handler (starter)</title>
+  <style>
+    body { font-family: system-ui, Arial, sans-serif; max-width: 720px; margin: 2rem auto; padding: 0 1rem; line-height: 1.5; }
+    h1 { font-size: 1.3rem; }
+    button { font: inherit; padding: 0.5rem 0.9rem; margin: 0.25rem 0.4rem 0.25rem 0; cursor: pointer; }
+    .panel { border: 1px solid #ccc; border-radius: 8px; padding: 0.9rem 1rem; margin: 1rem 0; }
+    .probe { font-weight: 600; }
+    .clean { color: #146c2e; }
+    .bad { color: #b00020; }
+    #profile { min-height: 2.5rem; }
+    code { background: #f2f2f2; padding: 0 0.25rem; border-radius: 3px; }
+    .note { font-size: 0.85rem; color: #555; }
+  </style>
+</head>
+<body>
+  <h1>Untrusted JSON Payload Handler</h1>
+  <p class="note">
+    Safe, local demo. Everything runs in your browser against seeded data.
+    The only "attack" is a benign marker (a visible flag and a console message) —
+    nothing contacts the network or any real site.
+  </p>
+
+  <p>Load a payload and watch what the current (vulnerable) script does with it:</p>
+  <button id="btn-benign">Load benign payload</button>
+  <button id="btn-hostile">Load hostile payload (__proto__)</button>
+  <button id="btn-tricky">Load valid-shape payload (XSS bio)</button>
+
+  <div class="panel">
+    <div>Rendered profile:</div>
+    <div id="profile"><em>(nothing loaded yet)</em></div>
+  </div>
+
+  <div class="panel">
+    <div>Prototype-pollution probe — value of <code>({}).polluted</code> on a brand-new empty object:</div>
+    <div id="probe" class="probe">not checked yet</div>
+  </div>
+
+  <div class="panel">
+    <div>Render (XSS) marker:</div>
+    <div id="xss-marker" class="probe clean">inert</div>
+  </div>
+
+  <p class="note">
+    Reload the page between runs — once the prototype is polluted it stays polluted until reload.
+  </p>
+
+  <script src="app.js"></script>
+</body>
+</html>

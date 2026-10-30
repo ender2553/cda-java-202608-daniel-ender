@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Open Forum — Log In</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="vuln-banner" role="note">
+    <p>⚠ Deliberately vulnerable training app — runs on localhost only. Do not reuse this code.</p>
+  </div>
+
+  <main class="center-page">
+    <div class="narrow-column">
+      <h1 class="page-title">Open Forum</h1>
+      <p class="hint">Pick any username. No password needed.</p>
+
+      <form id="login-form" novalidate>
+        <div class="field">
+          <label for="userName">Username</label>
+          <input id="userName" name="userName" type="text" maxlength="255" autocomplete="off" required aria-describedby="userName-error">
+          <div id="userName-error" class="error" role="alert"></div>
+        </div>
+        <button type="submit" id="login-button" class="btn">Log In</button>
+        <div id="form-error" class="error" role="alert"></div>
+      </form>
+
+      <p class="hint">Try: alice · bob · carol · dave</p>
+
+      <div class="footer">
+        <a class="link" href="reset.html">Reset demo</a>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/common.js"></script>
+  <script src="js/login.js"></script>
+</body>
+</html>

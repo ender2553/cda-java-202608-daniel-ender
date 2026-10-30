@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Open Forum — Reset demo</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="vuln-banner" role="note">
+    <p>⚠ Deliberately vulnerable training app — runs on localhost only. Do not reuse this code.</p>
+  </div>
+
+  <main class="center-page">
+    <div class="narrow-column">
+      <h1 class="page-title">Reset demo</h1>
+      <p class="hint">Deletes every comment and user, then restores the original seed data (alice, bob, carol, dave and the starter comments). Use this when payloads have made the forum unusable.</p>
+
+      <button type="button" id="reset-button" class="btn">Reset demo</button>
+      <div id="form-error" class="error" role="alert"></div>
+
+      <div class="footer">
+        <a class="link" href="forum.html">Back to the forum</a>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/common.js"></script>
+  <script src="js/reset.js"></script>
+</body>
+</html>

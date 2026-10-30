@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Product List — Vulnerable Starter</title>
+  <style>
+    body { font-family: system-ui, Arial, sans-serif; max-width: 720px; margin: 2rem auto; padding: 0 1rem; color: #1a1a1a; }
+    h1 { font-size: 1.4rem; }
+    .note { background: #fff8e1; border: 1px solid #f0d488; border-radius: 6px; padding: .75rem 1rem; font-size: .9rem; }
+    #product-list { list-style: none; padding: 0; margin: 1.25rem 0; }
+    .card { border: 1px solid #ccc; border-radius: 6px; padding: .75rem 1rem; margin: .6rem 0; }
+    .card h3 { margin: 0 0 .35rem; font-size: 1.05rem; }
+    .card a { color: #0b57d0; }
+    #xss-log { background: #fdecea; border: 1px solid #f3b0a8; border-radius: 6px; padding: .75rem 1rem; min-height: 1.5rem; white-space: pre-wrap; font-family: ui-monospace, monospace; font-size: .85rem; }
+    #xss-log:empty::before { content: "(no payload has fired)"; color: #6a6a6a; }
+    .fired { color: #b3261e; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <h1>Product List</h1>
+
+  <p class="note">
+    <strong>Benign, contained demo.</strong> Any "payload" on this page only writes to the
+    log below and to the browser console. Nothing makes a network request; nothing leaves
+    this local page. It stands in for arbitrary script an attacker could otherwise run.
+  </p>
+
+  <div id="product-list" aria-label="rendered product cards"></div>
+
+  <h2 style="font-size:1rem;">Payload activity log</h2>
+  <div id="xss-log" aria-live="polite"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
