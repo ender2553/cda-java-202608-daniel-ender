@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Team Dashboard — No Policy (Starter)</title>
+  <style>
+    body { font-family: system-ui, Arial, sans-serif; max-width: 720px; margin: 2rem auto; padding: 0 1rem; line-height: 1.5; color: #1a1a1a; }
+    h1 { font-size: 1.4rem; }
+    .note { background: #fff3cd; border: 1px solid #e0c200; border-radius: 6px; padding: .6rem .8rem; font-size: .9rem; }
+    .badge { width: 64px; height: 64px; border: 1px dashed #999; display: flex; align-items: center; justify-content: center; font-size: .7rem; color: #777; }
+    #status { font-weight: 600; }
+  </style>
+</head>
+<body>
+  <h1>Team Dashboard</h1>
+
+  <p class="note">
+    <strong>Your task:</strong> this page currently ships with <em>no</em> Content Security Policy at all.
+    Add <code>headers.json</code> in this project root applying
+    <code>Content-Security-Policy: default-src 'self'</code>, reload with DevTools Console open, and
+    record every violation you see. Do not change the page or the policy to make the violations go
+    away — see README.md.
+  </p>
+
+  <p>Welcome badge (loaded from a partner asset host):</p>
+  <div class="badge">
+    <img src="https://images.partner-assets.example.net/badge.png" alt="welcome badge" width="64" height="64">
+  </div>
+
+  <p>Status: <span id="status">loading…</span></p>
+
+  <!-- Inline bootstrap: sets the status text directly in the page. -->
+  <script>
+    document.getElementById('status').textContent = 'ready (inline script ran)';
+  </script>
+
+  <!-- Third-party widget script, not hosted on this origin. -->
+  <script src="https://widgets.example-cdn.net/notice-widget.js"></script>
+</body>
+</html>

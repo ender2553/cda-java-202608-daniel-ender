@@ -1,0 +1,56 @@
+@font-face {
+  font-family: 'AppSans';
+  src: url('app-sans.woff2') format('woff2');
+  font-weight: 400;
+}
+
+body {
+  font-family: 'AppSans', system-ui, Arial, sans-serif;
+  max-width: 480px;
+  margin: 3rem auto;
+  padding: 0 1rem;
+  color: #1a1a1a;
+}
+
+.card {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 1.5rem;
+}
+
+.logo {
+  width: 48px;
+  height: 48px;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+h1 {
+  font-size: 1.3rem;
+  margin: 0 0 1rem;
+}
+
+label {
+  display: block;
+  margin: .8rem 0 .2rem;
+  font-weight: 600;
+}
+
+input {
+  width: 100%;
+  padding: .5rem;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+button {
+  margin-top: 1.2rem;
+  padding: .6rem 1.2rem;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.status {
+  font-size: .9rem;
+  color: #444;
+}

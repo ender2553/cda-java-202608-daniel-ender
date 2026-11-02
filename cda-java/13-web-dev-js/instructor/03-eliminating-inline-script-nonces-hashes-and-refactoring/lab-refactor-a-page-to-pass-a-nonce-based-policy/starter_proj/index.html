@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Feedback Widget — Blocked Under Strict Policy (Starter)</title>
+  <style>
+    body { font-family: system-ui, Arial, sans-serif; max-width: 600px; margin: 2rem auto; padding: 0 1rem; }
+    .note { background: #fff3cd; border: 1px solid #e0c200; border-radius: 6px; padding: .6rem .8rem; font-size: .9rem; }
+    button { margin: .6rem .4rem .6rem 0; padding: .55rem 1rem; font-size: 1rem; cursor: pointer; }
+    #log { border: 1px solid #ccc; border-radius: 6px; padding: .8rem; margin-top: 1rem; min-height: 3rem; font-family: ui-monospace, monospace; font-size: .85rem; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <h1>Feedback Widget</h1>
+
+  <p class="note">
+    <strong>Your task:</strong> a strict <code>script-src 'self'</code> policy (see
+    <code>headers.json</code>) is already applied, and it is currently breaking this page: the
+    buttons below are wired with <code>onclick</code> attributes, and a vendor-supplied inline
+    analytics snippet doesn't run. Open Console and confirm both kinds of violation, then fix the
+    <em>application</em> — never the policy — per README.md.
+  </p>
+
+  <!-- TODO: these onclick attributes are inline script under CSP and are blocked by
+       script-src 'self'. Refactor to addEventListener wiring in script.js. -->
+  <button id="submit-btn" onclick="submitFeedback()">Submit feedback</button>
+  <button id="reset-btn" onclick="resetFeedback()">Reset</button>
+
+  <div id="log">(waiting for action)</div>
+
+  <!-- Vendor-supplied inline analytics snippet. The vendor ships this as an inline-only
+       snippet (their integration docs require it pasted verbatim, inline, on every page) —
+       it cannot be moved to an external file. TODO: this needs a per-response nonce to run
+       under a strict script-src with no 'unsafe-inline'. -->
+  <script>
+    window.__analyticsQueue = window.__analyticsQueue || [];
+    window.__analyticsQueue.push(['pageview', location.pathname]);
+  </script>
+
+  <script src="script.js"></script>
+</body>
+</html>
