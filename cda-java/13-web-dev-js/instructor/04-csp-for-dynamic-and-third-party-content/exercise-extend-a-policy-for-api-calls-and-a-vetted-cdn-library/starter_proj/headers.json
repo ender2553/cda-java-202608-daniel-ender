@@ -1,5 +1,5 @@
 {
-  "/": {
-    "Content-Security-Policy": "default-src 'self'; script-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'"
-  }
+"/": {
+"Content-Security-Policy": "default-src 'self'; script-src 'self' https://cdn.example-charts.net/libs/charting/; connect-src 'self' https://partner-api.example.com; object-src 'none'; base-uri 'self'; form-action 'self'"
+}
 }

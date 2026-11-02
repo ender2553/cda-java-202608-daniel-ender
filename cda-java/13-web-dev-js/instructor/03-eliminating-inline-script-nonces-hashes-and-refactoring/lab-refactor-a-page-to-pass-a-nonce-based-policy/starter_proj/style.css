@@ -1,0 +1,32 @@
+body {
+  font-family: system-ui, Arial, sans-serif;
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.note {
+  background: #fff3cd;
+  border: 1px solid #e0c200;
+  border-radius: 6px;
+  padding: .6rem .8rem;
+  font-size: .9rem;
+}
+
+button {
+  margin: .6rem .4rem .6rem 0;
+  padding: .55rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+#log {
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: .8rem;
+  margin-top: 1rem;
+  min-height: 3rem;
+  font-family: ui-monospace, monospace;
+  font-size: .85rem;
+  white-space: pre-wrap;
+}
