@@ -1,0 +1,3 @@
+# placeholder self-hosted font asset — served for CSP font-src exercise purposes only,
+# not a byte-valid WOFF2. The exercise verifies the CSP directive/request path, not font
+# rendering fidelity.

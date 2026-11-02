@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Metrics Dashboard — Baseline Policy (Starter)</title>
+  <style>
+    body { font-family: system-ui, Arial, sans-serif; max-width: 640px; margin: 2rem auto; padding: 0 1rem; }
+    .note { background: #fff3cd; border: 1px solid #e0c200; border-radius: 6px; padding: .6rem .8rem; font-size: .9rem; }
+    #log { border: 1px solid #ccc; border-radius: 6px; padding: .8rem; margin-top: 1rem; min-height: 4rem; font-family: ui-monospace, monospace; font-size: .85rem; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <h1>Metrics Dashboard</h1>
+
+  <p class="note">
+    <strong>Your task:</strong> <code>headers.json</code> currently authorizes only
+    <code>'self'</code> everywhere. This page needs to load a vetted charting library from a CDN and
+    call a partner API — extend <code>script-src</code> and <code>connect-src</code> for exactly
+    those two origins, and confirm a third, unvetted origin stays blocked. See README.md.
+  </p>
+
+  <div id="log">(not loaded yet)</div>
+
+  <!-- Vetted third-party charting library — deliberately scoped to the specific path it
+       serves from, per the lesson's "scope narrowly" guidance. Currently blocked (no
+       script-src entry for this origin yet). -->
+  <script src="https://cdn.example-charts.net/libs/charting/chart.min.js"></script>
+
+  <script src="app.js"></script>
+</body>
+</html>

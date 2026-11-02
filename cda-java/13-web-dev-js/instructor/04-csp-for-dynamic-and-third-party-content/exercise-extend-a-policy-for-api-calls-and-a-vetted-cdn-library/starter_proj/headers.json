@@ -1,0 +1,5 @@
+{
+  "/": {
+    "Content-Security-Policy": "default-src 'self'; script-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'"
+  }
+}

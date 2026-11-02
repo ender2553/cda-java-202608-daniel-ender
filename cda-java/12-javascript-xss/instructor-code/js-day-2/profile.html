@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <div id="mount"></div>
+        <script>
+            const person = {
+                //name: 'Ada Lovelace',
+                name: 'Sneaky Pete',
+                //website: 'https://www.linkedin.com/in/anthony-orlando/'
+                website: 'javascript:alert(document.cookie)'
+            };
+
+            const mount = document.getElementById('mount');
+
+            // Need Function for safe url
+            function isSafeURL(value) {
+                let url;
+                try {
+                    url = new URL(value, window.location.href);
+                } catch {
+                    return false;
+                }
+                return ['https:', 'http:', 'mailto:'].includes(url.protocol);
+            }
+
+
+
+            const link = document.createElement('a');
+            link.textContent = person.name;
+
+            if (isSafeURL(person.website)){
+                link.setAttribute('href', person.website);
+            }
+
+            mount.append(link);
+        </script>
+    </body>
+</html>

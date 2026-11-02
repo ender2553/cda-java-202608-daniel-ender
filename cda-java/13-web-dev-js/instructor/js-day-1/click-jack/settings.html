@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <!-- Hide the entire page immediately -->
+    <style id="antiClickjack">
+        body { display: none !important; }
+    </style>
+
+    <script>
+        if (self === top) {
+            // Safe: We are NOT framed. Reveal the page content.
+            const style = document.getElementById('antiClickjack');
+            style.parentNode.removeChild(style);
+        } else {
+            // Framed: Even though this redirect will be blocked by Chrome,
+            // the CSS above stays active, rendering the iframe blank and unclickable.
+            try {
+                top.location = self.location;
+            } catch (e) {
+                // Catches the SecurityError silently
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Account Settings</h1>
+    <button id="delete" onclick="alert('oops')">Delete Account</button>
+</body>
+</html>
