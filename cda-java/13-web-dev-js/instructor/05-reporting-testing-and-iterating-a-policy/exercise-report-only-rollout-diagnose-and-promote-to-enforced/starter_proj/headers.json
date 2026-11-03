@@ -1,6 +1,6 @@
 {
   "/": {
-    "Content-Security-Policy-Report-Only": "default-src 'self'; script-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; report-to csp-endpoint",
+    "Content-Security-Policy": "default-src 'self'; script-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; report-to csp-endpoint",
     "Report-To": "{\"group\":\"csp-endpoint\",\"max_age\":10886400,\"endpoints\":[{\"url\":\"http://localhost:8080/csp-report\"}]}"
   }
 }

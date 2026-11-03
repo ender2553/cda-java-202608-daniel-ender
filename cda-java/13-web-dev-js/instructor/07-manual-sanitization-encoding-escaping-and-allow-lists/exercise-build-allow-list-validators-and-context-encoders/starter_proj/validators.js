@@ -16,7 +16,13 @@
 // markup.
 // ===========================================================================
 function encodeForHtml(str) {
-  // TODO: implement HTML-entity encoding for &, <, >, ", '.
+  return String(str).replace(/[&<>"']/g, (char) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;',
+  })[char]);
 }
 
 // ===========================================================================
@@ -27,8 +33,13 @@ function encodeForHtml(str) {
 // site) so every call site names its context explicitly.
 // ===========================================================================
 function encodeForAttribute(str) {
-  // TODO: implement attribute-context encoding (same character set as
-  // encodeForHtml: &, <, >, ", ').
+  return String(str).replace(/[&<>"']/g, (char) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;',
+  })[char]);
 }
 
 // ===========================================================================
@@ -37,8 +48,7 @@ function encodeForAttribute(str) {
 // alter the URL's structure or inject an unexpected parameter.
 // ===========================================================================
 function encodeForUrl(str) {
-  // TODO: implement URL-context encoding. (Hint: there's a built-in
-  // function for exactly this.)
+  return encodeURIComponent(String(str));
 }
 
 // ===========================================================================
@@ -47,8 +57,11 @@ function encodeForUrl(str) {
 // throw on anything that doesn't match; never "clean up" and pass through.
 // ===========================================================================
 function validateIdentifier(value) {
-  // TODO: implement allow-list validation against /^[a-z0-9_-]{3,32}$/.
-  // Throw new Error(...) on rejection.
+  if (typeof value !== 'string' || !/^[a-z0-9_-]{3,32}$/.test(value)) {
+    throw new Error('Invalid identifier');
+  }
+
+  return value;
 }
 
 // ===========================================================================
@@ -56,8 +69,17 @@ function validateIdentifier(value) {
 // 'closed'. Fail closed on anything outside the exact allowed set.
 // ===========================================================================
 function validateStatus(value) {
-  // TODO: implement allow-list validation against the exact allowed set.
-  // Throw new Error(...) on rejection.
+  const allowedStatuses = new Set([
+    'open',
+    'in_progress',
+    'closed',
+  ]);
+
+  if (!allowedStatuses.has(value)) {
+    throw new Error('Invalid status');
+  }
+
+  return value;
 }
 
 // ===========================================================================
@@ -65,8 +87,24 @@ function validateStatus(value) {
 // merely confirmed to "look numeric"). Options: { min, max }.
 // ===========================================================================
 function validateInteger(value, { min = -Infinity, max = Infinity } = {}) {
-  // TODO: parse value as an integer, reject non-integers and out-of-range
-  // values. Throw new Error(...) on rejection; otherwise return the number.
+  if (
+    typeof value !== 'number' &&
+    (typeof value !== 'string' || value.trim() === '')
+  ) {
+    throw new Error('Invalid integer');
+  }
+
+  const number = Number(value);
+
+  if (
+    !Number.isSafeInteger(number) ||
+    number < min ||
+    number > max
+  ) {
+    throw new Error('Integer outside allowed range');
+  }
+
+  return number;
 }
 
 // ===========================================================================
@@ -75,9 +113,25 @@ function validateInteger(value, { min = -Infinity, max = Infinity } = {}) {
 // calendar date (e.g. reject 2023-02-30).
 // ===========================================================================
 function validateDate(value) {
-  // TODO: implement strict ISO yyyy-mm-dd validation, including rejecting
-  // dates that don't exist on the calendar. Throw new Error(...) on
-  // rejection; otherwise return the value.
+  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+    throw new Error('Invalid date format');
+  }
+
+  const [year, month, day] = value.split('-').map(Number);
+
+  const date = new Date(0);
+  date.setUTCHours(0, 0, 0, 0);
+  date.setUTCFullYear(year, month - 1, day);
+
+  if (
+    date.getUTCFullYear() !== year ||
+    date.getUTCMonth() !== month - 1 ||
+    date.getUTCDate() !== day
+  ) {
+    throw new Error('Invalid calendar date');
+  }
+
+  return value;
 }
 
 // ===========================================================================
@@ -101,3 +155,4 @@ if (typeof module !== 'undefined' && module.exports) {
     stripTagsNaive,
   };
 }
+

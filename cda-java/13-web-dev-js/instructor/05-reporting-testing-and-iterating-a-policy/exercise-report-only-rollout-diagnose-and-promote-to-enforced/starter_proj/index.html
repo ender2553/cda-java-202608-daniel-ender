@@ -1,14 +1,10 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Order Status Page — Report-Only Rollout (Starter)</title>
-  <style>
-    body { font-family: system-ui, Arial, sans-serif; max-width: 640px; margin: 2rem auto; padding: 0 1rem; }
-    .note { background: #fff3cd; border: 1px solid #e0c200; border-radius: 6px; padding: .6rem .8rem; font-size: .9rem; }
-    button { margin: .6rem .4rem .6rem 0; padding: .55rem 1rem; font-size: 1rem; cursor: pointer; }
-  </style>
 </head>
 <body>
   <h1>Order Status</h1>
@@ -23,11 +19,9 @@
 
   <p>Order #4471 — <span id="order-status">checking…</span></p>
 
-  <!-- Leftover from before this page adopted addEventListener wiring elsewhere in the app.
-       TODO: this onclick attribute is inline script and violates script-src under the
-       target policy. Refactor it, don't loosen the policy. -->
-  <button id="refresh-btn" onclick="legacyRefreshStatus()">Refresh status</button>
+<button id="refresh-btn">Refresh status</button>
 
   <script src="app.js"></script>
+
 </body>
 </html>

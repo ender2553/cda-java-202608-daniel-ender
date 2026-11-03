@@ -14,24 +14,28 @@ function $(id) {
 }
 
 // ===========================================================================
-// TODO (LO3): scope this configuration to the minimum this feature needs —
+// COMPLETE (LO3): scope this configuration to the minimum this feature needs —
 // only b, i, em, strong, and a[href]. Right now it's empty, so
 // DOMPurify.sanitize() below falls back to its broad built-in defaults,
 // which allow far more than a rich-text note requires.
 // ===========================================================================
 const NOTE_SANITIZE_CONFIG = {
-  // ALLOWED_TAGS: [...],
-  // ALLOWED_ATTR: [...],
+  ALLOWED_TAGS: ['b', 'i', 'em', 'strong', 'a'],
+  ALLOWED_ATTR: ['href']
 };
 
 // ===========================================================================
-// TODO (LO4): add a DOMPurify.addHook('afterSanitizeAttributes', ...) call
+// COMPLETE (LO4): add a DOMPurify.addHook('afterSanitizeAttributes', ...) call
 // here that forces every surviving <a> element to carry
 // rel="noopener noreferrer" (and, optionally, target="_blank"). This can't
 // be expressed as an ALLOWED_TAGS/ALLOWED_ATTR rule — it's not "allow" or
 // "disallow" but "always add" — so it has to run as a hook.
 // ===========================================================================
-
+DOMPurify.addHook('afterSanitizeAttributes', (node) => {
+  if (node.tagName === 'A') {
+    node.setAttribute('rel', 'noopener noreferrer');
+  }
+});
 // ===========================================================================
 // Sanitize + render every seeded note. (Complete — do not need to edit.)
 // ===========================================================================

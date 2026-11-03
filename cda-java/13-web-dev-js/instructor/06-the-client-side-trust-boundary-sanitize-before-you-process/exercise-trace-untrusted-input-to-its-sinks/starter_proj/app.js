@@ -23,23 +23,23 @@ const SEEDED_NAME = '<img src=x onerror="console.warn(\'[trace] welcome banner s
 // TRACE — Origin: which line first reads this value, and from which of the
 //         four untrusted sources named in the lesson (form field, URL query
 //         param, localStorage, API response)?
-// Answer: ____________________________________________________________________
+// Answer: `input.value` in `readDisplayName()` reads the value from the HTML form field `#nameInput`. The fallback is the seeded value `SEEDED_NAME`.
 function readDisplayName() {
   const input = $('nameInput');
-  return input.value.trim().length > 0 ? input.value : SEEDED_NAME; // TRACE hop — label: __________
+  return input.value.trim().length > 0 ? input.value : SEEDED_NAME; // TRACE hop — label: potential markup
 }
 
 function renderWelcome() {
-  const name = readDisplayName(); // TRACE hop — label: __________
+  const name = readDisplayName(); // TRACE hop — label: potential markup
 
   // TRACE — SINK: name this DOM operation and state what the browser does with
   //         an attacker-supplied value written here.
-  // Answer: __________________________________________________________________
+  // Answer: `innerHTML` assignment. The browser parses the supplied string as HTML and creates DOM elements from it. Event-handler attributes in injected elements may execute JavaScript when triggered.
   $('welcome').innerHTML = 'Welcome, ' + name + '!';
 
   // TRACE — Required defense: what would need to happen to this value before
   //         this sink, for this specific sink type?
-  // Answer: __________________________________________________________________
+  // Answer: Apply output encoding appropriate for the HTML context, or use `textContent` to display the name as plain text.
 }
 
 $('nameInput').addEventListener('input', renderWelcome);
@@ -51,26 +51,26 @@ $('nameInput').addEventListener('input', renderWelcome);
 // ---------------------------------------------------------------------------
 
 // TRACE — Origin: which line reads this value, and from which source?
-// Answer: ____________________________________________________________________
+// Answer: `params.get('returnTo')` reads the `returnTo` value from the URL query parameter in `location.search`.
 function readReturnTo() {
   const params = new URLSearchParams(location.search);
-  const fromUrl = params.get('returnTo'); // TRACE hop — label: __________
+  const fromUrl = params.get('returnTo'); // TRACE hop — label: potential markup
   return fromUrl !== null ? fromUrl : 'profile-42';
 }
 
 function renderProfileLink() {
-  const returnTo = readReturnTo(); // TRACE hop — label: __________
+  const returnTo = readReturnTo(); // TRACE hop — label: potential markup
   const link = $('profileLink');
 
   // TRACE — SINK: name this DOM operation and this specific sink risk (what
   //         could `returnTo` alter about the resulting URL if unencoded?).
-  // Answer: __________________________________________________________________
+  // Answer: Assignment to the link's `href` property (URL/attribute sink). An unencoded `&` could introduce additional query parameters, and `#` could introduce a URL fragment.
   link.href = '/profile?id=42&return=' + returnTo;
   link.textContent = 'View profile';
 
   // TRACE — Required defense: what would need to happen to this value before
   //         this sink?
-  // Answer: __________________________________________________________________
+  // Answer: Validate the value and apply URL-component output encoding with `encodeURIComponent(returnTo)` before adding it to the query string.
 }
 
 // ---------------------------------------------------------------------------
@@ -85,22 +85,22 @@ if (!localStorage.getItem('savedTheme')) {
 }
 
 // TRACE — Origin: which line reads this value, and from which source?
-// Answer: ____________________________________________________________________
+// Answer: `localStorage.getItem('savedTheme')` in `readSavedTheme()` reads the value from browser `localStorage`.
 function readSavedTheme() {
-  return localStorage.getItem('savedTheme'); // TRACE hop — label: __________
+  return localStorage.getItem('savedTheme'); // TRACE hop — label: potential markup
 }
 
 function renderThemeBadge() {
-  const theme = readSavedTheme(); // TRACE hop — label: __________
+  const theme = readSavedTheme(); // TRACE hop — label: potential markup
   const host = $('themeBadgeHost');
 
   // TRACE — SINK: name this DOM operation and what it does with `theme`.
-  // Answer: __________________________________________________________________
+  // Answer: `insertAdjacentHTML()`. The browser parses the supplied string as HTML and inserts the resulting DOM nodes at the specified position.
   host.insertAdjacentHTML('beforeend', '<strong>Theme: </strong>' + theme);
 
   // TRACE — Required defense: what would need to happen to this value before
   //         this sink?
-  // Answer: __________________________________________________________________
+  // Answer: Apply output encoding for the HTML context, or use safe DOM methods such as `createElement()` and `textContent` instead of parsing the value as HTML.
 }
 
 // ---------------------------------------------------------------------------
@@ -110,7 +110,7 @@ function renderThemeBadge() {
 function fetchCommentsFromApi() {
   // TRACE — Origin: even though this "arrives from our own API," why does the
   //         lesson still call it untrusted?
-  // Answer: ____________________________________________________________________
+  // Answer: API responses may contain content originally submitted by other users or obtained from untrusted sources. Coming from our own backend does not automatically make the returned data safe.
   return Promise.resolve([
     { author: 'j.chen', body: 'Great write-up, thanks!' },
     {
@@ -125,11 +125,11 @@ function renderComments() {
     const host = $('comments');
     host.textContent = '';
     for (const comment of comments) {
-      // TRACE hop — `comment.body` label: __________
+      // TRACE hop — `comment.body` label: potential markup
       const row = document.createElement('div');
 
       // TRACE — SINK: name this DOM operation.
-      // Answer: ________________________________________________________________
+      // Answer: `innerHTML` assignment. The browser parses the concatenated author and comment body as HTML and creates DOM elements from the supplied markup.
       row.innerHTML = '<strong>' + comment.author + ':</strong> ' + comment.body;
       host.appendChild(row);
     }
@@ -138,7 +138,7 @@ function renderComments() {
     //         before this sink? (Hint: this field is meant to allow some rich
     //         text, not just plain text — which technique from this module
     //         fits that requirement?)
-    // Answer: __________________________________________________________________
+    // Answer: Use a real HTML sanitizer with a strict allowlist of permitted formatting elements and attributes. Plain output encoding would prevent the intended formatting from rendering.
   });
 }
 
