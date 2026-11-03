@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trust Boundary Panel — Trace Sources to Sinks</title>
+  <style>
+    body { font-family: system-ui, Arial, sans-serif; max-width: 760px; margin: 2rem auto; padding: 0 1rem; color: #1a1a1a; line-height: 1.5; }
+    h1 { font-size: 1.4rem; }
+    .note { background: #fff8e1; border: 1px solid #f0d060; border-radius: 6px; padding: 0.75rem 1rem; font-size: 0.9rem; }
+    .panel { background: #fff; border: 1px solid #dcdfe4; border-radius: 8px; padding: 1rem 1.25rem; margin: 1rem 0; }
+    .panel h2 { font-size: 1.05rem; margin-top: 0; }
+    .panel .out { background: #eef4ff; border: 1px solid #b9ccf0; border-radius: 6px; padding: 0.6rem 0.8rem; min-height: 1.5rem; }
+    code { background: #f0f0f0; padding: 0.1rem 0.3rem; border-radius: 3px; }
+  </style>
+</head>
+<body>
+  <h1>Trust Boundary Panel</h1>
+
+  <p class="note">
+    <strong>Local, contained demo.</strong> Any "exploit" on this page is a harmless
+    <code>console.warn</code> call that fires against this page only — there is no network call
+    and no real site involved. Your job in this exercise is to <em>trace and label</em> each
+    source-to-sink path, not to fix it. Fill in every <code>// TRACE:</code> blank in
+    <code>app.js</code>, then complete <code>TRACE.md</code>.
+  </p>
+
+  <section class="panel" aria-label="Welcome banner">
+    <h2>1. Welcome banner (form field)</h2>
+    <div class="out" id="welcome">Loading&hellip;</div>
+    <label for="nameInput" style="display:block; margin-top:0.5rem; font-weight:bold;">Display name</label>
+    <input id="nameInput" type="text" placeholder="Type a name or a payload like &lt;b&gt;hi&lt;/b&gt;">
+  </section>
+
+  <section class="panel" aria-label="Profile link">
+    <h2>2. Profile link (URL query parameter)</h2>
+    <div class="out"><a id="profileLink" href="#">Loading&hellip;</a></div>
+  </section>
+
+  <section class="panel" aria-label="Theme badge">
+    <h2>3. Theme badge (localStorage)</h2>
+    <div class="out" id="themeBadgeHost">Loading&hellip;</div>
+  </section>
+
+  <section class="panel" aria-label="Comment list">
+    <h2>4. Comment list (simulated API response)</h2>
+    <div class="out" id="comments">Loading&hellip;</div>
+  </section>
+
+  <script src="app.js"></script>
+</body>
+</html>
