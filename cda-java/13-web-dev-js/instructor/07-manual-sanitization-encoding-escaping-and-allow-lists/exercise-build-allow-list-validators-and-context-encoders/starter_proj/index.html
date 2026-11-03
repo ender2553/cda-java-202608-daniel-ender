@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Validators &amp; Encoders Console</title>
+  <style>
+    body { font-family: system-ui, Arial, sans-serif; max-width: 820px; margin: 2rem auto; padding: 0 1rem; color: #1a1a1a; line-height: 1.5; }
+    h1 { font-size: 1.4rem; }
+    h2 { font-size: 1.05rem; margin-top: 2rem; }
+    .note { background: #e8f6ec; border: 1px solid #a6d9b6; border-radius: 6px; padding: 0.75rem 1rem; font-size: 0.9rem; }
+    .field { margin: 0.6rem 0; }
+    label { display: block; font-weight: bold; margin-bottom: 0.2rem; }
+    input { width: 100%; padding: 0.5rem; font-size: 1rem; box-sizing: border-box; }
+    .out { background: #eef4ff; border: 1px solid #b9ccf0; border-radius: 6px; padding: 0.6rem 0.8rem; margin-top: 0.3rem; min-height: 1.4rem; }
+    button { margin-top: 1rem; padding: 0.6rem 1.2rem; font-size: 1rem; cursor: pointer; }
+    table { border-collapse: collapse; width: 100%; margin-top: 1rem; font-size: 0.85rem; }
+    th, td { border: 1px solid #dcdfe4; padding: 0.4rem 0.6rem; text-align: left; vertical-align: top; }
+    th { background: #eef0f4; }
+    td.pass { color: #1e7e34; font-weight: 700; }
+    td.fail { color: #c0392b; font-weight: 700; }
+    code { background: #f0f0f0; padding: 0.1rem 0.3rem; border-radius: 3px; }
+  </style>
+</head>
+<body>
+  <h1>Validators &amp; Encoders Console</h1>
+
+  <p class="note">
+    <strong>Your task.</strong> Every encoder and validator in <code>validators.js</code> is
+    stubbed with a <code>// TODO:</code> — no library, hand-written only. Implement each one,
+    then type into a field to see live encoding/validation, or click
+    <strong>Run bypass-payload suite</strong> to run a fixed set of hostile payloads against
+    every field and confirm each is rendered inert or rejected.
+  </p>
+
+  <h2>HTML body context</h2>
+  <div class="field">
+    <label for="displayNameInput">Display name</label>
+    <input id="displayNameInput" type="text" value="&lt;script&gt;alert(1)&lt;/script&gt;">
+    <div class="out" id="displayNamePreview"></div>
+  </div>
+
+  <h2>Attribute context</h2>
+  <div class="field">
+    <label for="bioInput">Bio (rendered as a title attribute)</label>
+    <input id="bioInput" type="text" value='" onmouseover="alert(1)'>
+    <div class="out" id="bioPreview"></div>
+  </div>
+
+  <h2>URL context</h2>
+  <div class="field">
+    <label for="searchInput">Search term</label>
+    <input id="searchInput" type="text" value="javascript:alert(1)">
+    <div class="out" id="searchPreview"></div>
+  </div>
+
+  <h2>Structured values (allow-list, fail closed)</h2>
+  <div class="field">
+    <label for="userIdInput">User ID</label>
+    <input id="userIdInput" type="text" value="../../etc/passwd">
+  </div>
+  <div class="field">
+    <label for="statusInput">Status</label>
+    <input id="statusInput" type="text" value="deleted">
+  </div>
+  <div class="field">
+    <label for="ageInput">Age</label>
+    <input id="ageInput" type="text" value="-5">
+  </div>
+  <div class="field">
+    <label for="joinDateInput">Join date (YYYY-MM-DD)</label>
+    <input id="joinDateInput" type="text" value="2023-02-30">
+  </div>
+  <div class="out" id="structuredPreview"></div>
+
+  <h2>Why naive regex tag-stripping fails (LO5 — demonstration only)</h2>
+  <p>
+    <code>stripTagsNaive</code> is never used as a defense anywhere in this project — it exists
+    only to show a tag broken across an attribute boundary surviving a textbook
+    <code>/&lt;[^&gt;]*&gt;/g</code> strip: the <code>&gt;</code> inside the quoted
+    <code>title="a&gt;b"</code> attribute ends the regex's match early, leaving the
+    <code>onerror=alert(1)</code> fragment behind as leftover text.
+  </p>
+  <div class="out" id="regexFailureOut"></div>
+
+  <h2>Bypass-payload suite</h2>
+  <button id="runSuiteBtn">Run bypass-payload suite</button>
+  <table>
+    <thead>
+      <tr><th>Field</th><th>Payload</th><th>Result</th><th>Detail</th></tr>
+    </thead>
+    <tbody id="resultsBody"></tbody>
+  </table>
+
+  <script src="validators.js"></script>
+  <script>
+    // validators.js exposes its functions as free identifiers when loaded via
+    // <script> (no module system). Collect them onto one namespace object so
+    // app.js can call Validators.encodeForHtml(...) etc.
+    window.Validators = {
+      encodeForHtml,
+      encodeForAttribute,
+      encodeForUrl,
+      validateIdentifier,
+      validateStatus,
+      validateInteger,
+      validateDate,
+      stripTagsNaive,
+    };
+  </script>
+  <script src="app.js"></script>
+</body>
+</html>

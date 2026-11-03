@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Order Status Page — Report-Only Rollout (Starter)</title>
+  <style>
+    body { font-family: system-ui, Arial, sans-serif; max-width: 640px; margin: 2rem auto; padding: 0 1rem; }
+    .note { background: #fff3cd; border: 1px solid #e0c200; border-radius: 6px; padding: .6rem .8rem; font-size: .9rem; }
+    button { margin: .6rem .4rem .6rem 0; padding: .55rem 1rem; font-size: 1rem; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <h1>Order Status</h1>
+
+  <p class="note">
+    <strong>Your task:</strong> the target strict policy is already live in
+    <strong>report-only</strong> mode (see <code>headers.json</code>), reporting to
+    <code>/csp-report</code>. Watch the server's terminal output and the browser Console while this
+    page loads and while you click the button, diagnose what's failing, fix the <em>application</em>,
+    then promote the header from report-only to enforced. See README.md.
+  </p>
+
+  <p>Order #4471 — <span id="order-status">checking…</span></p>
+
+  <!-- Leftover from before this page adopted addEventListener wiring elsewhere in the app.
+       TODO: this onclick attribute is inline script and violates script-src under the
+       target policy. Refactor it, don't loosen the policy. -->
+  <button id="refresh-btn" onclick="legacyRefreshStatus()">Refresh status</button>
+
+  <script src="app.js"></script>
+</body>
+</html>
