@@ -1,0 +1,32 @@
+CASE 4 — A typo'd URL
+
+Scenario
+--------
+The dashboard at https://dashboard.example.com calls
+https://api.example.com/oders (typo — the real route is /orders) with a
+plain GET.
+
+Browser console
+----------------
+Access to fetch at 'https://api.example.com/oders' from origin
+'https://dashboard.example.com' has been blocked by CORS policy: No
+'Access-Control-Allow-Origin' header is present on the requested resource.
+
+Network panel — Request
+------------------------
+GET /oders HTTP/1.1
+Host: api.example.com
+Origin: https://dashboard.example.com
+Accept: application/json
+
+Network panel — Response
+--------------------------
+HTTP/1.1 404 Not Found
+Content-Type: application/json
+Content-Length: 25
+
+{"error":"Not Found"}
+
+(No Access-Control-Allow-Origin header — the server's catch-all "route not
+found" handler never runs through the same CORS middleware the real
+routes do, so it never adds the header, on ANY origin, matching or not.)

@@ -1,0 +1,32 @@
+CASE 1 — Simple GET request
+
+Scenario
+--------
+The dashboard at https://dashboard.example.com calls the status endpoint at
+https://api.example.com/status with a plain GET (no custom headers, default
+Content-Type) — a simple request, sent directly with no preflight.
+
+Browser console
+----------------
+Access to fetch at 'https://api.example.com/status' from origin
+'https://dashboard.example.com' has been blocked by CORS policy: No
+'Access-Control-Allow-Origin' header is present on the requested resource.
+If an opaque response serves your needs, set the request's mode to
+'no-cors' to fetch the resource with CORS disabled.
+
+Network panel — Request
+------------------------
+GET /status HTTP/1.1
+Host: api.example.com
+Origin: https://dashboard.example.com
+Accept: application/json
+
+Network panel — Response
+--------------------------
+HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Length: 41
+
+{"status":"operational","uptime":"99.98%"}
+
+(No Access-Control-Allow-Origin header anywhere in the response.)

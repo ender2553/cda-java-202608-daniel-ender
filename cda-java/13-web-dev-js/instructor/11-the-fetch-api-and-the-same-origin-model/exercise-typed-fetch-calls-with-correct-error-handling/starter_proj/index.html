@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Typed Fetch — Vulnerable Error Handling (Starter)</title>
+  <style>
+    body { font-family: system-ui, Arial, sans-serif; max-width: 720px; margin: 2rem auto; padding: 0 1rem; line-height: 1.5; color: #1a1a1a; }
+    h1 { font-size: 1.4rem; }
+    .note { background: #fff3cd; border: 1px solid #e0c200; border-radius: 6px; padding: .6rem .8rem; font-size: .9rem; }
+    button { margin: .8rem .4rem .8rem 0; padding: .55rem 1rem; font-size: 1rem; cursor: pointer; }
+    .row { border: 1px solid #ccc; border-radius: 8px; padding: .6rem .8rem; margin-top: .5rem; font-family: ui-monospace, monospace; font-size: .85rem; white-space: pre-wrap; }
+    .row .label { font-weight: 700; font-family: system-ui, Arial, sans-serif; }
+  </style>
+</head>
+<body>
+  <h1>Order Status Dashboard</h1>
+
+  <p class="note">
+    <strong>Requires the shared dev server.</strong> From this folder run
+    <code>node ../../../../../../_server/serve.js</code>, then open
+    <code>http://localhost:8080</code>.
+  </p>
+
+  <p>
+    This page calls four endpoints that represent the outcomes a real client has
+    to handle: a request that succeeds, one that 404s, one that fails on the
+    server (500), and one that is simply unreachable. Click <strong>Run
+    requests</strong> and watch how each is reported below.
+  </p>
+
+  <button id="run-btn">Run requests</button>
+
+  <div id="results"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

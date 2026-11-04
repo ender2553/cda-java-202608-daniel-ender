@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+    <script src="./purify.min.js"></script>
+
+    <div id="note"></div>
+    <script>
+        const noteEL = document.getElementById('note');
+        function renderMarkdown(src) {
+            return src.replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+        }
+
+        const markdownSource = 
+        'Shipped **dark mode**! <script>alert(1)<\/script> THanks ALL!';
+
+        const rawHtml = renderMarkdown(markdownSource);
+        const safeHTML = DOMPurify.sanitize(rawHtml);
+        noteEL.innerHTML = safeHTML;
+    </script>

@@ -1,0 +1,36 @@
+CASE 2 — POST with a JSON body and an Authorization header
+
+Scenario
+--------
+The dashboard at https://dashboard.example.com submits a new order to
+https://api.example.com/orders with Content-Type: application/json and an
+Authorization: Bearer <token> header — both trigger a preflight.
+
+Browser console
+----------------
+Access to fetch at 'https://api.example.com/orders' from origin
+'https://dashboard.example.com' has been blocked by CORS policy: Request
+header field authorization is not allowed by Access-Control-Allow-Headers
+in preflight response.
+
+Network panel — Preflight request (automatic, sent by the browser)
+---------------------------------------------------------------------
+OPTIONS /orders HTTP/1.1
+Host: api.example.com
+Origin: https://dashboard.example.com
+Access-Control-Request-Method: POST
+Access-Control-Request-Headers: content-type, authorization
+
+Network panel — Preflight response
+-------------------------------------
+HTTP/1.1 204 No Content
+Access-Control-Allow-Origin: https://dashboard.example.com
+Access-Control-Allow-Methods: POST, GET, OPTIONS
+Access-Control-Allow-Headers: Content-Type
+
+(Access-Control-Allow-Headers lists Content-Type but not Authorization.)
+
+Network panel — Actual POST /orders
+--------------------------------------
+(never sent — the browser stopped after the preflight response failed to
+authorize the "authorization" header the real request needs to carry.)

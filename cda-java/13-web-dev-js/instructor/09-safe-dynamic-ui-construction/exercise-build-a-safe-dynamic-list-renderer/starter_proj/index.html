@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Directory List</title>
+  <style>
+    body { font-family: system-ui, Arial, sans-serif; max-width: 700px; margin: 2rem auto; padding: 0 1rem; color: #1a1a1a; line-height: 1.5; }
+    h1 { font-size: 1.4rem; }
+    .note { background: #e8f6ec; border: 1px solid #a6d9b6; border-radius: 6px; padding: 0.75rem 1rem; font-size: 0.9rem; }
+    ul.record-list { list-style: none; padding: 0; }
+    li.record { background: #fff; border: 1px solid #dcdfe4; border-radius: 8px; padding: 0.75rem 1rem; margin: 0.6rem 0; }
+    li.record a { font-weight: 700; color: #2255aa; text-decoration: none; }
+    li.record span { font-weight: 700; }
+    .bio { color: #555; margin: 0.3rem 0 0; }
+    .no-link-flag { display: block; color: #c0392b; font-size: 0.8rem; margin-top: 0.2rem; }
+  </style>
+</head>
+<body>
+  <h1>Directory</h1>
+
+  <p class="note">
+    <strong>Your task.</strong> <code>list-renderer.js</code> currently builds each record by
+    string-concatenating an HTML string and assigning it via <code>innerHTML</code> — replace that
+    with <code>createElement</code> / <code>setAttribute</code> / <code>textContent</code> only, and
+    add scheme allow-listing so a record whose URL isn't <code>http:</code>/<code>https:</code>
+    renders with no link at all instead of a dangerous one.
+  </p>
+
+  <div id="list">Loading&hellip;</div>
+
+  <script src="records.js"></script>
+  <script src="list-renderer.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
