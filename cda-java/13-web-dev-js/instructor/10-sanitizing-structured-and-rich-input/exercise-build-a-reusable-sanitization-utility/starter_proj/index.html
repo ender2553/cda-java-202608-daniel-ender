@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reusable Sanitization Utility</title>
+  <style>
+    body { font-family: system-ui, Arial, sans-serif; max-width: 820px; margin: 2rem auto; padding: 0 1rem; color: #1a1a1a; line-height: 1.5; }
+    h1 { font-size: 1.4rem; }
+    h2 { font-size: 1.1rem; margin-top: 2rem; }
+    .note { background: #e8f6ec; border: 1px solid #a6d9b6; border-radius: 6px; padding: 0.75rem 1rem; font-size: 0.9rem; }
+    .caution { background: #fff8e1; border: 1px solid #f0d060; border-radius: 6px; padding: 0.75rem 1rem; font-size: 0.85rem; margin-top: 0.75rem; }
+    pre { background: #f6f6f8; border: 1px solid #dcdfe4; border-radius: 6px; padding: 0.75rem 1rem; overflow-x: auto; font-size: 0.78rem; }
+    #output { background: #fff; border: 1px solid #dcdfe4; border-radius: 8px; padding: 1rem 1.25rem; margin-top: 1rem; }
+    #output a { color: #2255aa; }
+    .tags { padding-left: 1.2rem; }
+    .meta { margin-top: 1rem; padding-top: 0.75rem; border-top: 1px dashed #dcdfe4; }
+  </style>
+</head>
+<body>
+  <h1>Reusable Sanitization Utility</h1>
+
+  <p class="note">
+    <strong>Your task.</strong> Complete <code>sanitize-utils.js</code> so that
+    <code>sanitizeObject()</code> routes each field of the nested submission below to the correct
+    treatment: HTML-entity encoding for plain text, scheme allow-listing for URLs (including a
+    narrow <code>data:</code> image allowance and relative-URL resolution), and a render-then-sanitize
+    pipeline for the markdown body.
+  </p>
+
+  <p class="caution">
+    <strong>Client-side sanitization protects only this page's own rendering.</strong> It is never a
+    substitute for equivalent server-side validation — an attacker who skips this UI and talks
+    directly to an API bypasses every check on this page.
+  </p>
+
+  <h2>Rendered (sanitized)</h2>
+  <div id="output"></div>
+
+  <h2>Raw submission (untrusted)</h2>
+  <pre id="rawJson"></pre>
+
+  <h2>Sanitized submission</h2>
+  <pre id="sanitizedJson"></pre>
+
+  <script src="purify.min.js"></script>
+  <script src="untrusted-submission.js"></script>
+  <script src="sanitize-utils.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

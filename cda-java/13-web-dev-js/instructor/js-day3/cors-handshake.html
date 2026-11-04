@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CORS Handshake</title>
+    <style>
+        :root {
+            --bg: #f4f1ea;
+            --card: #ffffff;
+            --ink: #2b2b2b;
+            --muted: #6b6b6b;
+            --accent: #8b2e1f;
+            --joke: #2f5d8a;
+            --border: #e2ddd2;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 2rem 1rem;
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--ink);
+        }
+
+        header {
+            max-width: 960px;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        h1 { margin: 0; font-size: 1.75rem; }
+
+        button {
+            padding: 0.6rem 1.2rem;
+            font-size: 1rem;
+            border: none;
+            border-radius: 6px;
+            background: var(--accent);
+            color: #fff;
+            cursor: pointer;
+        }
+        button:disabled { opacity: 0.6; cursor: wait; }
+
+        #status { max-width: 960px; margin: 0 auto 1rem; color: var(--muted); }
+        #status.error { color: var(--accent); font-weight: 600; }
+
+        #results {
+            max-width: 960px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            align-items: start;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .card h2 {
+            margin: 0 0 1rem;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--muted);
+        }
+
+        /* Joke card */
+        .joke { border-top: 4px solid var(--joke); }
+        .joke .setup { font-size: 1.25rem; margin: 0 0 1rem; }
+        .joke .punchline { font-size: 1.1rem; font-weight: 600; color: var(--joke); margin: 0; }
+        .tag {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.15rem 0.6rem;
+            border-radius: 999px;
+            background: #e8eef5;
+            color: var(--joke);
+            font-size: 0.8rem;
+        }
+
+        /* Monster card */
+        .monster { border-top: 4px solid var(--accent); }
+        .monster .name { margin: 0; font-size: 1.6rem; font-weight: 700; color: var(--accent); }
+        .monster .subtitle { margin: 0.25rem 0 1rem; font-style: italic; color: var(--muted); }
+        .monster img {
+            width: 100%;
+            max-height: 260px;
+            object-fit: contain;
+            border-radius: 6px;
+            background: #faf8f3;
+            margin-bottom: 1rem;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+            margin: 0 0 1rem;
+        }
+        .stats div {
+            text-align: center;
+            padding: 0.5rem;
+            background: #faf8f3;
+            border-radius: 6px;
+        }
+        .stats dt { font-size: 0.7rem; text-transform: uppercase; color: var(--muted); }
+        .stats dd { margin: 0; font-size: 1.1rem; font-weight: 600; }
+
+        .monster h3 { font-size: 1rem; margin: 1rem 0 0.5rem; border-bottom: 1px solid var(--border); }
+        .monster ul { padding-left: 1.1rem; margin: 0; }
+        .monster li { margin-bottom: 0.5rem; line-height: 1.4; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>CORS Handshake: Two APIs, One Page</h1>
+        <button id="reload" type="button">Fetch again</button>
+    </header>
+
+    <p id="status">Loading…</p>
+    <main id="results"></main>
+
+    <script src="cors-handshake.js"></script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+    <div id="card"></div>
+    <script>
+        const author = {
+            name:'Sam <img src=x onerror=alert(1)>',
+            website: 'javascript:alert(1)'
+        };
+
+        const card = document.getElementById('card');
+
+        const nameEl = document.createElement('h2');
+        nameEl.innerText = author.name;
+        card.appendChild(nameEl);
+
+        const ALLOWED_SCHEMES = new Set(['http:', 'https:']);
+        function safeURLorNull(rawURL) {
+            try {
+                const parsed = new URL(rawURL, location.origin);
+                return ALLOWED_SCHEMES.has(parsed.protocol) ? parsed.href : null;
+            } catch {
+                return  null; 
+            }   
+
+        }
+
+        const link = document.createElement('a');
+        link.textContent = 'Website';
+        const safeHref = safeURLorNull(author.website);
+        if (safeHref) {
+            const href = safeURLorNull(author.website);
+            link.setAttribute('href', href)
+        } else {
+            link.textContent = 'Website Unavailable'
+        }
+        card.appendChild(link);
+    </script>
+</div>
