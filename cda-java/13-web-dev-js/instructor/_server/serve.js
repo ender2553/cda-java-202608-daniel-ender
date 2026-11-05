@@ -56,3 +56,4 @@ const server = http.createServer((req, res) => {
   });
 });
 server.listen(PORT, () => console.log(`[serve] http://localhost:${PORT}  (root: ${ROOT})`));
+console.log('>>> RUNNING ACTIVE SERVE.JS WITH NOTIFICATIONS ROUTE <<<');

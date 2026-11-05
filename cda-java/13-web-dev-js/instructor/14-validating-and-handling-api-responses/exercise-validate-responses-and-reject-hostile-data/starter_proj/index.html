@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Order Feed — Untrusted Responses (Starter)</title>
+  <style>
+    body { font-family: system-ui, Arial, sans-serif; max-width: 720px; margin: 2rem auto; padding: 0 1rem; line-height: 1.5; color: #1a1a1a; }
+    h1 { font-size: 1.4rem; }
+    .note { background: #fff3cd; border: 1px solid #e0c200; border-radius: 6px; padding: .6rem .8rem; font-size: .9rem; }
+    button { margin: .8rem .4rem .8rem 0; padding: .55rem 1rem; font-size: 1rem; cursor: pointer; }
+    .row { border: 1px solid #ccc; border-radius: 8px; padding: .6rem .8rem; margin-top: .5rem; }
+    .row .label { font-weight: 700; font-size: .8rem; text-transform: uppercase; letter-spacing: .04em; color: #666; }
+  </style>
+</head>
+<body>
+  <h1>Order Feed</h1>
+
+  <p class="note">
+    <strong>Requires the shared dev server.</strong> From this folder run
+    <code>node ../../../../../../_server/serve.js</code>, then open
+    <code>http://localhost:8080</code>.
+  </p>
+
+  <p>
+    This page loads four "orders": one from the live mock API's hostile
+    (non-JSON) route, and three from local fixture files — a valid order, a
+    shape-invalid order, and one carrying a hostile field.
+  </p>
+
+  <button id="run-btn">Load all four</button>
+
+  <div id="results"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

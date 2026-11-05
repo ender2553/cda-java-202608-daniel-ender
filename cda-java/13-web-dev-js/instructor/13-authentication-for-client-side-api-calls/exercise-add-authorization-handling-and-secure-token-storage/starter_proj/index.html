@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Profile Viewer — Incomplete Auth (Starter)</title>
+  <style>
+    body { font-family: system-ui, Arial, sans-serif; max-width: 720px; margin: 2rem auto; padding: 0 1rem; line-height: 1.5; color: #1a1a1a; }
+    h1 { font-size: 1.4rem; }
+    .note { background: #fff3cd; border: 1px solid #e0c200; border-radius: 6px; padding: .6rem .8rem; font-size: .9rem; }
+    button { margin: .8rem .4rem .8rem 0; padding: .55rem 1rem; font-size: 1rem; cursor: pointer; }
+    .card { border: 1px solid #ccc; border-radius: 8px; padding: 1rem; margin-top: 1rem; }
+    #status { font-family: ui-monospace, monospace; font-size: .9rem; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <h1>Profile Viewer</h1>
+
+  <p class="note">
+    <strong>Scenario:</strong> this is a pure single-page app calling a
+    third-party API — there is no first-party backend session, so an
+    <code>HttpOnly</code> cookie is not an option here. <strong>Requires the
+    shared dev server.</strong> From this folder run
+    <code>node ../../../../../../_server/serve.js</code>, then open
+    <code>http://localhost:8080</code>.
+  </p>
+
+  <button id="login-btn">Log in</button>
+  <button id="load-btn">Load profile</button>
+  <button id="expire-btn">Clear token (simulate expiry)</button>
+
+  <div class="card">
+    <div id="status">Not logged in.</div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
