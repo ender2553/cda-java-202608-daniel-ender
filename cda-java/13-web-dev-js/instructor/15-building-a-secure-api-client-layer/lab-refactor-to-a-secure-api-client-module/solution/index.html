@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Client Dashboard — Scattered Fetch Calls (Starter)</title>
+  <style>
+    body { font-family: system-ui, Arial, sans-serif; max-width: 760px; margin: 2rem auto; padding: 0 1rem; line-height: 1.5; color: #1a1a1a; }
+    h1 { font-size: 1.4rem; }
+    h2 { font-size: 1.05rem; margin-top: 1.6rem; }
+    .note { background: #fff3cd; border: 1px solid #e0c200; border-radius: 6px; padding: .6rem .8rem; font-size: .9rem; }
+    button { margin: .6rem .4rem .6rem 0; padding: .5rem .9rem; font-size: .95rem; cursor: pointer; }
+    .row { border: 1px solid #ccc; border-radius: 8px; padding: .6rem .8rem; margin-top: .4rem; }
+    .row .label { font-weight: 700; font-size: .78rem; text-transform: uppercase; letter-spacing: .04em; color: #666; }
+    #policy-result { font-family: ui-monospace, monospace; font-size: .85rem; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <h1>Client Dashboard</h1>
+
+  <p class="note">
+    <strong>Requires the shared dev server.</strong> From this folder run
+    <code>node ../../../../../../_server/serve.js</code>, then open
+    <code>http://localhost:8080</code>.
+  </p>
+
+  <p>
+    This dashboard has three widgets, each written with its own inline
+    <code>fetch()</code> call. <code>connect-src-policy.json</code> is the
+    page's supplied CSP <code>connect-src</code> allow-list.
+  </p>
+
+  <h2>Policy check</h2>
+  <div id="policy-result">Not checked yet.</div>
+
+  <h2>Profile</h2>
+  <button id="profile-btn">Load profile</button>
+  <div id="profile-result"></div>
+
+  <h2>Ping</h2>
+  <button id="ping-btn">Ping API</button>
+  <div id="ping-result"></div>
+
+  <h2>Fixture check</h2>
+  <button id="fixtures-btn">Run all three fixtures</button>
+  <div id="fixtures-result"></div>
+
+  <script src="api-client.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
