@@ -24,7 +24,7 @@ window.__evalExecuted = function () {
   return { poisoned: true };
 };
 
-// ==== TODO (Step 1/2): replace this eval-based "parser" ====================
+// ==== COMPLETE (Step 1/2): replace this eval-based "parser" ====================
 // This is the historical shortcut: JSON syntax is a subset of JS syntax, so
 // wrapping the text in parens and calling eval() "works" for well-formed
 // JSON -- but eval() runs ANY valid JavaScript the string contains, not just
@@ -32,8 +32,12 @@ window.__evalExecuted = function () {
 // returns a clear { ok, data } / { ok, error } result instead of throwing
 // out of the function.
 function parseResponse(text) {
-  const data = eval("(" + text + ")"); // VULNERABLE: executes arbitrary JS
-  return { ok: true, data };
+  try {
+    const data = JSON.parse(text);
+    return { ok: true, data };
+  } catch (error) {
+    return { ok: false, error };
+  }
 }
 // =============================================================================
 
@@ -57,14 +61,23 @@ const currentSession = {
   authToken: "eyJhbGciOiJIUzI1NiJ9.session-secret-do-not-leak",
 };
 
-// ==== TODO (Step 4/5): add a JSON.stringify replacer ========================
+// ==== COMPLETE (Step 4/5): add a JSON.stringify replacer ========================
 // This logging function currently serializes the session object exactly as
 // it sits in memory, which means authToken -- a secret -- goes out with it.
 // Add a replacer function as JSON.stringify's second argument that omits the
 // authToken field (return undefined for that key) so it never appears in
 // logged output, even though the in-memory object still has it.
 function logSession(session) {
-  const serialized = JSON.stringify(session); // VULNERABLE: no replacer
+  const serialized = JSON.stringify(
+    session,
+    (key, value) => {
+      if (key === "authToken") {
+        return undefined;
+      }
+      return value;
+    }
+  );
+
   document.getElementById("logged-output").textContent = serialized;
   console.log("[log]", serialized);
   return serialized;

@@ -23,7 +23,7 @@ function encodeForHtml(str) {
 }
 
 // ===========================================================================
-// TODO (LO1): implement URL sanitization for the harder cases. Parse rawUrl
+// COMPLETE (LO1): implement URL sanitization for the harder cases. Parse rawUrl
 // with the URL constructor, resolving relative URLs against `base`. Return
 // the resolved URL only if its scheme is http: or https:. If
 // options.allowDataImages is true, ALSO allow a data: URL whose pathname
@@ -32,16 +32,34 @@ function encodeForHtml(str) {
 // including anything that fails to parse.
 // ===========================================================================
 function safeUrl(rawUrl, base, { allowDataImages = false } = {}) {
-  return rawUrl; // VULNERABLE: no parsing, no scheme check, no fail-closed default
+  try {
+    const url = new URL(rawUrl, base);
+
+    if (url.protocol === 'http:' || url.protocol === 'https:') {
+      return url.href;
+    }
+
+    if (
+      allowDataImages &&
+      url.protocol === 'data:' &&
+      url.pathname.startsWith('image/')
+    ) {
+      return url.href;
+    }
+
+    return null;
+  } catch {
+    return null;
+  }
 }
 
 // ===========================================================================
-// TODO (LO2): implement safe attribute assignment. Every call site in this
+// COMPLETE (LO2): implement safe attribute assignment. Every call site in this
 // project should go through this one function instead of setting attributes
 // via string concatenation into an HTML string.
 // ===========================================================================
 function safeSetAttribute(el, name, value) {
-  // TODO: set the attribute using the DOM API (not string concatenation).
+  el.setAttribute(name, value);
 }
 
 // ===========================================================================
@@ -64,16 +82,18 @@ const MARKDOWN_SANITIZE_CONFIG = {
   ALLOWED_ATTR: ['href'],
 };
 
-// TODO (LO3): render the markdown source to HTML first, THEN sanitize the
+// COMPLETE (LO3): render the markdown source to HTML first, THEN sanitize the
 // RENDERED HTML OUTPUT (not the markdown source) with DOMPurify.sanitize()
 // using MARKDOWN_SANITIZE_CONFIG. Sanitizing the source instead of the
 // output would miss whatever HTML the renderer itself introduces.
 function renderThenSanitizeMarkdown(markdownSource) {
-  return renderMarkdownRaw(markdownSource); // VULNERABLE: never sanitized
+  const html = renderMarkdownRaw(markdownSource);
+
+  return DOMPurify.sanitize(html, MARKDOWN_SANITIZE_CONFIG);
 }
 
 // ===========================================================================
-// TODO (LO4, LO6): implement field-by-field structured sanitization.
+// COMPLETE (LO4, LO6): implement field-by-field structured sanitization.
 // Route by field name using the sets below:
 //   - URL_FIELDS            -> safeUrl(value, base) ?? ''
 //   - DATA_IMAGE_URL_FIELDS -> safeUrl(value, base, { allowDataImages: true }) ?? ''
@@ -89,7 +109,39 @@ const DATA_IMAGE_URL_FIELDS = new Set(['avatarDataUrl']);
 const RICH_TEXT_FIELDS = new Set(['bodyMarkdown']);
 
 function sanitizeField(key, value, base) {
-  return value; // VULNERABLE: every field passes through untouched
+
+  // URL fields
+  if (URL_FIELDS.has(key)) {
+    return safeUrl(value, base) ?? '';
+  }
+
+  // Data-image URL fields
+  if (DATA_IMAGE_URL_FIELDS.has(key)) {
+    return safeUrl(value, base, { allowDataImages: true }) ?? '';
+  }
+
+  // Rich-text fields
+  if (RICH_TEXT_FIELDS.has(key)) {
+    return renderThenSanitizeMarkdown(value);
+  }
+
+  // Arrays: sanitize every element using the same field key
+  if (Array.isArray(value)) {
+    return value.map(item => sanitizeField(key, item, base));
+  }
+
+  // Nested objects: recursively sanitize
+  if (value !== null && typeof value === 'object') {
+    return sanitizeObject(value, base);
+  }
+
+  // Ordinary strings: HTML-entity encode
+  if (typeof value === 'string') {
+    return encodeForHtml(value);
+  }
+
+  // Preserve numbers, booleans, null, etc.
+  return value;
 }
 
 function sanitizeObject(obj, base) {

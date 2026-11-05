@@ -1,81 +1,110 @@
-// Client Dashboard — STARTER (scattered inline fetch calls)
-//
-// Three widgets, three independent, duplicated request implementations.
-// Each one re-attaches the Authorization header by hand (copy-pasted, easy
-// to forget at a fourth call site), applies validation inconsistently (the
-// profile widget checks nothing; the fixture-check widget blindly parses
-// and innerHTML-renders, same bug as the L14 starter), has no timeout, no
-// retry policy, and reports errors in a different shape each time. Nothing
-// here checks the endpoint list against connect-src-policy.json at all.
-//
-// TODO (the whole point of this lab): replace all of this with ONE wrapper
-// module that injects auth/base URL/headers once, enforces validation on
-// every call, applies uniform timeout/retry/error handling, and is checked
-// against connect-src-policy.json.
+function validateProfile(data){
+    return typeof data === 'object' && data !== null
+    && typeof data.id === 'number'
+    && typeof data.name === 'string';
+}
 
-const AUTH_TOKEN = 'demo-token'; // TODO: duplicated in every widget below
+function validatePing(data){
+ return typeof data === 'object' && data !== null
+    && typeof data.ok === 'boolean';
+}
 
-// ---- Widget 1: Profile ----
-document.getElementById('profile-btn').addEventListener('click', async () => {
-  const el = document.getElementById('profile-result');
-  try {
-    // TODO: auth header hand-attached here, again.
-    const response = await fetch('/api/user', {
-      headers: { 'Authorization': `Bearer ${AUTH_TOKEN}` }
-    });
-    // TODO: no response.ok check, no shape validation.
-    const data = await response.json();
-    el.textContent = JSON.stringify(data);
-  } catch (err) {
-    el.textContent = `Error: ${err.message}`;
-  }
-});
+function validateOrder(data){
+    if (typeof data !== 'object' || data === null) return false;
+    if (typeof data.customer !== 'object' || data.customer === null) return false;
+    if (typeof data.customer.name !== 'string') return false;
+    if (typeof data.total !== 'number') return false;
+    return true; 
+}
 
-// ---- Widget 2: Ping ----
-document.getElementById('ping-btn').addEventListener('click', async () => {
-  const el = document.getElementById('ping-result');
-  try {
-    // TODO: auth header hand-attached here too — third copy of the same
-    // three lines, and it will only get more copies as widgets are added.
-    const response = await fetch('/api/echo', {
-      headers: { 'Authorization': `Bearer ${AUTH_TOKEN}` }
-    });
-    if (response.ok) {
-      const data = await response.json();
-      el.textContent = JSON.stringify(data);
-    } else {
-      // TODO: a THIRD, differently-shaped error report from a THIRD widget.
-      el.textContent = `ping failed: status ${response.status}`;
+function renderFields(el, fields) {
+    el.innerHTML = '';
+    for (const text of fields){
+        const line = document.createElement('div');
+        line.append(document.createTextNode(text));
+        el.append(line);
     }
-  } catch (err) {
-    el.textContent = `ping error: ${err.message}`;
-  }
+}
+
+function renderFailure(el, result){
+    console.error('API failure detail:', result);
+    const messages = {
+        network_error: 'Could not reach the server. Please try again',
+        request_failed: 'The server reported a problem with this request',
+        unexpected_content_type: 'The server returned an unexpected response format',
+        invalid_shape: 'The server returned in an unexpected shape. Like a trapezoid lol.'
+    };
+    el.textContent = messages[result.error] || 'Something went wrong. Please try again';
+}
+
+//Widget 1: Profile
+document.getElementById('profile-btn').addEventListener('click', async () =>{
+    const el = document.getElementById('profile-result');
+    const result = await apiRequest('/api/user', validateProfile);
+    if (result.ok) {
+        renderFields(el, [`id: ${result.data.id}`, `name: ${result.data.name}`]);
+    } else {
+        renderFailure(el, result);
+    }
 });
 
-// ---- Widget 3: Fixture check ----
-const FIXTURES = ['fixtures/valid.json', 'fixtures/shape-invalid.json', 'fixtures/hostile-field.json'];
+//Widget 2: Ping
+document.getElementById('ping-btn').addEventListener('click', async() =>{
+    const el = document.getElementById('ping-result');
+    const result = await apiRequest('/api/echo', validatePing);
+    if (result.ok){
+        renderFields(el, [`ok: ${result.data.ok}`, `method: ${result.data.method}`]);
+    }else {
+        renderFailure(el, result);
+    }
+});
+
+const FIXTURES = [
+    {url: 'fixtures/valid.json', label: 'valid'},
+    {url: 'fixtures/shape-invalid.json', label: 'shape-invalid'},
+    {url: 'fixtures/hostile-field.json', label: 'hostile-field'},
+];
 
 document.getElementById('fixtures-btn').addEventListener('click', async () => {
-  const container = document.getElementById('fixtures-result');
-  container.innerHTML = '';
-  for (const url of FIXTURES) {
-    const row = document.createElement('div');
-    row.className = 'row';
-    container.append(row);
-    try {
-      // TODO: no content-type check, no shape validation, and innerHTML
-      // rendering — the hostile fixture's payload will execute here, same
-      // as the unfixed L14 starter.
-      const response = await fetch(url);
-      const order = await response.json();
-      row.innerHTML = `<span class="label">${url}</span><br>${order.customer.name} — $${order.total.toFixed(2)}`;
-    } catch (err) {
-      row.innerHTML = `<span class="label">${url}</span><br>ERROR (unhandled): ${err.message}`;
+    const container = document.getElementById('fixtures-result');
+    container.innerHTML = '';
+    for (const fixture of FIXTURES){
+        const row = document.createElement('div');
+        row.className = 'row';
+        const label = document.createElement('div');
+        label.className = 'label';
+        label.textContent = fixture.label;
+        row.append(label);
+        container.append(row);
+
+        const result = await apiRequest(fixture.url, validateOrder);
+        if (result.ok){
+            renderFields(row, 
+                [`${result.data.customer.name} - $${result.data.total.toFixed(2)}`]);
+        } else {
+            renderFailure(row, result);
+        }
     }
-  }
 });
 
-// TODO: nothing on this page ever reads connect-src-policy.json or checks
-// it against the endpoints these widgets actually call.
-document.getElementById('policy-result').textContent =
-  'Not implemented — the wrapper you build should check its endpoint list against connect-src-policy.json and flag any mismatch.';
+(async function checkPolicy() {
+    const policyResponse = await fetch('connect-src-policy.json');
+    const policy = await policyResponse.json;
+    const mismatches = checkConnectSrcAlignment(ENDPOINTS, policy);
+
+    const el = document.getElementById('policy-result');
+    if (mismatches.length === 0){
+        el.textContent = 'All registered endpoints are covered by connect-src';
+        return;
+    }
+
+    el.innerHTML = '';
+    const heading = document.createElement('div');
+    heading.textContent = `${mismatches.length} registered endpoints are not covered by connect-src`;
+    el.append(heading);
+    for (const m of mismatches){
+        const line = document.createElement('div');
+        line.append(document.createTextNode(` - ${m.name} (${m.path}) -> origin ${m.origin} not in policy`));
+        el.append(line);
+    }
+})();

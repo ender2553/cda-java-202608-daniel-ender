@@ -1,13 +1,10 @@
-// Dynamic list renderer — VULNERABLE STARTER.
+// Dynamic list renderer — SAFE VERSION.
 //
-// This renderer works: it builds a directory list from DIRECTORY_RECORDS.
-// But it builds each record by string-concatenating an HTML string and
-// assigning it via innerHTML, and it drops every URL straight into an href
-// with no scheme check at all.
+// This renderer builds a directory list from DIRECTORY_RECORDS.
+// It uses createElement, setAttribute, and textContent instead of
+// string concatenation and innerHTML.
 //
-// Your job (see README.md): rebuild this using createElement + setAttribute
-// + textContent only — no innerHTML, no string concatenation into markup —
-// and add scheme allow-listing so only http:/https: URLs become links.
+// URLs are validated so only http: and https: schemes become links.
 //
 // Loaded via a plain <script> tag (no build step). Exposed as globals for the
 // browser (app.js calls renderList), and safeUrlOrNull is also exported for
@@ -22,7 +19,18 @@
 // that fails to parse.
 // ===========================================================================
 function safeUrlOrNull(rawUrl, base) {
-  return rawUrl; // VULNERABLE: no scheme check, no parsing, no fail-closed default
+  try {
+    const parsedUrl = new URL(rawUrl, base);
+
+    if (parsedUrl.protocol === 'http:' ||
+        parsedUrl.protocol === 'https:') {
+      return parsedUrl.href;
+    }
+
+    return null;
+  } catch {
+    return null;
+  }
 }
 
 // ===========================================================================
@@ -39,13 +47,25 @@ function createRecordListItem(record, base) {
   const li = document.createElement('li');
   li.className = 'record';
 
-  // VULNERABLE: string concatenation into an HTML string, assigned via
-  // innerHTML. record.name renders as markup (a payload executes); the URL
-  // is dropped into href with no scheme check (a javascript: URL becomes a
-  // clickable, executable link).
-  li.innerHTML =
-    '<a href="' + safeUrlOrNull(record.profileUrl, base) + '">' + record.name + '</a>' +
-    '<p class="bio">' + record.bio + '</p>';
+  const safeUrl = safeUrlOrNull(record.profileUrl, base);
+
+  let nameElement;
+
+  if (safeUrl !== null) {
+    nameElement = document.createElement('a');
+    nameElement.setAttribute('href', safeUrl);
+  } else {
+    nameElement = document.createElement('span');
+  }
+
+  nameElement.textContent = record.name;
+
+  const bioElement = document.createElement('p');
+  bioElement.className = 'bio';
+  bioElement.textContent = record.bio;
+
+  li.appendChild(nameElement);
+  li.appendChild(bioElement);
 
   return li;
 }
@@ -67,3 +87,4 @@ function renderList(records, container, base) {
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = { safeUrlOrNull, createRecordListItem, renderList };
 }
+
