@@ -1,0 +1,4 @@
+{
+  "_comment": "Supplied CSP connect-src allow-list for this page. The wrapper's endpoint list should be checked against this — nothing should be callable that this policy doesn't already permit.",
+  "connect-src": ["'self'"]
+}
