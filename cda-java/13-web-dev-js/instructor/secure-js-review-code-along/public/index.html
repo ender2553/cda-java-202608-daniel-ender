@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Neighborly: Community Event Board</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <!-- TODO Part 1: this inline script is code the CSP would have to allow.
+       Configuration is data. Move it into a JSON data block. -->
+  <script>
+    window.NEIGHBORLY_CONFIG = { apiBase: "/api", timeoutMs: 5000, partnerFeed: "http://localhost:8081/partner/events" };
+  </script>
+  <script src="vendor/purify.min.js"></script>
+  <script type="module" src="breakit.js"></script>
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">
+      <h1 style="letter-spacing: .02em">Neighborly</h1>
+      <p class="tagline">Community events near you</p>
+    </div>
+    <div class="session" id="session-area">
+      <form id="sign-in-form" class="sign-in" onsubmit="signIn(event)">
+        <label for="sign-in-username">Username</label>
+        <input id="sign-in-username" name="username" autocomplete="username" maxlength="20" required>
+        <label for="sign-in-password">Password</label>
+        <input id="sign-in-password" name="password" type="password" autocomplete="current-password" maxlength="72" required>
+        <button id="sign-in-btn" type="submit">Sign in</button>
+        <button id="create-account-btn" type="button" class="quiet" onclick="createAccount(event)">Create account</button>
+      </form>
+      <p id="user-greeting" class="greeting" hidden></p>
+      <button id="organizer-tools" type="button" class="danger" hidden onclick="openOrganizerTools()">Organizer tools</button>
+      <button id="expire-btn" type="button" class="quiet" hidden onclick="expireSession()">Simulate expired session</button>
+      <button id="sign-out-btn" type="button" class="quiet" hidden onclick="signOut()">Sign out</button>
+    </div>
+  </header>
+
+  <div id="welcome-banner" class="banner" hidden></div>
+
+  <main class="layout">
+    <section class="panel events" aria-labelledby="events-heading">
+      <h2 id="events-heading">Upcoming events</h2>
+      <div class="toolbar">
+        <button id="refresh-btn" type="button" onclick="loadEvents()">Refresh events</button>
+        <button id="featured-btn" type="button" onclick="loadFeatured()">Load featured</button>
+        <button id="attendance-btn" type="button" onclick="refreshAttendance()">Refresh attendance</button>
+        <button id="partner-btn" type="button" onclick="loadPartnerEvents()">Load partner events</button>
+      </div>
+      <p id="status" class="status-line" role="status" aria-live="polite"></p>
+      <div id="featured" class="featured"></div>
+      <ul id="event-list" class="event-list"></ul>
+      <section id="event-detail" class="detail" aria-live="polite"></section>
+      <button id="edit-event" type="button" class="danger" hidden>Edit this event</button>
+    </section>
+
+    <div class="side">
+      <section class="panel" aria-labelledby="post-heading">
+        <h2 id="post-heading">Post an event</h2>
+        <form id="post-form" action="/api/events" method="post" novalidate onsubmit="postEvent(event)">
+          <label for="post-title">Title</label>
+          <input id="post-title" name="title" maxlength="80">
+          <label for="post-category">Category</label>
+          <select id="post-category" name="category">
+            <option value="community">Community</option>
+            <option value="learning">Learning</option>
+            <option value="volunteering">Volunteering</option>
+            <option value="sports">Sports</option>
+            <option value="arts">Arts</option>
+            <option value="food">Food</option>
+          </select>
+          <label for="post-date">Date and time</label>
+          <input id="post-date" name="date" type="datetime-local">
+          <label for="post-capacity">Capacity</label>
+          <input id="post-capacity" name="capacity" type="number" min="1" max="500" value="20">
+          <label for="post-link">Link (https://…)</label>
+          <input id="post-link" name="link">
+          <label for="post-description">Description (you may use &lt;b&gt;, &lt;i&gt;, &lt;em&gt;, &lt;strong&gt;, &lt;p&gt;, &lt;ul&gt;, &lt;li&gt;)</label>
+          <textarea id="post-description" name="description" rows="4"></textarea>
+          <div class="form-actions">
+            <button id="preview-btn" type="button" onclick="previewDraft()">Preview</button>
+            <button id="post-btn" type="submit">Post event</button>
+          </div>
+        </form>
+        <div id="form-errors" class="form-errors" role="alert"></div>
+        <h3>Preview</h3>
+        <div id="preview" class="preview"></div>
+      </section>
+
+      <section class="panel" aria-labelledby="filters-heading">
+        <h2 id="filters-heading">Filters</h2>
+        <label for="filter-category">Show</label>
+        <select id="filter-category" onchange="changeFilter()">
+          <option value="all">All categories</option>
+          <option value="community">Community</option>
+          <option value="learning">Learning</option>
+          <option value="volunteering">Volunteering</option>
+          <option value="sports">Sports</option>
+          <option value="arts">Arts</option>
+          <option value="food">Food</option>
+        </select>
+        <label for="filter-sort">Sort</label>
+        <select id="filter-sort" onchange="changeFilter()">
+          <option value="soonest">Soonest first</option>
+          <option value="latest">Latest first</option>
+        </select>
+        <label for="filters-json">Import shared filters (paste JSON a friend sent you)</label>
+        <textarea id="filters-json" rows="3" spellcheck="false">{"category":"food","sortBy":"latest"}</textarea>
+        <div class="form-actions">
+          <button id="import-filters-btn" type="button" onclick="importFilters()">Import filters</button>
+          <button id="reset-demo-btn" type="button" class="quiet" onclick="resetDemo()">Reset demo</button>
+        </div>
+      </section>
+
+      <section class="panel breakit" id="breakit" aria-labelledby="breakit-heading">
+        <h2 id="breakit-heading">Break-it board</h2>
+        <!-- Built by breakit.js -->
+      </section>
+    </div>
+  </main>
+</body>
+</html>
