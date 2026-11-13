@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS documents (
+    id BIGINT PRIMARY KEY,
+    owner VARCHAR(255) NOT NULL,
+    title VARCHAR(255) NOT NULL
+);

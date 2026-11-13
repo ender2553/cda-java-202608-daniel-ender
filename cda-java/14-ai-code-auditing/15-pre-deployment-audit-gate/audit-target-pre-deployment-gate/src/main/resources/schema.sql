@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS coupons (
+    code VARCHAR(64) PRIMARY KEY,
+    discount_pct INT NOT NULL,
+    redeemed BOOLEAN NOT NULL DEFAULT FALSE
+);

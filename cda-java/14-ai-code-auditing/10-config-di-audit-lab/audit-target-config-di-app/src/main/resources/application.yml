@@ -1,0 +1,41 @@
+server:
+  address: 0.0.0.0
+  port: 8080
+  error:
+    include-stacktrace: always
+    include-message: always
+
+spring:
+  application:
+    name: customer-portal
+  datasource:
+    url: jdbc:postgresql://db:5432/portal
+    username: portal_app
+    password: P0rtal-Db-2024!
+  security:
+    require-ssl: true
+
+portal:
+  jwt:
+    secret: 8f14e45fceea167a5a36dedd4bea2543c1d4e3b7a9f02
+    ttl-seconds: 3600
+  notifier:
+    # Implementation class for outbound notifications.
+    class: com.acme.portal.EmailNotifier
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+    shutdown:
+      enabled: true
+
+logging:
+  level:
+    root: INFO
+
+debug: true
