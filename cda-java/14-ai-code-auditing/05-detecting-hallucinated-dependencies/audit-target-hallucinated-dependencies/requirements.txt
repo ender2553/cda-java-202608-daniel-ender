@@ -1,0 +1,8 @@
+# Dependencies suggested by an AI assistant for a small token-auth API client.
+fastapi==0.110.0
+PyJWT==2.8.0
+requests==2.31.0
+urllib3==1.26.18
+beautifulsoup==4.12.2
+python-jwt-utils==1.2.0
+requests-async-helper==0.4.1

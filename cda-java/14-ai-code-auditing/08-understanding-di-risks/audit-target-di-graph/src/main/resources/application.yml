@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: reporting-service
+
+report:
+  exporter: csv

@@ -1,0 +1,48 @@
+server:
+  address: 0.0.0.0
+  port: 8080
+  error:
+    include-stacktrace: always
+    include-message: always
+
+spring:
+  application:
+    name: billing-service
+  datasource:
+    url: jdbc:postgresql://db:5432/billing
+    username: billing_admin
+    password: Pr0d-B1ll1ng!2024
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  security:
+    require-ssl: true
+
+billing:
+  external-gateway:
+    base-url: https://gateway.acme-pay.example
+    api-key: sk_live_9f2a7c4e11b84d6e90c3aa57de01bb42
+    verify-tls: false
+
+logging:
+  level:
+    root: INFO
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+    shutdown:
+      enabled: true
+
+debug: true

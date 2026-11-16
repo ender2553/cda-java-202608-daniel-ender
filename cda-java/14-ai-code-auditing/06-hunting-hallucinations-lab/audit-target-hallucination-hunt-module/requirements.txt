@@ -1,0 +1,6 @@
+# AI-suggested dependencies for the metrics aggregation pipeline.
+requests==2.31.0
+pandas==1.3.5
+python-dateutil==2.8.2
+boto3==1.34.0
+fastjsonschema-validator==2.1.0

@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS reports (
+    id IDENTITY PRIMARY KEY,
+    title VARCHAR(200),
+    owner VARCHAR(100),
+    status VARCHAR(40),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
