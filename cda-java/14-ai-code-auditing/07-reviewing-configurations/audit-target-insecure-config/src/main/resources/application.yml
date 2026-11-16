@@ -25,7 +25,7 @@ spring:
 billing:
   external-gateway:
     base-url: https://gateway.acme-pay.example
-    api-key: sk_live_9f2a7c4e11b84d6e90c3aa57de01bb42
+    api-key: replace-with-your-api-key
     verify-tls: false
 
 logging:

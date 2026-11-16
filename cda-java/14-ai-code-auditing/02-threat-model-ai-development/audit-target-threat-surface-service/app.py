@@ -18,7 +18,7 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 
-SECRET_KEY = "sk_live_8f3c1a92b4e74d0fa1c2e5b9d7a60f11"
+SECRET_KEY = "secret-key-please-change"
 ADMIN_API_KEY = "admin-key-please-change"
 
 CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
