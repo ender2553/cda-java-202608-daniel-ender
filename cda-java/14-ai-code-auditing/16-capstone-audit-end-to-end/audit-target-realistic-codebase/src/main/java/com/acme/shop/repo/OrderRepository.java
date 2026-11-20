@@ -22,9 +22,20 @@ public class OrderRepository {
             rs.getString("item"),
             rs.getInt("amount_cents"));
 
-    public List<Order> searchByItem(String item) {
-        String sql = "SELECT id, customer, item, amount_cents FROM orders WHERE item LIKE '%" + item + "%'";
-        return jdbc.query(sql, MAPPER);
+    public List<Order> searchByItem(String item, String customer) {
+        String sql = """
+        SELECT id, customer, item, amount_cents
+        FROM orders
+        WHERE customer = ?
+        AND item LIKE ?
+        """;
+
+        return jdbc.query(
+                sql,
+                MAPPER,
+                customer,
+                "%" + item + "%"
+        );
     }
 
     public Order findById(long id) {
@@ -38,4 +49,20 @@ public class OrderRepository {
                 "SELECT id, customer, item, amount_cents FROM orders WHERE customer = ?",
                 MAPPER, customer);
     }
+
+    public java.util.Optional<Order> findByIdForCustomer(
+            long id, String customer) {
+
+        return jdbc.query(
+                """
+                SELECT id, customer, item, amount_cents
+                FROM orders
+                WHERE id = ? AND customer = ?
+                """,
+                MAPPER,
+                id,
+                customer
+        ).stream().findFirst();
+    }
+
 }

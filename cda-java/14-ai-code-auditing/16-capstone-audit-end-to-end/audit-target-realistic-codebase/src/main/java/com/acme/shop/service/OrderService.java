@@ -5,6 +5,7 @@ import com.acme.shop.repo.OrderRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class OrderService {
@@ -15,12 +16,12 @@ public class OrderService {
         this.orderRepository = orderRepository;
     }
 
-    public List<Order> search(String item) {
-        return orderRepository.searchByItem(item);
+    public List<Order> search(String item, String customer) {
+        return orderRepository.searchByItem(item, customer);
     }
 
-    public Order get(long id) {
-        return orderRepository.findById(id);
+    public Optional<Order> get(long id, String customer) {
+        return orderRepository.findByIdForCustomer(id, customer);
     }
 
     public List<Order> ordersForCustomer(String customer) {
