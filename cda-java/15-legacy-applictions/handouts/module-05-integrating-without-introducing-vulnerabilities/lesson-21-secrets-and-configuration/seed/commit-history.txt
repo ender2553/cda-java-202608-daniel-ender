@@ -1,0 +1,12 @@
+commit 4e1b9c2
+    Move SMTP password to an environment variable
+
+-notify.smtp.password=Mailr00m-2024!
++notify.smtp.password=${SMTP_PASSWORD}
+
+commit a83f0d5
+    Add low-balance email notifications
+
++notify.smtp.host=smtp.internal.example
++notify.smtp.username=ledger-alerts
++notify.smtp.password=Mailr00m-2024!

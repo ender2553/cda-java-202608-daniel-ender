@@ -1,0 +1,8 @@
+2026-03-14 07:58:19.004 ERROR SpringApplication : Application run failed
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'ledgerDataSource'
+Caused by: org.postgresql.util.PSQLException: FATAL: password authentication failed for user "ledger_app"
+    connection: jdbc:postgresql://ledger-db:5432/ledger?user=ledger_app&password=Ledg3r!Prod#2024
+    at org.postgresql.core.v3.ConnectionFactoryImpl.doAuthentication(ConnectionFactoryImpl.java:693)
+    at org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl(ConnectionFactoryImpl.java:203)
+    at org.postgresql.Driver.connect(Driver.java:297)
+    ... 42 more
