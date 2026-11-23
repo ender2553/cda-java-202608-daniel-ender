@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 880" width="1200" height="880" font-family="Arial, Helvetica, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#333"/>
+    </marker>
+    <marker id="arrowBig" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="16" markerHeight="16" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#333"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="880" fill="#ffffff"/>
+
+  <text x="600" y="32" text-anchor="middle" font-size="22" font-weight="bold" fill="#222">Northwind Retail Platform — Architecture &amp; Data Flow</text>
+  <text x="600" y="55" text-anchor="middle" font-size="14" fill="#555">Legacy monolith as it runs today. Flows are numbered F1–F5 and described in the handout.</text>
+
+  <!-- External actors -->
+  <rect x="60" y="80" width="210" height="46" rx="23" fill="#fff" stroke="#333" stroke-width="2"/>
+  <text x="165" y="109" text-anchor="middle" font-size="15" fill="#222">Customers (internet)</text>
+  <rect x="290" y="80" width="210" height="46" rx="23" fill="#fff" stroke="#333" stroke-width="2"/>
+  <text x="395" y="109" text-anchor="middle" font-size="15" fill="#222">Store &amp; office staff</text>
+
+  <!-- Monolith -->
+  <rect x="40" y="160" width="710" height="320" rx="8" fill="#f4efe4" stroke="#333" stroke-width="2"/>
+  <text x="60" y="186" font-size="17" font-weight="bold" fill="#222">NORTHWIND RETAIL PLATFORM</text>
+  <text x="335" y="186" font-size="13" fill="#555">legacy monolith · one process · running since 2008</text>
+
+  <g font-size="15" fill="#222" text-anchor="middle">
+    <rect x="60" y="205" width="210" height="100" rx="5" fill="#fff" stroke="#666" stroke-width="1.5"/>
+    <text x="165" y="245" font-weight="bold">Storefront</text>
+    <text x="165" y="267" font-size="13" fill="#555">browse · checkout ·</text>
+    <text x="165" y="284" font-size="13" fill="#555">My Account</text>
+
+    <rect x="290" y="205" width="210" height="100" rx="5" fill="#fff" stroke="#666" stroke-width="1.5"/>
+    <text x="395" y="245" font-weight="bold">Admin Console</text>
+    <text x="395" y="267" font-size="13" fill="#555">refunds · Issue Credit ·</text>
+    <text x="395" y="284" font-size="13" fill="#555">user management</text>
+
+    <rect x="520" y="205" width="210" height="100" rx="5" fill="#fff" stroke="#666" stroke-width="1.5"/>
+    <text x="625" y="245" font-weight="bold">Billing</text>
+    <text x="625" y="267" font-size="13" fill="#555">monthly statements ·</text>
+    <text x="625" y="284" font-size="13" fill="#555">charges cards</text>
+
+    <rect x="60" y="330" width="210" height="100" rx="5" fill="#fff" stroke="#666" stroke-width="1.5"/>
+    <text x="165" y="370" font-weight="bold">Catalog</text>
+    <text x="165" y="392" font-size="13" fill="#555">products · prices ·</text>
+    <text x="165" y="409" font-size="13" fill="#555">images</text>
+
+    <rect x="290" y="330" width="210" height="100" rx="5" fill="#fff" stroke="#666" stroke-width="1.5"/>
+    <text x="395" y="370" font-weight="bold">Finance &amp; Payroll</text>
+    <text x="395" y="392" font-size="13" fill="#555">ledger · employee pay</text>
+
+    <rect x="520" y="330" width="210" height="100" rx="5" fill="#fff" stroke="#666" stroke-width="1.5"/>
+    <text x="625" y="370" font-weight="bold">Nightly Batch Jobs</text>
+    <text x="625" y="392" font-size="13" fill="#555">runs 1:00 a.m. ·</text>
+    <text x="625" y="409" font-size="13" fill="#555">finance export</text>
+  </g>
+  <text x="395" y="465" text-anchor="middle" font-size="12" fill="#666">Modules call each other in-process; there are no checks between them.</text>
+
+  <!-- Database -->
+  <path d="M80,580 v200 a315,26 0 0 0 630,0 v-200" fill="#eceff2" stroke="#333" stroke-width="2"/>
+  <ellipse cx="395" cy="580" rx="315" ry="26" fill="#f7f8fa" stroke="#333" stroke-width="2"/>
+  <text x="395" y="636" text-anchor="middle" font-size="18" font-weight="bold" fill="#222">RETAIL_DB</text>
+  <text x="395" y="656" text-anchor="middle" font-size="13" fill="#555">one shared database · every module connects as <tspan font-family="Consolas, 'Courier New', monospace">app_owner</tspan> (owner rights on all tables)</text>
+  <g font-size="14" fill="#333" font-family="Consolas, 'Courier New', monospace">
+    <text x="120" y="694">catalog</text>
+    <text x="120" y="716">orders</text>
+    <text x="120" y="738">order_items</text>
+    <text x="300" y="694">customer *</text>
+    <text x="300" y="716">payment_tokens</text>
+    <text x="300" y="738">invoices</text>
+    <text x="500" y="694">ledger</text>
+    <text x="500" y="716">employees</text>
+    <text x="500" y="738">payroll</text>
+  </g>
+  <text x="395" y="772" text-anchor="middle" font-size="12" fill="#555">* customer: id, name, email, address, phone, account_credit, reward_points</text>
+
+  <!-- External systems -->
+  <rect x="830" y="205" width="230" height="56" rx="8" fill="#fff" stroke="#333" stroke-width="2" stroke-dasharray="6 4"/>
+  <text x="945" y="238" text-anchor="middle" font-size="15" fill="#222">Payment processor</text>
+  <rect x="830" y="352" width="230" height="56" rx="8" fill="#fff" stroke="#333" stroke-width="2" stroke-dasharray="6 4"/>
+  <text x="945" y="378" text-anchor="middle" font-size="15" fill="#222">Accounting firm</text>
+  <text x="945" y="396" text-anchor="middle" font-size="12" fill="#555">(external FTP server)</text>
+
+  <!-- New service placeholder -->
+  <rect x="820" y="560" width="350" height="230" rx="10" fill="#fafafa" stroke="#999" stroke-width="2" stroke-dasharray="10 6"/>
+  <text x="995" y="660" text-anchor="middle" font-size="16" font-weight="bold" fill="#777">Space for the new service</text>
+  <text x="995" y="684" text-anchor="middle" font-size="13" fill="#888">Draw the Loyalty Service here and add</text>
+  <text x="995" y="702" text-anchor="middle" font-size="13" fill="#888">every flow it needs (step 3).</text>
+
+  <!-- Flows -->
+  <line x1="165" y1="126" x2="165" y2="203" stroke="#333" stroke-width="2" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
+  <line x1="395" y1="126" x2="395" y2="203" stroke="#333" stroke-width="2" marker-end="url(#arrow)" marker-start="url(#arrow)"/>
+  <line x1="395" y1="480" x2="395" y2="552" stroke="#333" stroke-width="4" marker-end="url(#arrowBig)" marker-start="url(#arrowBig)"/>
+  <line x1="730" y1="233" x2="828" y2="233" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="730" y1="380" x2="828" y2="380" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <g font-size="13" font-weight="bold" text-anchor="middle" fill="#222">
+    <rect x="178" y="152" width="34" height="22" rx="11" fill="#fff" stroke="#333" stroke-width="1.5" transform="translate(4,-12)"/><text x="199" y="156">F1</text>
+    <rect x="408" y="152" width="34" height="22" rx="11" fill="#fff" stroke="#333" stroke-width="1.5" transform="translate(4,-12)"/><text x="429" y="156">F2</text>
+    <rect x="412" y="508" width="34" height="22" rx="11" fill="#fff" stroke="#333" stroke-width="1.5"/><text x="429" y="524">F3</text>
+    <rect x="762" y="208" width="34" height="22" rx="11" fill="#fff" stroke="#333" stroke-width="1.5"/><text x="779" y="224">F4</text>
+    <rect x="762" y="355" width="34" height="22" rx="11" fill="#fff" stroke="#333" stroke-width="1.5"/><text x="779" y="371">F5</text>
+  </g>
+
+  <text x="600" y="860" text-anchor="middle" font-size="12" fill="#777">No trust boundaries are drawn. Finding them is part of the exercise.</text>
+</svg>
