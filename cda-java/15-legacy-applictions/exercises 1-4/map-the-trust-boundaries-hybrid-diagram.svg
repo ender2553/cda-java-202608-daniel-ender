@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 800" width="1100" height="800" font-family="Arial, Helvetica, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#333"/>
+    </marker>
+  </defs>
+  <rect width="1100" height="800" fill="#ffffff"/>
+
+  <text x="550" y="34" text-anchor="middle" font-size="22" font-weight="bold" fill="#222">Map the Trust Boundaries of a Hybrid</text>
+  <text x="550" y="58" text-anchor="middle" font-size="14" fill="#555">Mark every trust boundary. Label who authenticates, authorizes and validates at each one.</text>
+
+  <!-- Customers -->
+  <rect x="120" y="85" width="260" height="46" rx="23" fill="#ffffff" stroke="#333" stroke-width="2"/>
+  <text x="250" y="114" text-anchor="middle" font-size="16" fill="#222">Customers (web &amp; mobile)</text>
+
+  <!-- Monolith -->
+  <rect x="50" y="200" width="400" height="250" rx="8" fill="#f4efe4" stroke="#333" stroke-width="2"/>
+  <text x="70" y="230" font-size="18" font-weight="bold" fill="#222">ORDER MANAGEMENT SYSTEM</text>
+  <text x="70" y="252" font-size="14" fill="#555">legacy monolith · running since 2009</text>
+  <rect x="70" y="275" width="170" height="60" rx="5" fill="#fff" stroke="#666" stroke-width="1.5"/>
+  <text x="155" y="310" text-anchor="middle" font-size="15" fill="#222">Web storefront</text>
+  <rect x="260" y="275" width="170" height="60" rx="5" fill="#fff" stroke="#666" stroke-width="1.5"/>
+  <text x="345" y="310" text-anchor="middle" font-size="15" fill="#222">Order API</text>
+  <rect x="70" y="355" width="170" height="60" rx="5" fill="#fff" stroke="#666" stroke-width="1.5"/>
+  <text x="155" y="390" text-anchor="middle" font-size="15" fill="#222">Payments module</text>
+  <rect x="260" y="355" width="170" height="60" rx="5" fill="#fff" stroke="#666" stroke-width="1.5"/>
+  <text x="345" y="383" text-anchor="middle" font-size="15" fill="#222">Customer accounts</text>
+  <text x="345" y="401" text-anchor="middle" font-size="15" fill="#222">module</text>
+
+  <!-- Notification service -->
+  <rect x="690" y="200" width="340" height="250" rx="8" fill="#e8f0fa" stroke="#333" stroke-width="2"/>
+  <text x="710" y="230" font-size="18" font-weight="bold" fill="#222">NOTIFICATION SERVICE</text>
+  <text x="710" y="252" font-size="14" fill="#555">new microservice · 2026</text>
+  <rect x="710" y="275" width="300" height="44" rx="5" fill="#fff" stroke="#666" stroke-width="1.5"/>
+  <text x="860" y="303" text-anchor="middle" font-size="15" fill="#222">Status watcher</text>
+  <rect x="710" y="328" width="300" height="44" rx="5" fill="#fff" stroke="#666" stroke-width="1.5"/>
+  <text x="860" y="356" text-anchor="middle" font-size="15" fill="#222">Message builder</text>
+  <rect x="710" y="381" width="300" height="44" rx="5" fill="#fff" stroke="#666" stroke-width="1.5"/>
+  <text x="860" y="409" text-anchor="middle" font-size="15" fill="#222">Sender</text>
+
+  <!-- Database (cylinder) -->
+  <path d="M50,545 v170 a200,26 0 0 0 400,0 v-170" fill="#eceff2" stroke="#333" stroke-width="2"/>
+  <ellipse cx="250" cy="545" rx="200" ry="26" fill="#f7f8fa" stroke="#333" stroke-width="2"/>
+  <text x="250" y="603" text-anchor="middle" font-size="18" font-weight="bold" fill="#222">ORDERS_DB</text>
+  <text x="250" y="624" text-anchor="middle" font-size="14" fill="#555">shared database</text>
+  <text x="110" y="660" font-size="14" fill="#333" font-family="Consolas, 'Courier New', monospace">customers</text>
+  <text x="270" y="660" font-size="14" fill="#333" font-family="Consolas, 'Courier New', monospace">addresses</text>
+  <text x="110" y="684" font-size="14" fill="#333" font-family="Consolas, 'Courier New', monospace">orders</text>
+  <text x="270" y="684" font-size="14" fill="#333" font-family="Consolas, 'Courier New', monospace">order_status</text>
+  <text x="110" y="708" font-size="14" fill="#333" font-family="Consolas, 'Courier New', monospace">payments</text>
+  <text x="270" y="708" font-size="14" fill="#333" font-family="Consolas, 'Courier New', monospace">card_tokens</text>
+
+  <!-- Email / SMS provider -->
+  <rect x="800" y="600" width="230" height="56" rx="8" fill="#ffffff" stroke="#333" stroke-width="2" stroke-dasharray="6 4"/>
+  <text x="915" y="633" text-anchor="middle" font-size="15" fill="#222">Email / SMS provider</text>
+
+  <!-- Connections (plain, unlabeled) -->
+  <!-- (1) customers -> monolith -->
+  <line x1="250" y1="131" x2="250" y2="198" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+  <!-- (2) notification -> Order API -->
+  <line x1="710" y1="305" x2="432" y2="305" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+  <!-- monolith -> db -->
+  <line x1="250" y1="450" x2="250" y2="517" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+  <!-- (3) notification -> db -->
+  <polyline points="760,450 760,590 452,590" fill="none" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+  <!-- (4) notification -> provider -->
+  <line x1="915" y1="450" x2="915" y2="598" stroke="#333" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Connection numbers -->
+  <g font-size="14" font-weight="bold" text-anchor="middle" fill="#222">
+    <circle cx="275" cy="165" r="13" fill="#fff" stroke="#333" stroke-width="1.5"/><text x="275" y="170">1</text>
+    <circle cx="560" cy="305" r="13" fill="#fff" stroke="#333" stroke-width="1.5"/><text x="560" y="310">2</text>
+    <circle cx="600" cy="590" r="13" fill="#fff" stroke="#333" stroke-width="1.5"/><text x="600" y="595">3</text>
+    <circle cx="940" cy="525" r="13" fill="#fff" stroke="#333" stroke-width="1.5"/><text x="940" y="530">4</text>
+  </g>
+
+  <text x="550" y="780" text-anchor="middle" font-size="12" fill="#777">Numbered connections are described in the handout. Lines are drawn plain on purpose.</text>
+</svg>
